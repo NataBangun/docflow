@@ -1,0 +1,104 @@
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address,cite,code,del,dfn,em,img,ins,kbd,q,samp,small,strong,sub,sup,var,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,figcaption,figure,footer,header,hgroup,menu,nav,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}nav ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}a{margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent}ins{background-color:#ff9;color:#000;text-decoration:none}mark{background-color:#ff9;color:#000;font-style:italic;font-weight:bold}del{text-decoration:line-through}abbr[title],dfn[title]{border-bottom:1px dotted;cursor:help}table{border-collapse:collapse;border-spacing:0}hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:1em 0;padding:0}input,select{vertical-align:middle}
+
+body {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	padding:0;
+}
+
+.container {
+	mix-width:330px;
+	max-width:330px;
+	margin:0 auto;
+	margin-top:20px;
+	padding:10px;
+	border:solid 1px #f2f2f2;
+	/*background:url('../img/login-footer.jpg') no-repeat center bottom;*/
+}
+
+div.header {
+	margin-bottom:10px;
+	border-bottom:solid 1px #ddd;
+	border-bottom:solid 1px #ddd\9;
+	text-align:center;
+}
+
+h4.legend {
+	font-size:20px;
+	color: #333;
+	text-align:center;
+	margin:20px auto;
+}
+
+label {
+	display:block;
+	margin-bottom:2px;
+}
+
+input {
+	display:block;
+	margin-bottom:10px;
+}
+
+input[type=text], input[type=password] {
+	min-width:320px;
+	padding:6px 4px;
+	border:solid 1px #ccc;
+	box-shadow:inset 0 0 5px #eee;
+	font-size:14px;
+}
+
+input[type=submit] {
+	margin-top:15px;
+	padding:8px;
+	cursor:pointer;
+	background:#0E5AA5;
+	border:#004C99 solid 1px;
+	color:#fff;
+}
+
+input[type=submit]:hover {
+	background:#004C99;
+	border:#0E5AA5 solid 1px;
+	text-align:right;
+}
+
+.success, .warning {
+	margin-bottom:5px;
+}
+
+.success {
+	color:#060;
+}
+
+.warning {
+	color:#F00;
+}
+
+.require {
+	text-align:center;
+	font-size:10px;
+	padding:5px;
+	padding-top:10px;
+	border-top:solid 1px #ccc;
+}
+
+.require h5 {
+	margin-bottom:5px;
+}
+
+div.footer {
+	height:30px;
+	text-align:center;
+}
+
+div.footer small {
+	font-size:10px;
+	color:#bbb;
+}
+
+.clear {
+	clear:both;
+	float:none;
+	line-height:1.4px;
+}

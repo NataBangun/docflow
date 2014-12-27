@@ -1,0 +1,1 @@
+<h1>Mohon gunakan Firefox, Chrome atau Opera.</h1>
