@@ -1,6 +1,6 @@
 	<!--/footer-->
     <div class="footer">
-      <small><?php echo $config['app_abbr'].' :: '.$config['app_name'].' @'.date('Y')?></small>
+      <small><?php echo $config['app_abbr'].' :: '.$config['app_name'].' @'.date('Y').'<br>(Best view at Google Chrome 26 or Firefox 3-0 above on 1024x768 resolution)'?></small>
     </div>
 
     </div><!--/container-fluid-->
