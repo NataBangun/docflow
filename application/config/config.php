@@ -14,8 +14,8 @@
 | path to your installation.
 |
 */
-//$config['base_url']	= 'http://10.24.14.107/docflow2/';
-$config['base_url']	= 'http://'. $_SERVER['SERVER_NAME']. ($_SERVER['SERVER_PORT']==80?'':':'.$_SERVER['SERVER_PORT']) . '/docflow2/';
+//$config['base_url']	= 'http://10.24.14.107/docflow/';
+$config['base_url']	= 'http://'. $_SERVER['SERVER_NAME']. ($_SERVER['SERVER_PORT']==80?'':':'.$_SERVER['SERVER_PORT']) . '/docflow/';
 
 /*
 |--------------------------------------------------------------------------
