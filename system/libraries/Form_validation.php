@@ -1090,6 +1090,64 @@ class CI_Form_validation {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Validate Filename - Added By Heru
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	string
+	 */
+	public function valid_filename($filename)
+	{
+            $invalidChar = '\\/:*?"<>|';
+            for ($idx = 0; $idx < strlen($filename); $idx++) {
+                if (strpos($invalidChar, $filename[$idx]) === false) {
+                    // OK, check next character
+                } else {
+                    return false;
+                }
+            }
+            return true;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Validate Text, Tag HTML '<>' is not allowed - Added By Heru
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	string
+	 */
+	public function valid_text($text)
+	{
+            $invalidChar = '<>';
+            for ($idx = 0; $idx < strlen($text); $idx++) {
+                if (strpos($invalidChar, $text[$idx]) === false) {
+                    // OK, check next character
+                } else {
+                    return false;
+                }
+            }
+            return true;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Validate HTML, Block Javascript Injection - Added By Heru
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	string
+	 */
+	public function valid_html($html)
+	{
+            return (stripos($html, "<script") === false);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Alpha
 	 *
 	 * @access	public
