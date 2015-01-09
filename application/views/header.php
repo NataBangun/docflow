@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="mmediadata.com">
     <meta name="robots" content="noindex, nofollow">
-	<link href="<?php echo base_url('assets/css/jquery.dynatable.css')?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/jquery.dynatable.css')?>" rel="stylesheet">
     <link href="<?php echo base_url()?>assets/css/main.css" rel="stylesheet">
     <link href="<?php echo base_url()?>assets/css/responsive.css" rel="stylesheet">
     <link href="<?php echo base_url()?>assets/css/jquery-ui.css" rel="stylesheet">

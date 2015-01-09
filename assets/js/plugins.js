@@ -120,7 +120,7 @@ $(function () {
         });
     });
     $('body').on('click', '#atch', function () {
-        $('#wraper-atch').append('<div id="atch-container"><div class="control-group"><label class="control-label no-border"></label><div class="controls"><div class="input-prepend"><input type="file" class="span3" name="files[]"><a class="btn btn-danger atch-close" style="margin-left: 3px;"><i class="fam-cancel"></i></a></div></div></div></div>');
+        $('#wraper-atch').append('<div id="atch-container"><input type="file" class="span3" name="files[]"><a class="btn btn-danger atch-close" style="margin-left: 3px;"><i class="fam-cancel"></i></a></div>');
 
         $(".atch-close").click(function (e) {
             $(this).closest("#atch-container").remove();
@@ -176,13 +176,9 @@ $(function () {
     });
 
     /* chosen */
-    //$('.edt').css("visibility", "hiden").css("display", "none");
     $('#categories').on("change", function () {
         var data_cg_key = $('#data_cg_key').attr('data-id');
         var list_value = $(this).val();
-        //var $this = $('.' + list_value);
-        //var edt = $($this).attr('data-select');
-        //$("input[class=default]").css("width", "200px");
 
         if (list_value > 0) {
             $(data_cg_key).hide();
@@ -190,12 +186,6 @@ $(function () {
         } else {
             $(data_cg_key).hide();
         }
-//        if (edt == 'else_selected') {
-//            $('.edt').css("visibility", "visible").css("display", "block");
-//        } else {
-//            $('.edt').hide();
-//            $('.edt').css("visibility", "hiden").css("display", "none");
-//        }
     });
 
     /* doc-type */
@@ -209,24 +199,13 @@ $(function () {
             $(srt).hide();
         }
     });
-    /* loading */
-    // $('.data-load').click(function(e){
-    // $('.data-load').submit();
-    // var load = $(this).attr('data-loading');
-    // $(this).text(load);
-    // $("button[type=submit]").attr("disabled", "disabled");
-    // $(this).submit();
-    // $(this).attr("disabled", "disabled");
-    // e.preventDefault();
-    // });
-
+    
     /* loading */
     $('.data-load').click(function () {
         $('.data-load').submit();
         var load = $(this).attr('data-loading');
         $(this).text(load);
-        $("button[type=submit]").attr("disabled", "disabled");
-        //e.preventDefault();
-    })
+        $(this).enable(false);
+    });
 
 });

@@ -1,21 +1,22 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
 
 class Mm_inbox extends CI_Model {
 
-	function __construct()
-	{
-		parent::__construct();
-	}
-	
-	/* 
-	*  process = 1-4 [ draft, edit, review, publication ]
-	*/	
-	
-	public function get_inbox($users_id)
-	{
-		$as = "APPROVAL_STATUS";
-		$step = "STEP_LAYER";
-		$sql = "SELECT DISTINCT
+    function __construct() {
+        parent::__construct();
+    }
+
+    /*
+     *  process = 1-4 [ draft, edit, review, publication ]
+     */
+
+    public function get_inbox($users_id) {
+        $as = "APPROVAL_STATUS";
+        $step = "STEP_LAYER";
+        $sql = "SELECT DISTINCT
 		DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID,
 		DBDOC.T_DOCUMENTS.DOCUMENTS_TITLE,
 		DBDOC.T_DOCUMENTS.DOCUMENTS_DATEPUB,
@@ -42,83 +43,76 @@ class Mm_inbox extends CI_Model {
 		AND
 		DBDOC.H_DOCUMENTS_PROCESS.PROCESS_STATUS > ?
 		ORDER BY DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID DESC";
-						
-		$query = $this->db->query($sql, array($users_id, DOC_DRAFT));
-		//print_r($query);exit();
-		if($query)
-		{
-			return $query->result_array();
-		}
-		else
-		{
-			return FALSE;
-		}
-	
-	}
-	
-	// public function get_inbox_layer($users_id)
-	// {
-		// $as = "CURRENT_LAYER";
-		// $step = "STEP_LAYER";
-		// $sql = "SELECT DISTINCT
-		// DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID,
-		// DBDOC.T_DOCUMENTS.DOCUMENTS_TITLE,
-		// DBDOC.T_DOCUMENTS.DOCUMENTS_DATEPUB,
-		// DBDOC.P_CATEGORIES.CATEGORIES_TITLE,
-		// DBDOC.T_DOCUMENTS.DOCUMENTS_CDT,
-		// DBDOC.V_EMPLOYEE.EMPLOYEE_NAME,						
-		// DBDOC.V_EMPLOYEE.E_MAIL_ADDR,						
-		// DBDOC.H_DOCUMENTS_PROCESS.PROCESS_STATUS,
-		// DBDOC.H_DOCUMENTS_PROCESS.VERSION_ID,
-		// DBDOC.H_DOCUMENTS_PROCESS.UDT,
-		// DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO,
-		// Max(DBDOC.H_DOCUMENTS_STEP.STEP_LAYER) AS $step,
-		// Max(DBDOC.H_DOCUMENTS_PROCESS.CURRENT_LAYER) AS $as,
-		// DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS		
-		// FROM
-		// DBDOC.H_DOCUMENTS_PROCESS
-		// INNER JOIN DBDOC.T_DOCUMENTS ON DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID = DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID
-		// INNER JOIN DBDOC.H_DOCUMENTS_STEP ON DBDOC.H_DOCUMENTS_STEP.FK_DOCUMENTS_ID = DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID
-		// INNER JOIN DBDOC.H_DOCUMENTS_APPROVAL ON DBDOC.H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID = DBDOC.H_DOCUMENTS_STEP.FK_DOCUMENTS_ID
-		// INNER JOIN DBDOC.P_CATEGORIES ON DBDOC.T_DOCUMENTS.FK_CATEGORIES_ID = DBDOC.P_CATEGORIES.PK_CATEGORIES_ID
-		// INNER JOIN DBDOC.V_EMPLOYEE ON DBDOC.T_DOCUMENTS.DOCUMENTS_CBY = DBDOC.V_EMPLOYEE.EMPLOYEE_NO
-		// WHERE 
-		// DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO = ? AND 
-		// DBDOC.H_DOCUMENTS_PROCESS.PROCESS_STATUS > ?
-		// GROUP BY
-		// DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID,
-		// DBDOC.T_DOCUMENTS.DOCUMENTS_TITLE,
-		// DBDOC.T_DOCUMENTS.DOCUMENTS_DATEPUB,
-		// DBDOC.P_CATEGORIES.CATEGORIES_TITLE,
-		// DBDOC.T_DOCUMENTS.DOCUMENTS_CDT,
-		// DBDOC.V_EMPLOYEE.EMPLOYEE_NAME,						
-		// DBDOC.V_EMPLOYEE.E_MAIL_ADDR,
-		// DBDOC.H_DOCUMENTS_PROCESS.PROCESS_STATUS,
-		// DBDOC.H_DOCUMENTS_PROCESS.VERSION_ID,
-		// DBDOC.H_DOCUMENTS_PROCESS.UDT,
-		// DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO,
-		// DBDOC.H_DOCUMENTS_STEP.STEP_LAYER,
-		// DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS	
-		// ORDER BY DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID DESC";
-						
-		// $query = $this->db->query($sql, array($users_id, DOC_DRAFT));
-		//print_r($query);exit();
-		// if($query)
-		// {
-			// return $query->result_array();
-		// }
-		// else
-		// {
-			// return FALSE;
-		// }
-	
-	// }
-	
-	public function get_inbox_monitoring($users_id)
-	{
-		$as = "CURRENT_LAYER";
-		$step = "STEP_LAYER";
-		$sql = "SELECT DISTINCT
+
+        $query = $this->db->query($sql, array($users_id, DOC_DRAFT));
+        //print_r($query);exit();
+        if ($query) {
+            return $query->result_array();
+        } else {
+            return FALSE;
+        }
+    }
+
+    // public function get_inbox_layer($users_id)
+    // {
+    // $as = "CURRENT_LAYER";
+    // $step = "STEP_LAYER";
+    // $sql = "SELECT DISTINCT
+    // DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID,
+    // DBDOC.T_DOCUMENTS.DOCUMENTS_TITLE,
+    // DBDOC.T_DOCUMENTS.DOCUMENTS_DATEPUB,
+    // DBDOC.P_CATEGORIES.CATEGORIES_TITLE,
+    // DBDOC.T_DOCUMENTS.DOCUMENTS_CDT,
+    // DBDOC.V_EMPLOYEE.EMPLOYEE_NAME,						
+    // DBDOC.V_EMPLOYEE.E_MAIL_ADDR,						
+    // DBDOC.H_DOCUMENTS_PROCESS.PROCESS_STATUS,
+    // DBDOC.H_DOCUMENTS_PROCESS.VERSION_ID,
+    // DBDOC.H_DOCUMENTS_PROCESS.UDT,
+    // DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO,
+    // Max(DBDOC.H_DOCUMENTS_STEP.STEP_LAYER) AS $step,
+    // Max(DBDOC.H_DOCUMENTS_PROCESS.CURRENT_LAYER) AS $as,
+    // DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS		
+    // FROM
+    // DBDOC.H_DOCUMENTS_PROCESS
+    // INNER JOIN DBDOC.T_DOCUMENTS ON DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID = DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID
+    // INNER JOIN DBDOC.H_DOCUMENTS_STEP ON DBDOC.H_DOCUMENTS_STEP.FK_DOCUMENTS_ID = DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID
+    // INNER JOIN DBDOC.H_DOCUMENTS_APPROVAL ON DBDOC.H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID = DBDOC.H_DOCUMENTS_STEP.FK_DOCUMENTS_ID
+    // INNER JOIN DBDOC.P_CATEGORIES ON DBDOC.T_DOCUMENTS.FK_CATEGORIES_ID = DBDOC.P_CATEGORIES.PK_CATEGORIES_ID
+    // INNER JOIN DBDOC.V_EMPLOYEE ON DBDOC.T_DOCUMENTS.DOCUMENTS_CBY = DBDOC.V_EMPLOYEE.EMPLOYEE_NO
+    // WHERE 
+    // DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO = ? AND 
+    // DBDOC.H_DOCUMENTS_PROCESS.PROCESS_STATUS > ?
+    // GROUP BY
+    // DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID,
+    // DBDOC.T_DOCUMENTS.DOCUMENTS_TITLE,
+    // DBDOC.T_DOCUMENTS.DOCUMENTS_DATEPUB,
+    // DBDOC.P_CATEGORIES.CATEGORIES_TITLE,
+    // DBDOC.T_DOCUMENTS.DOCUMENTS_CDT,
+    // DBDOC.V_EMPLOYEE.EMPLOYEE_NAME,						
+    // DBDOC.V_EMPLOYEE.E_MAIL_ADDR,
+    // DBDOC.H_DOCUMENTS_PROCESS.PROCESS_STATUS,
+    // DBDOC.H_DOCUMENTS_PROCESS.VERSION_ID,
+    // DBDOC.H_DOCUMENTS_PROCESS.UDT,
+    // DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO,
+    // DBDOC.H_DOCUMENTS_STEP.STEP_LAYER,
+    // DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS	
+    // ORDER BY DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID DESC";
+    // $query = $this->db->query($sql, array($users_id, DOC_DRAFT));
+    //print_r($query);exit();
+    // if($query)
+    // {
+    // return $query->result_array();
+    // }
+    // else
+    // {
+    // return FALSE;
+    // }
+    // }
+
+    public function get_inbox_monitoring($users_id) {
+        $as = "CURRENT_LAYER";
+        $step = "STEP_LAYER";
+        $sql = "SELECT DISTINCT
 		DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID,
 		DBDOC.T_DOCUMENTS.DOCUMENTS_TITLE,
 		DBDOC.T_DOCUMENTS.DOCUMENTS_DATEPUB,
@@ -159,25 +153,20 @@ class Mm_inbox extends CI_Model {
 		DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS
 		ORDER BY
 		DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID DESC";
-						
-		$query = $this->db->query($sql, array($users_id, DOC_DRAFT));
-		//print_r($query);exit();
-		if($query)
-		{
-			return $query->result_array();
-		}
-		else
-		{
-			return FALSE;
-		}
-	
-	}
-	
-	public function get_inbox_layer($users_id)
-	{
-		$as = "CURRENT_LAYER";
-		$step = "STEP_LAYER";
-		$sql = "SELECT DISTINCT
+
+        $query = $this->db->query($sql, array($users_id, DOC_DRAFT));
+        //print_r($query);exit();
+        if ($query) {
+            return $query->result_array();
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function get_inbox_layer($users_id) {
+        $as = "CURRENT_LAYER";
+        $step = "STEP_LAYER";
+        $sql = "SELECT DISTINCT
 		DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID,
 		DBDOC.T_DOCUMENTS.DOCUMENTS_TITLE,
 		DBDOC.T_DOCUMENTS.DOCUMENTS_DATEPUB,
@@ -218,23 +207,18 @@ class Mm_inbox extends CI_Model {
 		DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS
 		ORDER BY
 		DBDOC.T_DOCUMENTS.PK_DOCUMENTS_ID DESC";
-						
-		$query = $this->db->query($sql, array($users_id, DOC_DRAFT));
-		//print_r($query);exit();
-		if($query)
-		{
-			return $query->result_array();
-		}
-		else
-		{
-			return FALSE;
-		}
-	
-	}
-	
-	public function get_detail($doc_id, $users_id)
-	{
-		$sql = "SELECT
+
+        $query = $this->db->query($sql, array($users_id, DOC_DRAFT));
+        //print_r($query);exit();
+        if ($query) {
+            return $query->result_array();
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function get_detail($doc_id, $users_id) {
+        $sql = "SELECT
 				DBDOC.T_DOCUMENTS.DOCUMENTS_TITLE,
 				DBDOC.P_CATEGORIES.CATEGORIES_TITLE,
 				DBDOC.T_DOCUMENTS.DOCUMENTS_DESCRIPTION,
@@ -264,29 +248,25 @@ class Mm_inbox extends CI_Model {
 				WHERE DBDOC.H_DOCUMENTS_STEP.FK_DOCUMENTS_ID = ? AND 
 				DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO = ? AND 
 				DBDOC.H_DOCUMENTS_PROCESS.PROCESS_STATUS > ?";
-		
-		$query = $this->db->query($sql, array($doc_id, $users_id, DOC_DRAFT));		
-		//print_r($query);exit();		
-		if($query)
-		{
-			$row = $query->row_array();
-			
-			if(isset($row['APPROVAL_STATUS']) && $row['APPROVAL_STATUS']==ACTION_UNREAD) {
-				$this->set_to_read($row);
-				//print_r($row);exit();
-			}
-			
-			return $row;
-		}
-		else
-		{
-			return FALSE;
-		}
-	}
-	
-	public function get_detail_pengesahan($doc_id, $users_id)
-	{
-		$sql = "SELECT
+
+        $query = $this->db->query($sql, array($doc_id, $users_id, DOC_DRAFT));
+        //print_r($query);exit();		
+        if ($query) {
+            $row = $query->row_array();
+
+            if (isset($row['APPROVAL_STATUS']) && $row['APPROVAL_STATUS'] == ACTION_UNREAD) {
+                $this->set_to_read($row);
+                //print_r($row);exit();
+            }
+
+            return $row;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function get_detail_pengesahan($doc_id, $users_id) {
+        $sql = "SELECT
 				DBDOC.T_DOCUMENTS.DOCUMENTS_TITLE,
 				DBDOC.P_CATEGORIES.CATEGORIES_TITLE,
 				DBDOC.T_DOCUMENTS.DOCUMENTS_DESCRIPTION,
@@ -316,111 +296,101 @@ class Mm_inbox extends CI_Model {
 				WHERE DBDOC.H_DOCUMENTS_STEP.FK_DOCUMENTS_ID = ? AND 
 				DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO = ? AND 
 				DBDOC.H_DOCUMENTS_PROCESS.PROCESS_STATUS > ?";
-		
-		$query = $this->db->query($sql, array($doc_id, $users_id, DOC_DRAFT));		
-		//print_r($query);exit();		
-		//print_r($query);exit();
-		if($query)
-		{
-			$row = $query->row_array();
-			
-			if(isset($row['APPROVAL_STATUS']) && $row['APPROVAL_STATUS']==ACTION_UNREAD) {
-				$this->set_to_read($row);
-				//print_r($row);exit();
-			}
-			
-			return $row;
-		}
-		else
-		{
-			return FALSE;
-		}
-	}
-	
-	private function set_to_read($array)
-	{	
-	//print_r($array);exit();
-		//print_r($array);exit();
-		$this->db->set('APPROVAL_STATUS', ACTION_READ);
-		$this->db->set('APPROVAL_UDT', date('Y-m-d H:i:s'));
-		$this->db->where('FK_DOCUMENTS_ID', $array['FK_DOCUMENTS_ID']);
-		$this->db->where('VERSION_ID', $array['VERSION_ID']);
-		$this->db->where('STEP_LAYER', $array['CURRENT_LAYER']);
-		$this->db->where('EMPLOYEE_NO', $array['EMPLOYEE_NO']);
-		$this->db->where('APPROVAL_STATUS', 0);
-		//$row = $this->db->get('documents_approval');
-		$this->db->update('H_DOCUMENTS_APPROVAL');
-	}
-	
-	public function check_is_make_approval($array)
-	{	
-	
-		$sql = "SELECT * FROM DBDOC.H_DOCUMENTS_APPROVAL 
+
+        $query = $this->db->query($sql, array($doc_id, $users_id, DOC_DRAFT));
+        //print_r($query);exit();		
+        //print_r($query);exit();
+        if ($query) {
+            $row = $query->row_array();
+
+            if (isset($row['APPROVAL_STATUS']) && $row['APPROVAL_STATUS'] == ACTION_UNREAD) {
+                $this->set_to_read($row);
+                //print_r($row);exit();
+            }
+
+            return $row;
+        } else {
+            return FALSE;
+        }
+    }
+
+    private function set_to_read($array) {
+        //print_r($array);exit();
+        //print_r($array);exit();
+        $this->db->set('APPROVAL_STATUS', ACTION_READ);
+        $this->db->set('APPROVAL_UDT', date('Y-m-d H:i:s'));
+        $this->db->where('FK_DOCUMENTS_ID', $array['FK_DOCUMENTS_ID']);
+        $this->db->where('VERSION_ID', $array['VERSION_ID']);
+        $this->db->where('STEP_LAYER', $array['CURRENT_LAYER']);
+        $this->db->where('EMPLOYEE_NO', $array['EMPLOYEE_NO']);
+        $this->db->where('APPROVAL_STATUS', 0);
+        //$row = $this->db->get('documents_approval');
+        $this->db->update('H_DOCUMENTS_APPROVAL');
+    }
+
+    public function check_is_make_approval($array) {
+
+        $sql = "SELECT * FROM DBDOC.H_DOCUMENTS_APPROVAL 
 						WHERE 
 						DBDOC.H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID = ? AND
 						DBDOC.H_DOCUMENTS_APPROVAL.STEP_LAYER = ? AND
 						DBDOC.H_DOCUMENTS_APPROVAL.VERSION_ID = ? AND
 						DBDOC.H_DOCUMENTS_APPROVAL.EMPLOYEE_NO = ? AND 
-						DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS <= ".ACTION_READ." AND
+						DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS <= " . ACTION_READ . " AND
 						DBDOC.H_DOCUMENTS_APPROVAL.FK_TYPE_ID = 1
 						";
-		$query = $this->db->query($sql, array($array['FK_DOCUMENTS_ID'], $array['CURRENT_LAYER'], $array['VERSION_ID'], $array['EMPLOYEE_NO']));
-		
-		if($query->num_rows() == 1)
-		{
-			//return $query->row_array();
-			return TRUE;
-		}
-		else
-		{
-			return FALSE;
-		}
-	}
-	
-	public function insert_comment($array)
-	{
-		$time =  date('Y-m-d H:i:s');
-		
-		$data = array(	
-			'FK_DOCUMENTS_ID' => $array['dI'],
-			'VERSION_ID' => $array['vI'],
-			'COMMENTS_DESC' => $array['comment'],
-			'COMMENTS_CBY' => $array['uID'],
-			'FK_TYPE_ID' => 1,
-			'COMMENTS_CDT' => $time
-		);
-		$this->db->insert('H_DOCUMENTS_COMMENTS', $data);
-	}
-	
-	// Utk melakukan insert data ke H_DOCUMENTS_APPROVAL by dok pro
-	public function clone_to_approval($documents_id)
-	{			
-		// ORACLE NOW () == TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH:MI:SS') AS dates_
+        $query = $this->db->query($sql, array($array['FK_DOCUMENTS_ID'], $array['CURRENT_LAYER'], $array['VERSION_ID'], $array['EMPLOYEE_NO']));
+
+        if ($query->num_rows() == 1) {
+            //return $query->row_array();
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function insert_comment($array) {
+        $time = date('Y-m-d H:i:s');
+
+        $data = array(
+            'FK_DOCUMENTS_ID' => $array['dI'],
+            'VERSION_ID' => $array['vI'],
+            'COMMENTS_DESC' => $array['comment'],
+            'COMMENTS_CBY' => $array['uID'],
+            'FK_TYPE_ID' => 1,
+            'COMMENTS_CDT' => $time
+        );
+        $this->db->insert('H_DOCUMENTS_COMMENTS', $data);
+    }
+
+    // Utk melakukan insert data ke H_DOCUMENTS_APPROVAL by dok pro
+    public function clone_to_approval($documents_id) {
+        // ORACLE NOW () == TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH:MI:SS') AS dates_
 // $clone = "INSERT INTO DBDOC.H_DOCUMENTS_APPROVAL (				
-				// DBDOC.H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID,
-				// DBDOC.H_DOCUMENTS_APPROVAL.VERSION_ID,
-				// DBDOC.H_DOCUMENTS_APPROVAL.EMPLOYEE_NO,
-				// DBDOC.H_DOCUMENTS_APPROVAL.STEP_LAYER,
-				// DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS,
-				// DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_MAILED,
-				// DBDOC.H_DOCUMENTS_APPROVAL.FK_TYPE_ID
-				// ) 				
-				// SELECT				
-				// DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID,
-				// DBDOC.H_DOCUMENTS_PROCESS.VERSION_ID,
-				// DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO,
-				// DBDOC.H_DOCUMENTS_STEP.STEP_LAYER,
-				// (0) AS APPROVAL_STATUS,
-				// (1) AS APPROVAL_MAILED,
-				// (1) AS FK_TYPE_ID
-				// FROM
-				// DBDOC.H_DOCUMENTS_PROCESS
-				// INNER JOIN DBDOC.H_DOCUMENTS_STEP ON DBDOC.H_DOCUMENTS_STEP.FK_DOCUMENTS_ID = DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID
-				// WHERE DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID = ".$documents_id." AND
-				// DBDOC.H_DOCUMENTS_STEP.FK_TYPE_ID = 1 AND				
-				// DBDOC.H_DOCUMENTS_STEP.STEP_LAYER = ".$current_layer;
-		
-		$clone = "
+        // DBDOC.H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID,
+        // DBDOC.H_DOCUMENTS_APPROVAL.VERSION_ID,
+        // DBDOC.H_DOCUMENTS_APPROVAL.EMPLOYEE_NO,
+        // DBDOC.H_DOCUMENTS_APPROVAL.STEP_LAYER,
+        // DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_STATUS,
+        // DBDOC.H_DOCUMENTS_APPROVAL.APPROVAL_MAILED,
+        // DBDOC.H_DOCUMENTS_APPROVAL.FK_TYPE_ID
+        // ) 				
+        // SELECT				
+        // DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID,
+        // DBDOC.H_DOCUMENTS_PROCESS.VERSION_ID,
+        // DBDOC.H_DOCUMENTS_STEP.EMPLOYEE_NO,
+        // DBDOC.H_DOCUMENTS_STEP.STEP_LAYER,
+        // (0) AS APPROVAL_STATUS,
+        // (1) AS APPROVAL_MAILED,
+        // (1) AS FK_TYPE_ID
+        // FROM
+        // DBDOC.H_DOCUMENTS_PROCESS
+        // INNER JOIN DBDOC.H_DOCUMENTS_STEP ON DBDOC.H_DOCUMENTS_STEP.FK_DOCUMENTS_ID = DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID
+        // WHERE DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID = ".$documents_id." AND
+        // DBDOC.H_DOCUMENTS_STEP.FK_TYPE_ID = 1 AND				
+        // DBDOC.H_DOCUMENTS_STEP.STEP_LAYER = ".$current_layer;
+
+        $clone = "
 			INSERT INTO H_DOCUMENTS_APPROVAL (                
 				H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID,
 				H_DOCUMENTS_APPROVAL.VERSION_ID,
@@ -480,7 +450,7 @@ class Mm_inbox extends CI_Model {
                                 INNER JOIN P_CATEGORY_PROCESS
                                     ON T_DOCUMENTS.FK_CATEGORIES_ID = P_CATEGORY_PROCESS.FK_CATEGORIES_ID
                                     AND P_CATEGORY_PROCESS.PROCESS_SORT = H_DOCUMENTS_STEP.STEP_LAYER             
-                            WHERE H_DOCUMENTS_STEP.FK_DOCUMENTS_ID = ".$documents_id." 
+                            WHERE H_DOCUMENTS_STEP.FK_DOCUMENTS_ID = " . $documents_id . " 
                                 AND H_DOCUMENTS_STEP.FK_TYPE_ID = 1 -- Doc Prosedur                 
                             ORDER BY H_DOCUMENTS_STEP.PK_DOCUMENTS_STEP_ID ASC
                 ) T1                  
@@ -496,15 +466,14 @@ class Mm_inbox extends CI_Model {
                 OR T2.PROCESS_TYPE = 1 -- pararel                 
              ORDER BY T2.PK_DOCUMENTS_STEP_ID
 		";
-		$query = $this->db->query($clone);
-	}
-	
-	// Utk melakukan insert data ke H_DOCUMENTS_APPROVAL by nota
-	
-	public function clone_to_approval_nota($documents_id, $current_layer)
-	{			
-		// ORACLE NOW () == TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH:MI:SS') AS dates_
-$clone = "INSERT INTO DBDOC.H_DOCUMENTS_APPROVAL (				
+        $query = $this->db->query($clone);
+    }
+
+    // Utk melakukan insert data ke H_DOCUMENTS_APPROVAL by nota
+
+    public function clone_to_approval_nota($documents_id, $current_layer) {
+        // ORACLE NOW () == TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH:MI:SS') AS dates_
+        $clone = "INSERT INTO DBDOC.H_DOCUMENTS_APPROVAL (				
 				DBDOC.H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID,
 				DBDOC.H_DOCUMENTS_APPROVAL.VERSION_ID,
 				DBDOC.H_DOCUMENTS_APPROVAL.EMPLOYEE_NO,
@@ -524,29 +493,28 @@ $clone = "INSERT INTO DBDOC.H_DOCUMENTS_APPROVAL (
 				FROM
 				DBDOC.H_DOCUMENTS_PROCESS
 				INNER JOIN DBDOC.H_DOCUMENTS_STEP ON DBDOC.H_DOCUMENTS_STEP.FK_DOCUMENTS_ID = DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID
-				WHERE DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID = ".$documents_id." AND
+				WHERE DBDOC.H_DOCUMENTS_PROCESS.FK_DOCUMENTS_ID = " . $documents_id . " AND
 				DBDOC.H_DOCUMENTS_STEP.FK_TYPE_ID = 2 AND				
-				DBDOC.H_DOCUMENTS_STEP.STEP_LAYER = ".$current_layer;
-		
-		$query = $this->db->query($clone);
-	}
-	
-	public function count_approve($array)
-	{
-		// $sql = "
-			// SELECT
-				// H_DOCUMENTS_APPROVAL.APPROVAL_STATUS,
-				// H_DOCUMENTS_APPROVAL.VERSION_ID,
-				// H_DOCUMENTS_APPROVAL.STEP_LAYER,
-				// H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID
-			// FROM
-				// H_DOCUMENTS_APPROVAL
-			// WHERE 
-				// H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID = ?
-				// AND H_DOCUMENTS_APPROVAL.FK_TYPE_ID = 1
-				// AND	H_DOCUMENTS_APPROVAL.STEP_LAYER = ?
-				// AND	H_DOCUMENTS_APPROVAL.VERSION_ID = ?";
-		$sql = "
+				DBDOC.H_DOCUMENTS_STEP.STEP_LAYER = " . $current_layer;
+
+        $query = $this->db->query($clone);
+    }
+
+    public function count_approve($array) {
+        // $sql = "
+        // SELECT
+        // H_DOCUMENTS_APPROVAL.APPROVAL_STATUS,
+        // H_DOCUMENTS_APPROVAL.VERSION_ID,
+        // H_DOCUMENTS_APPROVAL.STEP_LAYER,
+        // H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID
+        // FROM
+        // H_DOCUMENTS_APPROVAL
+        // WHERE 
+        // H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID = ?
+        // AND H_DOCUMENTS_APPROVAL.FK_TYPE_ID = 1
+        // AND	H_DOCUMENTS_APPROVAL.STEP_LAYER = ?
+        // AND	H_DOCUMENTS_APPROVAL.VERSION_ID = ?";
+        $sql = "
             SELECT
                 COUNT(*) TOTAL_RESPON,
                 SUM(CASE WHEN T4.APPROVAL_STATUS=2 THEN 1 ELSE 0 END) TOTAL_APPROVE,
@@ -573,33 +541,31 @@ $clone = "INSERT INTO DBDOC.H_DOCUMENTS_APPROVAL (
                 AND T3.VERSION_ID = T4.VERSION_ID(+)
                 AND T3.EMPLOYEE_NO = T4.EMPLOYEE_NO(+)
 		";
-		
-		// $query = $this->db->query($sql, array($array['dI'], $array['cL'], $array['vI']));
-		$query = $this->db->query($sql, array($array['dI']));
-		
-		if($query)
-		{
-			// $return = array('approve'=>0, 'reject'=>0, 'total'=>$query->num_rows());
-			// foreach($query->result_array() as $key=>$val)
-			// {
-				// if( $val['APPROVAL_STATUS']==ACTION_APPROVE )
-				// {
-					// $return['approve']++;
-				// }
-				
-				// if( $val['APPROVAL_STATUS']==ACTION_REJECT )
-				// {
-					// $return['reject']++;
-				// }				
-			// }
-			$row = $query->row();
-			$return = array('approve'=>$row->TOTAL_APPROVE, 'reject'=>$row->TOTAL_REJECT, 'total'=>$row->TOTAL_RESPON);
-			return $return;
-		}
-		else
-		{
-			return FALSE;
-		}
-	}
-	
-} // end class
+
+        // $query = $this->db->query($sql, array($array['dI'], $array['cL'], $array['vI']));
+        $query = $this->db->query($sql, array($array['dI']));
+
+        if ($query) {
+            // $return = array('approve'=>0, 'reject'=>0, 'total'=>$query->num_rows());
+            // foreach($query->result_array() as $key=>$val)
+            // {
+            // if( $val['APPROVAL_STATUS']==ACTION_APPROVE )
+            // {
+            // $return['approve']++;
+            // }
+            // if( $val['APPROVAL_STATUS']==ACTION_REJECT )
+            // {
+            // $return['reject']++;
+            // }				
+            // }
+            $row = $query->row();
+            $return = array('approve' => $row->TOTAL_APPROVE, 'reject' => $row->TOTAL_REJECT, 'total' => $row->TOTAL_RESPON);
+            return $return;
+        } else {
+            return FALSE;
+        }
+    }
+
+}
+
+// end class

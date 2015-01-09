@@ -87,13 +87,20 @@
 <div class="control-group">
     <label class="control-label">Lampiran</label>
     <div class="controls">
-        <div class="input-prepend">
-            <input type="file" accept="application/pdf" onchange="checkFile(this)"class="span3" name="files[]">
-            <a href="#" class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"> file harus Pdf</span>
+        <div id="wraper-atch">
+            <div class="input-prepend">
+                <input type="file" accept="application/pdf" class="span3" name="files[]">
+                <a href="#" class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"> Jenis File: pdf; Ukuran Maks: 5MB</span>
+            </div>
         </div>
+        <?php
+        if (isset($files_error)) {
+            echo "<div  style=\"color:red;\">" . $files_error . "</div>";
+        }
+        ?>
     </div>
 </div>
-<div id="wraper-atch"></div>
+
 
 <div class="control-group">
     <label class="control-label">Histori Perubahan</label>
@@ -103,13 +110,9 @@
     </div>
 </div>
 
-<div class="clearfix"></div>
-<h4 style="border-bottom: 1px solid #EDEDED; color: #000;">Distribusi Kepada <span class="important">*</span></h4>
-<div class="clearfix"></div>
-
 <div class="control-group add-bar">
-    <label class="control-label no-border"></label>	
-    <div class="span11">
+    <label class="control-label">Distribusi Kepada <span class="important">*</span></label>	
+    <div class="controls">
         <div class="input-append">
             <ul id="targetDist" style="margin-left:0;" class="no-bulets">
                 <li>
@@ -137,11 +140,12 @@
 <div class="clearfix"></div>
 
 <?php
-$arr_magis_suggest_key = array();
+$arr_magic_suggest_key = array();
 foreach ($process as $key => $val) {
     if (in_array($val['FK_CATEGORIES_ID'], $arr_pk_categories_id)) {
         $arr_control_group_key[] = '.cg' . $key;
-        $arr_magis_suggest_key[] = '#ms' . $key;
+        $arr_magic_suggest_key[] = '#ms' . $key;
+        $penandatangan = 'penandatangan_' . $val['FK_CATEGORIES_ID'] . '_' . $val['PROCESS_SORT'];
         ?>
         <div class="control-group <?php echo $val['FK_CATEGORIES_ID'] . ' cg' . $key ?>"
         <?php
@@ -151,12 +155,20 @@ foreach ($process as $key => $val) {
         ?> >
             <label class="control-label"><?php echo $val['PROCESS_NAME'] ?> <span class="important">*</span></label>
             <div class="controls">
-                <input style="width:400px;" type="text" placeholder="Ketikkan <?php echo $val['PROCESS_NAME'] ?>" id="ms<?php echo $key ?>" name="penandatangan<?php echo $val['PROCESS_SORT'] ?>[]"/>
-                <?php
-                if (set_value('categories') == $val['FK_CATEGORIES_ID']) {
-                    echo form_error('penandatangan' . $val['PROCESS_SORT'] . '[]');
-                }
-                ?>
+                <input style="width:400px;" type="text" placeholder="Ketikkan <?php echo $val['PROCESS_NAME'] ?>" 
+                       id="ms<?php echo $key ?>" name="<?php echo $penandatangan; ?>"
+                       <?php
+                       if (set_value('categories') == $val['FK_CATEGORIES_ID']) {
+                           if (is_array($this->input->post($penandatangan))) {
+                               echo "value='" . json_encode($this->input->post($penandatangan)) . "'";
+                           }
+                       }
+                       ?> />
+                       <?php
+                       if (set_value('categories') == $val['FK_CATEGORIES_ID']) {
+                           echo form_error($penandatangan);
+                       }
+                       ?>
             </div>
         </div>
         <?php
@@ -164,10 +176,10 @@ foreach ($process as $key => $val) {
 }
 ?>
 <div id="data_cg_key" data-id="<?php echo implode(',', $arr_control_group_key); ?>"></div>
-<div id="data_ms_key" data-id="<?php echo implode(',', $arr_magis_suggest_key); ?>"></div>
+<div id="data_ms_key" data-id="<?php echo implode(',', $arr_magic_suggest_key); ?>"></div>
 
 <div class="form-actions">
-    <button type="submit" id="submitBtn" class="btn btn-primary data-loader" title="Simpan" data-loading="Sedang Menyimpan..."  >Simpan</button>
+    <button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="Sedang Menyimpan..."  >Simpan</button>
     <button type="reset" id="resetBtn" class="btn">Batal</button>
 </div>
 
@@ -180,51 +192,34 @@ foreach ($process as $key => $val) {
 <script type="text/javascript" src="<?php echo base_url('assets/js/jquery.chained.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/magicsuggest.js') ?>"></script>
 <script type="text/javascript">
-
-                function checkFile(fieldObj) {
-                    var FileName = fieldObj.value;
-                    var FileExt = FileName.substr(FileName.lastIndexOf('.') + 1);
-                    var FileSize = fieldObj.files[0].size;
-                    var FileSizeMB = (FileSize / 125485760).toFixed(2);
-
-                    if ((FileExt.toLowerCase() != "pdf") || FileSize > 125485760)
-                    {
-                        var error = "Tipe file : " + FileExt + "\n\n";
-                        error += "Ukuran file: " + FileSizeMB + " MB \n\n";
-                        error += "Tipe file lampiran harus PDF dan tidak boleh lebih dari 125 MB.\n\n";
-                        alert(error);
-                        return false;
-                    }
-                    return true;
-                }
-
-</script>
-<script type="text/javascript">
     $(function () {
-        var cat_pro = $('#data_ms_key').attr('data-id');
-        var cmb_magic_suggest = $(cat_pro).magicSuggest({
-            width: 590, data: '<?php echo $name; ?>'
-        });
-
+        var ms_keys = $('#data_ms_key').attr('data-id');
+        ms_keys = ms_keys.split(',');
+        for (var i = 0; i < ms_keys.length; i++) {
+            var cg_key = ms_keys[i].replace("#ms", ".cg");
+            var cg_label = $(cg_key + ' label').html().replace(/<.*>.*<.*>/g, "").trim();
+            $(ms_keys[i]).magicSuggest({
+                placeholder: 'Ketikkan ' + cg_label, allowFreeEntries: false,
+                data: <?php echo json_encode($name); ?>
+            });
+            $(ms_keys[i]).width(560);
+        }
+        
         document.descrip = new nicEditor({iconsPath: '<?php echo base_url('assets/js/nicEditIcons-latest.gif') ?>'}).panelInstance('descrip');
-
+        
         $("#datepub").datepicker({format: 'yyyy-mm-dd', weekStart: 1, noDefault: true});
         $("#categories").chosen({disable_search_threshold: 10});
         $("#resetBtn").click(function (e) {
             location.href = "<?php echo site_url('documents') ?>/";
         });
         $("#submitBtn").click(function (e) {
-            // Show loading text...
-            var load = $(this).attr('data-loading');
-            $(this).text(load);
-            $(this).enable(false);
-
+            
             // send nicEditor data - Bug : chrome tidak mengirim data nicEditor - 2015/01/04
             $('#descrip').text(document.descrip.nicInstances[0].getContent());
-
-            // finnaly do submit
+            
+            // finally do submit
             $('#xform').submit();
         });
     });
-
+    
 </script>

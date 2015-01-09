@@ -53,17 +53,19 @@ class Mm_categories extends CI_Model {
         }
     }
 
-    public function get_process() {
+    public function get_process($categories_id = '') {
         $sql = "
-	SELECT
-	DBDOC.P_CATEGORY_PROCESS.PROCESS_NAME,
-	DBDOC.P_CATEGORY_PROCESS.PROCESS_SORT,
-	DBDOC.P_CATEGORY_PROCESS.PROCESS_TYPE,
-	DBDOC.P_CATEGORY_PROCESS.FK_CATEGORIES_ID
-	FROM
-	DBDOC.P_CATEGORY_PROCESS
-	ORDER BY
-	DBDOC.P_CATEGORY_PROCESS.PROCESS_SORT ASC";
+            SELECT
+                DBDOC.P_CATEGORY_PROCESS.PROCESS_NAME,
+                DBDOC.P_CATEGORY_PROCESS.PROCESS_SORT,
+                DBDOC.P_CATEGORY_PROCESS.PROCESS_TYPE,
+                DBDOC.P_CATEGORY_PROCESS.FK_CATEGORIES_ID
+            FROM
+            DBDOC.P_CATEGORY_PROCESS ";
+        if (is_numeric($categories_id)) {
+            $sql .= "WHERE DBDOC.P_CATEGORY_PROCESS.FK_CATEGORIES_ID = $categories_id ";
+        }
+        $sql .= "ORDER BY DBDOC.P_CATEGORY_PROCESS.PROCESS_SORT ASC";
         $query = $this->db->query($sql);
         if ($query) {
             return $query->result_array();

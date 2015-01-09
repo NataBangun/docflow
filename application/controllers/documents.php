@@ -240,10 +240,10 @@ EOD;
         $this->data['categories'] = $this->mm_categories->get();
         $this->data['num'] = $this->mm_categories->get_num();
         $this->data['process'] = $this->mm_categories->get_process();
-        $name = '';
+        $name = array();
         $this->data['users'] = $this->mm_users->get_sign();
         foreach ($this->data['users'] as $key => $val) {
-            $name .= $val['EMPLOYEE_NAME'] . '(' . $val['EMPLOYEE_NO'] . ')' . ',';
+            $name[] = $val['EMPLOYEE_NAME'] . ' (' . $val['EMPLOYEE_NO'] . ')';
         }
         $this->data['name'] = $name;
         $this->data['layout'] = $this->folder . 'a';
@@ -252,7 +252,7 @@ EOD;
 
     public function insert() {
         $this->form_validation->set_error_delimiters('<div style="color:red;">', '</div>');
-        
+
         $this->form_validation->set_rules('no', 'Nomor Dokumen', 'required|max_length[50]|valid_filename|callback_duplicate_documents_no');
         $this->form_validation->set_rules('title', 'Judul Dokumen', 'required|max_length[255]|valid_text');
         $this->form_validation->set_rules('versi[0]', 'Versi Digit Pertama', 'required|numeric|max_length[1]');
@@ -261,13 +261,42 @@ EOD;
         $this->form_validation->set_rules('categories', 'Kategori Prosedur', 'required');
         $this->form_validation->set_rules('datepub', 'Tanggal Terbit', 'required');
         $this->form_validation->set_rules('descrip', 'Histori Perubahan', 'max_length[1000]|valid_html');
-        $this->form_validation->set_rules('penandatangan1[]', 'Penandatangan', 'required');
-        $this->form_validation->set_rules('penandatangan2[]', 'Penandatangan', 'required');
-        $this->form_validation->set_rules('penandatangan3[]', 'Penandatangan', 'required');
-        $this->form_validation->set_rules('penandatangan4[]', 'Penandatangan', 'required');
+        
+        if ($this->input->post('categories') > 0) {
+            $this->load->model(array('mm_categories'));
+            $process = $this->mm_categories->get_process($this->input->post('categories'));
+            foreach ($process as $k=>$v) {
+                $penandatangan = 'penandatangan_' . $v['FK_CATEGORIES_ID'] . '_' . $v['PROCESS_SORT'];
+                $this->form_validation->set_rules($penandatangan, $v['PROCESS_NAME'], 'callback_required_penandatangan');
+            }
+        }
+        
         $this->form_validation->set_rules('distribution[]', 'Distribusi Kepada', 'required|valid_text');
 
-        if ($this->form_validation->run() == FALSE) {
+        $this->load->library('upload');
+        $this->load->library('MY_Upload');
+        $this->upload->initialize(array(
+            "upload_path" => "./uploads/lampiran_dokpro/",
+            "remove_spaces" => TRUE,
+            "allowed_types" => "pdf",
+            "max_size" => 5 * 1024 // 5MB = 5 x 1024
+        ));
+
+        $result = TRUE; // Di sini upload file Lampiran tidak mandatory
+        foreach ($_FILES['files']['name'] as $k => $v) {
+            if ($v == '') {
+                unset($_FILES['files']['name'][$k]);
+            }
+        }
+        // Tapi jika di upload, maka perlu validasi 
+        if (count($_FILES['files']['name']) > 0) {
+            $result = $this->upload->do_multi_upload("files", $validate_only = TRUE);
+        }
+
+        if ($this->form_validation->run() == FALSE || $result == FALSE) {
+            if ($result == FALSE) {
+                $this->data['files_error'] = $this->upload->display_errors();
+            }
             $this->add();
         } else {
             $insertID = $this->mm_documents->insert_documents($this->session->userdata('uID'));
@@ -294,10 +323,36 @@ EOD;
         }
         $result = $query->result_array();
         if ($result[0]['JML'] > 0) {
-            $this->form_validation->set_message('no_check', 'Kolom %s berisi data yang sudah terdaftar (Duplikasi Data)');
+            $this->form_validation->set_message('duplicate_documents_no', 'Kolom %s berisi data yang sudah terdaftar (Duplikasi Data)');
             return false; // error, duplikasi data
         }
         return true;
+    }
+
+    public function required_penandatangan($data) {
+        static $users;
+        $this->form_validation->set_message('required_penandatangan', 'Kolom %s harus terisi.');
+        if (!is_array($data)) {
+            return FALSE;
+        }
+        if (!isset($users)) {
+            $this->load->model(array('mm_users'));
+            $rows = $this->mm_users->get_sign();
+            $users = array();
+            foreach ($rows as $k => $v) {
+                $users[] = $v['EMPLOYEE_NAME'] . ' (' . $v['EMPLOYEE_NO'] . ')';
+            }
+        }
+        foreach ($data as $k => $v) {
+            if (!in_array($v, $users)) {
+                unset($data[$k]);
+            }
+        }
+        if (count($data) == 0) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
     }
 
     public function dist() {

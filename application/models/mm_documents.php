@@ -514,27 +514,10 @@ class Mm_documents extends CI_Model {
     /* Insert new documents */
 
     public function insert_documents() {
-        $this->load->library('upload'); // Load Library
-        $this->load->library('MY_Upload');
-        // use same as you did in the input field      
-        $this->upload->initialize(array(
-            "upload_path" => "./uploads/lampiran_dokpro/",
-            "remove_spaces" => TRUE,
-            "allowed_types" => "pdf",
-            "max_size" => 700000,
-            "xss_clean" => FALSE
-        ));
-        $image_data = Null;
-
-        if (isset($_FILES['files[]']['name']) && $_FILES['files[]']['name'] != '') {
-            if (!$this->upload->do_multi_upload("files")) {
-                return False;
-            }
-        }
 
         if ($this->upload->do_multi_upload("files")) {
             $image_data = $this->upload->get_multi_upload_data();
-        };
+        }
 
         $img_data = '';
         if ($image_data) {
@@ -542,7 +525,6 @@ class Mm_documents extends CI_Model {
                 $img_data .= $file['file_name'] . ',';
             }
         }
-        $this->load->helper('date');
 
         $timestamp = date('Y-m-d H:i:s');
 
@@ -557,7 +539,6 @@ class Mm_documents extends CI_Model {
             $versi = 100;
         }
 
-        // temp 
         $doc_status = DOC_DRAFT; // we use always draft docs first
 
         /* documents - metadata */
@@ -606,32 +587,20 @@ class Mm_documents extends CI_Model {
         $type = 0;
         for ($i = 1; $i <= count($step_layer); $i++) {
 
-            $penandatangan = $this->input->post("penandatangan" . $i);
+            $penandatangan_key = 'penandatangan_' . $cat_id . '_' . $i;
+            $penandatangan = $this->input->post($penandatangan_key);
 
             foreach ($penandatangan as $key => $value) {
-                if (is_null($value)) {
-                    unset($penandatangan[$key]);
-                }
-            }
-
-            foreach ($penandatangan as $key => $value) {
-                $matches = preg_replace("/[^0-9]/", "", $value);
-                //print_r($matches);exit();				
-                $str = chunk_split($matches, 8, ',');
-                $ex = explode(',', $str, -1);
-                foreach ($ex as $key => $val) {
-                    /* documents_step - step DD */
-                    $documents_step = array(
-                        'FK_DOCUMENTS_ID' => $appID,
-                        'EMPLOYEE_NO' => $val,
-                        'STEP_LAYER' => $i,
-                        'FK_TYPE_ID' => 1,
-                        'STEP_CDT' => $timestamp
-                    );
-                    $data_documents_step[] = $documents_step;
-
-                    $this->db->insert('H_DOCUMENTS_STEP', $documents_step);
-                }
+                $employee_no = preg_replace("/[^0-9]/", "", $value);
+                /* documents_step - step DD */
+                $documents_step = array(
+                    'FK_DOCUMENTS_ID' => $appID,
+                    'EMPLOYEE_NO' => $employee_no,
+                    'STEP_LAYER' => $i,
+                    'FK_TYPE_ID' => 1,
+                    'STEP_CDT' => $timestamp
+                );
+                $this->db->insert('H_DOCUMENTS_STEP', $documents_step);
             }
         }
 
