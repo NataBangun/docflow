@@ -515,6 +515,7 @@ class Mm_documents extends CI_Model {
 
     public function insert_documents() {
 
+        $image_data = FALSE;
         if ($this->upload->do_multi_upload("files")) {
             $image_data = $this->upload->get_multi_upload_data();
         }
@@ -577,14 +578,9 @@ class Mm_documents extends CI_Model {
         $this->db->insert('H_DOCUMENTS_PROCESS', $documents_process);
 
         // step layer
-        $data_documents_step = array();
-        $data_documents_process = array();
-
         $cat_id = $this->input->post('categories');
         $step_layer = $this->check_process($cat_id);
 
-        $penandatangan = 0;
-        $type = 0;
         for ($i = 1; $i <= count($step_layer); $i++) {
 
             $penandatangan_key = 'penandatangan_' . $cat_id . '_' . $i;
@@ -608,27 +604,12 @@ class Mm_documents extends CI_Model {
     }
 
     public function update_documents($users_id) {
-        $this->load->library('upload'); // Load Library
-        $this->load->library('MY_Upload');
-        // use same as you did in the input field      
-        $this->upload->initialize(array(
-            "upload_path" => "./uploads/lampiran_dokpro/",
-            "remove_spaces" => TRUE,
-            "allowed_types" => "pdf",
-            "max_size" => 700000,
-            "xss_clean" => FALSE
-        ));
 
-        if (isset($_FILES['files[]']['name']) && $_FILES['files[]']['name'] != '') {
-            if (!$this->upload->do_multi_upload("files")) {
-                return False;
-            }
-        }
-
-        $image_data = Null;
+        $image_data = FALSE;
         if ($this->upload->do_multi_upload("files")) {
             $image_data = $this->upload->get_multi_upload_data();
-        };
+        }
+
         $img_data = '';
         if ($image_data) {
             foreach ($image_data as $file) { // loop over the upload data 
@@ -641,30 +622,16 @@ class Mm_documents extends CI_Model {
         $versi = $this->input->post('versi');
         $versi = implode($versi);
 
-        $desc = $this->input->post('desc');
-        if ($desc == '<br />') {
-            $desc = NULL;
-        }
-
-        $D = '';
         $DISTRIBUTION = '';
-        if ($this->input_arr_form($this->input->post('distribution')) != '') {
-            $D = $this->input_arr_form($this->input->post('distribution'));
-            if ($this->input->post('dist_name') != '') {
-                $DISTRIBUTION = $this->input->post('dist_name') . ',' . $D;
-            } else {
-                $DISTRIBUTION = $D;
-            }
-        } else {
-            $DISTRIBUTION = $this->input->post('dist_name');
+        if ($this->input->post('distribution') != 0) {
+            $DISTRIBUTION = $this->input_arr_form($this->input->post('distribution'));
         }
-
 
         /* documents - metadata */
         $documents = array(
-            'DOCUMENTS_NO' => sanitize_filename($this->input->post('no')),
-            'DOCUMENTS_TITLE' => sanitize_filename($this->input->post('title')),
-            'DOCUMENTS_DESCRIPTION' => $desc,
+            'DOCUMENTS_NO' => $this->input->post('no'),
+            'DOCUMENTS_TITLE' => $this->input->post('title'),
+            'DOCUMENTS_DESCRIPTION' => $this->input->post('descrip'),
             'DOCUMENTS_ATC_NAME' => $this->input->post('file_name') . $img_data,
             'FK_CATEGORIES_ID' => $this->input->post('categories'),
             'DOCUMENTS_VERSION' => $versi,
@@ -693,46 +660,25 @@ class Mm_documents extends CI_Model {
         $this->db->delete('H_DOCUMENTS_STEP');
 
         // step layer
-        $data_documents_step = array();
-        $data_documents_process = array();
-
         $cat_id = $this->input->post('categories');
         $step_layer = $this->check_process($cat_id);
 
-        //echo $step_layer;exit();
-
-        $penandatangan = 0;
-        $type = 0;
         for ($i = 1; $i <= count($step_layer); $i++) {
 
-            $penandatangan = $this->input->post("penandatangan" . $i);
+            $penandatangan_key = 'penandatangan_' . $cat_id . '_' . $i;
+            $penandatangan = $this->input->post($penandatangan_key);
 
             foreach ($penandatangan as $key => $value) {
-                if (is_null($value)) {
-                    unset($penandatangan[$key]);
-                }
-            }
-
-            foreach ($penandatangan as $key => $value) {
-                if ($key == 0) {
-                    $matches = preg_replace("/[^0-9]/", "", $value);
-                    //print_r($matches);exit();				
-                    $str = chunk_split($matches, 8, ',');
-                    $ex = explode(',', $str, -1);
-                    foreach ($ex as $key => $val) {
-                        /* documents_step - step DD */
-                        $documents_step = array(
-                            'FK_DOCUMENTS_ID' => $doc_id,
-                            'EMPLOYEE_NO' => $val,
-                            'STEP_LAYER' => $i,
-                            'FK_TYPE_ID' => 1,
-                            'STEP_CDT' => $timestamp
-                        );
-                        $data_documents_step[] = $documents_step;
-
-                        $this->db->insert('H_DOCUMENTS_STEP', $documents_step);
-                    }
-                }
+                $employee_no = preg_replace("/[^0-9]/", "", $value);
+                /* documents_step - step DD */
+                $documents_step = array(
+                    'FK_DOCUMENTS_ID' => $doc_id,
+                    'EMPLOYEE_NO' => $employee_no,
+                    'STEP_LAYER' => $i,
+                    'FK_TYPE_ID' => 1,
+                    'STEP_CDT' => $timestamp
+                );
+                $this->db->insert('H_DOCUMENTS_STEP', $documents_step);
             }
         }
 

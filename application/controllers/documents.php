@@ -475,13 +475,13 @@ EOD;
 
     public function d_lampiran() {
         $doc_id = intval($this->uri->segment(3));
-        $dist_str = intval($this->uri->segment(4));
+        $atc_name = urldecode($this->uri->segment(4));
         if (!$doc_id) {
             $this->session->set_flashdata('error', $this->data['config']['msg_no_data']);
             redirect(404);
         }
 
-        $documents = $this->mm_documents->get_detail($doc_id, $this->data['userInfo']['uID']);
+        $documents = $this->mm_documents->get_detail($doc_id);
         if (!$documents) {
             $this->session->set_flashdata('error', $this->data['config']['msg_no_data']);
             redirect(404);
@@ -489,24 +489,22 @@ EOD;
 
         $this->data['records'] = $documents;
 
-        $ex_dis = explode(',', $documents['DOCUMENTS_ATC_NAME']);
-        $index = array_search($dist_str, $ex_dis);
-
-        if ($index !== FALSE) {
-            unset($ex_dis[$index]);
-            @unlink(realpath('uploads/lampiran_dokpro' . $ex_dis[$index]));
+        $arr_atc_name = explode(',', $documents['DOCUMENTS_ATC_NAME']);
+        foreach ($arr_atc_name as $k=>$v) {
+            if ($v == $atc_name) {
+                unset($arr_atc_name[$k]);
+                @unlink(realpath('uploads/lampiran_dokpro/' . $v));
+            }
         }
 
-        $ex_dis = array_values($ex_dis);
+        $new_atc_name = implode(",", array_values($arr_atc_name));
 
-        $array_dist = implode(",", $ex_dis);
-
-        $data_dist = array(
-            'DOCUMENTS_ATC_NAME' => $array_dist
+        $data = array(
+            'DOCUMENTS_ATC_NAME' => $new_atc_name
         );
 
         $this->db->where('PK_DOCUMENTS_ID', $doc_id);
-        $this->db->update('T_DOCUMENTS', $data_dist);
+        $this->db->update('T_DOCUMENTS', $data);
 
         if ($documents['PROCESS_STATUS'] == DOC_EDIT) {
             redirect(site_url('documents/edit_revisi/' . $doc_id));
