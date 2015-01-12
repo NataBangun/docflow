@@ -35,9 +35,9 @@
 <div class="control-group">
     <label class="control-label">Versi <span class="important">*</span></label>
     <div class="controls">
-        <input type="text" name="versi[0]" class="span1" id="versi1" placeholder="" value="<?php echo set_value('versi[0]', '1') ?>" style="width:20px;">
-        <input type="text" name="versi[1]" class="span1" id="versi2" placeholder="" value="<?php echo set_value('versi[1]', '0') ?>" style="width:20px;">
-        <input type="hidden" name="versi[2]" class="span1" id="versi3" placeholder="" value="<?php echo set_value('versi[2]', '0') ?>" style="width:20px;">		
+        <input type="text" name="versi[0]" class="span1" id="versi1" value="<?php echo set_value('versi[0]', '1') ?>" style="width:20px;">
+        <input type="text" name="versi[1]" class="span1" id="versi2" value="<?php echo set_value('versi[1]', '0') ?>" style="width:20px;">
+        <input type="hidden" name="versi[2]" class="span1" id="versi3" value="<?php echo set_value('versi[2]', '0') ?>" style="width:20px;">		
         <?php echo form_error('versi[0]'); ?>
         <?php echo form_error('versi[1]'); ?>
         <?php echo form_error('versi[2]'); ?>
@@ -90,7 +90,7 @@
         <div id="wraper-atch">
             <div class="input-prepend">
                 <input type="file" accept="application/pdf" class="span3" name="files[]">
-                <a href="#" class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"> Jenis File: pdf; Ukuran Maks: 5MB</span>
+                <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"> Jenis File: pdf; Ukuran Maks: 5MB</span>
             </div>
         </div>
         <?php
@@ -140,12 +140,13 @@
 <div class="clearfix"></div>
 
 <?php
+$arr_control_group_key = array();
 $arr_magic_suggest_key = array();
 foreach ($process as $key => $val) {
     if (in_array($val['FK_CATEGORIES_ID'], $arr_pk_categories_id)) {
         $arr_control_group_key[] = '.cg' . $key;
         $arr_magic_suggest_key[] = '#ms' . $key;
-        $penandatangan = 'penandatangan_' . $val['FK_CATEGORIES_ID'] . '_' . $val['PROCESS_SORT'];
+        $penandatangan_key = 'penandatangan_' . $val['FK_CATEGORIES_ID'] . '_' . $val['PROCESS_SORT'];
         ?>
         <div class="control-group <?php echo $val['FK_CATEGORIES_ID'] . ' cg' . $key ?>"
         <?php
@@ -155,18 +156,18 @@ foreach ($process as $key => $val) {
         ?> >
             <label class="control-label"><?php echo $val['PROCESS_NAME'] ?> <span class="important">*</span></label>
             <div class="controls">
-                <input style="width:400px;" type="text" placeholder="Ketikkan <?php echo $val['PROCESS_NAME'] ?>" 
-                       id="ms<?php echo $key ?>" name="<?php echo $penandatangan; ?>"
+                <input style="width:560px;" type="text" placeholder="Ketikkan <?php echo $val['PROCESS_NAME'] ?>" 
+                       id="ms<?php echo $key ?>" name="<?php echo $penandatangan_key; ?>"
                        <?php
                        if (set_value('categories') == $val['FK_CATEGORIES_ID']) {
-                           if (is_array($this->input->post($penandatangan))) {
-                               echo "value='" . json_encode($this->input->post($penandatangan)) . "'";
+                           if (is_array($this->input->post($penandatangan_key))) {
+                               echo "value='" . json_encode($this->input->post($penandatangan_key)) . "'";
                            }
                        }
                        ?> />
                        <?php
                        if (set_value('categories') == $val['FK_CATEGORIES_ID']) {
-                           echo form_error($penandatangan);
+                           echo form_error($penandatangan_key);
                        }
                        ?>
             </div>
@@ -178,13 +179,16 @@ foreach ($process as $key => $val) {
 <div id="data_cg_key" data-id="<?php echo implode(',', $arr_control_group_key); ?>"></div>
 <div id="data_ms_key" data-id="<?php echo implode(',', $arr_magic_suggest_key); ?>"></div>
 
+<?php
+//    echo validation_errors(); // for debuging
+?>
+
 <div class="form-actions">
     <button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="Sedang Menyimpan..."  >Simpan</button>
     <button type="reset" id="resetBtn" class="btn">Batal</button>
 </div>
 
 </form>
-<?php $a = count($process); ?>
 <script type="text/javascript" src="<?php echo base_url('assets/js/datepicker.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/chosen.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/nicEdit.js'); ?>"></script>
@@ -194,32 +198,26 @@ foreach ($process as $key => $val) {
 <script type="text/javascript">
     $(function () {
         var ms_keys = $('#data_ms_key').attr('data-id');
-        ms_keys = ms_keys.split(',');
-        for (var i = 0; i < ms_keys.length; i++) {
-            var cg_key = ms_keys[i].replace("#ms", ".cg");
-            var cg_label = $(cg_key + ' label').html().replace(/<.*>.*<.*>/g, "").trim();
-            $(ms_keys[i]).magicSuggest({
-                placeholder: 'Ketikkan ' + cg_label, allowFreeEntries: false,
-                data: <?php echo json_encode($name); ?>
-            });
-            $(ms_keys[i]).width(560);
-        }
-        
+        $(ms_keys).magicSuggest({
+            allowFreeEntries: false,
+            data: <?php echo json_encode($name); ?>
+        });
+
         document.descrip = new nicEditor({iconsPath: '<?php echo base_url('assets/js/nicEditIcons-latest.gif') ?>'}).panelInstance('descrip');
-        
+
         $("#datepub").datepicker({format: 'yyyy-mm-dd', weekStart: 1, noDefault: true});
         $("#categories").chosen({disable_search_threshold: 10});
         $("#resetBtn").click(function (e) {
             location.href = "<?php echo site_url('documents') ?>/";
         });
         $("#submitBtn").click(function (e) {
-            
+
             // send nicEditor data - Bug : chrome tidak mengirim data nicEditor - 2015/01/04
             $('#descrip').text(document.descrip.nicInstances[0].getContent());
-            
+
             // finally do submit
             $('#xform').submit();
         });
     });
-    
+
 </script>

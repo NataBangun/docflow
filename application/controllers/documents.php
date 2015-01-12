@@ -130,7 +130,6 @@ EOD;
     }
 
     public function edit() {
-        $data['response'] = $this->form_validation->set_error_delimiters('<span>', '</span><br>');
         $this->load->model(array('mm_categories', 'mm_users'));
         $this->data['categories'] = $this->mm_categories->get();
         $this->data['num'] = $this->mm_categories->get_num();
@@ -141,7 +140,7 @@ EOD;
         foreach ($this->data['users'] as $key => $val) {
             $name[] = $val['EMPLOYEE_NAME'] . ' (' . $val['EMPLOYEE_NO'] . ')';
         }
-        $this->data['name'] = implode(',', $name);
+        $this->data['name'] = $name;
 
 
         $doc_id = intval($this->uri->segment(3));
@@ -174,18 +173,13 @@ EOD;
     }
 
     public function update() {
-        $this->form_validation->set_rules('title', 'Judul', 'required|max_length[50]');
-        $this->form_validation->set_rules('no', 'No', 'required|max_length[50]|callback_no_check');
-        $this->form_validation->set_rules('versi[]', 'versi', 'required|numeric|max_length[3]');
-        $this->form_validation->set_rules('categories', 'Kategori', 'required');
-        $this->form_validation->set_rules('datepub', 'Tanggal terbit', 'required');
-
+        
+        $this->setup_form_validation();        
+        $result_validate_lampiran = $this->validate_lampiran();
+        
         $id = $this->uri->segment(3);
-        // if($this->input->post('dist_name') == 0 || $this->input->post('dist_name') == ''){
-        // $this->form_validation->set_rules('distribution[]', 'Distribusi', 'required');	
-        // }
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == FALSE || $result_validate_lampiran == FALSE) {
             $this->edit($id);
         } else {
             $update = $this->mm_documents->update_documents($this->data['userInfo']['uID']);
@@ -250,7 +244,7 @@ EOD;
         $this->load->view('layout', $this->data);
     }
 
-    public function insert() {
+    public function setup_form_validation() {
         $this->form_validation->set_error_delimiters('<div style="color:red;">', '</div>');
 
         $this->form_validation->set_rules('no', 'Nomor Dokumen', 'required|max_length[50]|valid_filename|callback_duplicate_documents_no');
@@ -272,7 +266,9 @@ EOD;
         }
         
         $this->form_validation->set_rules('distribution[]', 'Distribusi Kepada', 'required|valid_text');
-
+    }
+    
+    public function validate_lampiran() {
         $this->load->library('upload');
         $this->load->library('MY_Upload');
         $this->upload->initialize(array(
@@ -292,11 +288,18 @@ EOD;
         if (count($_FILES['files']['name']) > 0) {
             $result = $this->upload->do_multi_upload("files", $validate_only = TRUE);
         }
+        if ($result == FALSE) {
+            $this->data['files_error'] = $this->upload->display_errors();
+        }
+        return $result;
+    }
+    
+    public function insert() {
+        
+        $this->setup_form_validation();
+        $result_validate_lampiran = $this->validate_lampiran();
 
-        if ($this->form_validation->run() == FALSE || $result == FALSE) {
-            if ($result == FALSE) {
-                $this->data['files_error'] = $this->upload->display_errors();
-            }
+        if ($this->form_validation->run() == FALSE || $result_validate_lampiran == FALSE) {
             $this->add();
         } else {
             $insertID = $this->mm_documents->insert_documents($this->session->userdata('uID'));
