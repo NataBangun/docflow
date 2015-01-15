@@ -215,7 +215,7 @@ foreach ($process as $key => $val) {
             // send nicEditor data - Bug : chrome tidak mengirim data nicEditor - 2015/01/04
             $('#descrip').text(document.descrip.nicInstances[0].getContent());
 
-            // finally do submit
+            // finally do submit - Bug : jika menggunakan button[type=submit] chrome tidak bisa otomatis submit
             $('#xform').submit();
         });
     });

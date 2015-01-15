@@ -138,7 +138,12 @@
                                     ?>
                                     <li>
                                         <span class="label label-info"><?php echo $val ?></span> 
-                                        <a class="btn btn-mini btn-danger" href="<?php echo site_url('documents/d_lampiran/' . $records['PK_DOCUMENTS_ID'] . '/' . $val) ?>"><i class="fam-cancel"></i></a> &nbsp <a class="btn btn-mini btn-info" href="<?php echo base_url('uploads/lampiran_dokpro/' . $val) ?>" target="_blank"> 
+                                        &nbsp 
+                                        <a class="btn btn-mini btn-danger" href="<?php echo site_url('documents/d_lampiran/' . $records['PK_DOCUMENTS_ID'] . '/' . $val) ?>">
+                                            <i class="fam-cancel"></i>
+                                        </a> 
+                                        &nbsp 
+                                        <a class="btn btn-mini btn-info" href="<?php echo base_url('uploads/lampiran_dokpro/' . $val) ?>" target="_blank"> 
                                             <i class="fam-zoom"></i>
                                         </a> 
                                     </li>
@@ -183,7 +188,7 @@
                         if (is_array($this->input->post('distribution'))) {
                             $distribution = $this->input->post('distribution');
                         } else {
-                            foreach ($arr_distribution as $k=>$v) {
+                            foreach ($arr_distribution as $k => $v) {
                                 if ($v != '') {
                                     $distribution[$k] = $v;
                                 }
@@ -271,22 +276,27 @@
                 </tr>
             </thead>
             <tbody>		
-                <?php $name_img = ''; ?>
-                <?php if ($records['DOCUMENTS_ATC_SYSTEM']):$num = 1; ?>		
-                    <?php $doc_version = $records['VERSION_ID']; ?>
+                <?php
+                $name_img = '';
+                if ($records['DOCUMENTS_ATC_SYSTEM']) {
+                    $num = 1;
+                    $doc_version = $records['VERSION_ID'];
+                    ?>
                     <tr>
                         <td><?php echo $num ?>.</td>	
                         <td><?php echo $records['DOCUMENTS_ATC_SYSTEM'] ?></td>
                         <td><?php echo $doc_version[0] . '.' . $doc_version[1] ?><?php echo ($doc_version[2] == 0) ? NULL : ' Revisi Ke - ' . $doc_version[2]; ?></td>					
                         <td><a href="<?php echo base_url('uploads/' . $records['DOCUMENTS_CBY'] . '/' . $records['DOCUMENTS_ATC_SYSTEM']) ?>" target="_blank">View</a></td>	
                     </tr>
-                    <?php $name_img .= $records['DOCUMENTS_ATC_SYSTEM'] ?>
-                    <?php $num++; ?>
-                <?php endif; ?>
+                    <?php
+                    $name_img .= $records['DOCUMENTS_ATC_SYSTEM'];
+                    $num++;
+                }
+                ?>
             </tbody>
         </table>
 
-        <?php echo form_open_multipart(site_url('documents/upload'), array('class' => 'form-horizontal')); ?>
+        <?php echo form_open_multipart(site_url('documents/upload'), array('class' => 'form-horizontal', 'id' => 'xformUpload')); ?>
         <div class="well well-small">
             <input type="hidden" name="documents_id" id="documents_id" value="<?php echo $records['PK_DOCUMENTS_ID'] ?>">
             <input type="hidden" name="img_name" id="img_name" value="<?php echo $name_img; ?>">
@@ -294,17 +304,17 @@
             <input type="hidden" name="uid" id="uid" value="<?php echo $userInfo['uID'] ?>">
             <input type="hidden" name="process_status" id="process_status" value="<?php echo $records['PROCESS_STATUS'] ?>">
 
-            <input type="file" name="userfile" id="userfile">
+            <input type="file" name="userfile" accept="application/pdf" id="userfile">
             <div class="help help-block">
                 <h5 style="text-decoration:underline;">CATATAN</h5>
-                <span><?php echo 'File yang diperbolehkan : ' . str_replace('|', ' | ', UPLOADFILETYPE) ?></span><br>
-                <span><?php echo 'Maksimum file : ' . ini_get('upload_max_filesize') ?></span>	
+                <span><?php echo 'Jenis File yang diperbolehkan : pdf'; ?></span><br>
+                <span><?php echo 'Maksimum file : 5MB'; ?></span>	
             </div>
         </div>
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary data-load" id="uploadBtn" data-loading="Sedang Menyimpan...">Upload</button>
-            <button type="reset" class="btn" id="resetBtn">Batal</button>
+            <button type="reset" class="btn" id="resetUploadBtn">Batal</button>
         </div>
 
         <?php echo form_close(); ?>	
@@ -312,42 +322,6 @@
     </div><!--//files-->
 
 </div><!--//tab-content-->
-
-<!-- Modal -->
-<div id="modal-process-draft" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
-        <h3 id="modalLabel" class="important">Perhatian!</h3>
-    </div>
-    <div class="modal-body">
-        <p>Dokumen akan didistribusikan kepada penandatangan, anda dapat <strong>mengunci</strong> dokumen dari proses verifikasi dengan cara mengunci dokumen.</p>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Ya, Saya mengerti</button>
-    </div>
-</div>
-
-<?php
-//$pndtn = array();
-//foreach ($penandatangan as $a => $b):
-//    $pndtn[] = $b['EMPLOYEE_NAME'] . ' (' . $b['EMPLOYEE_NO'] . ')';
-//endforeach;
-//$pndtn = implode(',', $pndtn);
-//
-//$datas = array();
-//foreach ($categories as $key => $val):
-//    if ($val['FK_TYPE_ID'] == 1 && $val['CATEGORIES_STATUS'] != 1):
-//        $datas[] = '#ms' . $val['PK_CATEGORIES_ID'];
-//    endif;
-//endforeach;
-//$datas = implode(',', $datas);
-//
-//$data3 = array();
-//foreach ($process as $key => $val):
-//    $data3[] = '#ms' . $key;
-//endforeach;
-//$data3 = implode(',', $data3);
-?>
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/datepicker.js') ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/chosen.min.js') ?>"></script>
@@ -369,12 +343,6 @@
         $("#datepub").datepicker({format: 'yyyy-mm-dd', weekStart: 1, noDefault: true});
         $("#categories").chosen({disable_search_threshold: 10});
 
-        //$('#myTab a[href="#files"]').tab('show');
-//        var ttd = $('#data-penandatangan').attr('data-id');
-        //$("'"+ttd+"'").chosen({width:"95%"}); 
-//        $("#penandatangan20,#penandatangan21,#penandatangan22, #penandatangan23, #penandatangan24, #penandatangan25, #penandatangan26, #penandatangan27, #penandatangan28, #penandatangan29, #penandatangan30, #penandatangan31").chosen({width: "95%"});
-//        var curr_doc_status = '<?php echo $records['PROCESS_STATUS'] ?>';
-//        var doc_status = $("input[name=doc_status]").val();
         var pS = '<?php echo $records['PROCESS_STATUS'] ?>';
 
         if (pS == '<?php echo DOC_DRAFT ?>')
@@ -382,7 +350,7 @@
             $("#xform > input, #xform > textarea").attr('readonly');
         }
 
-        $("#resetBtn").click(function (e) {
+        $("#resetBtn,#resetUploadBtn").click(function (e) {
             location.href = "<?php echo site_url('documents') ?>/";
         });
         $("#submitBtn").click(function (e) {
@@ -390,8 +358,12 @@
             // send nicEditor data - Bug : chrome tidak mengirim data nicEditor - 2015/01/04
             $('#descrip').text(document.descrip.nicInstances[0].getContent());
 
-            // finally do submit
+            // finally do submit - Bug : jika menggunakan button[type=submit] chrome tidak bisa otomatis submit
             $('#xform').submit();
+        });
+        $("#uploadBtn").click(function (e) {
+            // finally do submit
+            $('#xformUpload').submit();
         });
 
         $("#distBtn").click(function (e) {

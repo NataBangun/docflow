@@ -794,6 +794,16 @@ class Mm_documents extends CI_Model {
             return true;
         }
     }
+    
+    public function is_attachment_exists($documents_id) {
+        $query = $this->db->query("SELECT * FROM T_DOCUMENTS WHERE PK_DOCUMENTS_ID = ? ", array($documents_id));
+        $row = $query->row_array();
+        if (isset($row['DOCUMENTS_ATC_SYSTEM']) && $row['DOCUMENTS_ATC_SYSTEM']!='') {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
     public function check_process($cat_id) {
         $sql = "SELECT

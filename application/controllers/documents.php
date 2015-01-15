@@ -173,10 +173,10 @@ EOD;
     }
 
     public function update() {
-        
-        $this->setup_form_validation();        
+
+        $this->setup_form_validation();
         $result_validate_lampiran = $this->validate_lampiran();
-        
+
         $id = $this->uri->segment(3);
 
         if ($this->form_validation->run() == FALSE || $result_validate_lampiran == FALSE) {
@@ -255,19 +255,19 @@ EOD;
         $this->form_validation->set_rules('categories', 'Kategori Prosedur', 'required');
         $this->form_validation->set_rules('datepub', 'Tanggal Terbit', 'required');
         $this->form_validation->set_rules('descrip', 'Histori Perubahan', 'max_length[1000]|valid_html');
-        
+
         if ($this->input->post('categories') > 0) {
             $this->load->model(array('mm_categories'));
             $process = $this->mm_categories->get_process($this->input->post('categories'));
-            foreach ($process as $k=>$v) {
+            foreach ($process as $k => $v) {
                 $penandatangan = 'penandatangan_' . $v['FK_CATEGORIES_ID'] . '_' . $v['PROCESS_SORT'];
                 $this->form_validation->set_rules($penandatangan, $v['PROCESS_NAME'], 'callback_required_penandatangan');
             }
         }
-        
+
         $this->form_validation->set_rules('distribution[]', 'Distribusi Kepada', 'required|valid_text');
     }
-    
+
     public function validate_lampiran() {
         $this->load->library('upload');
         $this->load->library('MY_Upload');
@@ -293,9 +293,9 @@ EOD;
         }
         return $result;
     }
-    
+
     public function insert() {
-        
+
         $this->setup_form_validation();
         $result_validate_lampiran = $this->validate_lampiran();
 
@@ -365,16 +365,21 @@ EOD;
         $data['error'] = 0;
 
         if (!$doc_status || !$doc_id || !$version_id) {
-            $data['response'] = 'Data tidak ditemukan';
+            $data['response'] = 'Data tidak ditemukan.';
             $data['error'] = 1;
-        }
+        } else {
+            $sql = "SELECT * FROM H_DOCUMENTS_PROCESS WHERE FK_DOCUMENTS_ID = ? AND FK_TYPE_ID = 1 AND PROCESS_STATUS = ?";
+            $query = $this->db->query($sql, array($doc_id, $doc_status));
 
-        $sql = "SELECT * FROM H_DOCUMENTS_PROCESS WHERE FK_DOCUMENTS_ID = ? AND FK_TYPE_ID = 1 AND PROCESS_STATUS = ?";
-        $query = $this->db->query($sql, array($doc_id, $doc_status));
-
-        if ($query->num_rows() == 0) {
-            $data['response'] = 'Data tidak ditemukan';
-            $data['error'] = 1;
+            if ($query->num_rows() == 0) {
+                $data['response'] = 'Data tidak ditemukan.';
+                $data['error'] = 1;
+            } else {
+                if ($this->mm_documents->is_attachment_exists($doc_id) == FALSE) {
+                    $data['response'] = 'Data belum lengkap. Dokumen Prosedur belum di upload.';
+                    $data['error'] = 1;
+                }
+            }
         }
 
         if ($data['error'] == 0) {
@@ -490,7 +495,7 @@ EOD;
         $this->data['records'] = $documents;
 
         $arr_atc_name = explode(',', $documents['DOCUMENTS_ATC_NAME']);
-        foreach ($arr_atc_name as $k=>$v) {
+        foreach ($arr_atc_name as $k => $v) {
             if ($v == $atc_name) {
                 unset($arr_atc_name[$k]);
                 @unlink(realpath('uploads/lampiran_dokpro/' . $v));
