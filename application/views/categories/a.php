@@ -6,7 +6,7 @@
 </ul>
 
 <div class="page-header">
-	<h4>Posting kategori</h4>
+	<h4>Posting kategorio</h4>
 </div>
 
 <?php echo form_open_multipart(site_url('categories/insert'), array('class'=>'form-horizontal alt1', 'id'=>'xform'))?>
@@ -85,13 +85,13 @@
 <div class="control-group">
 	<label class="control-label">Deskripsi/Catatan </label>
 	<div class="controls">
-		<textarea name="desc" id="desc" class="span10" rows="5" placeholder="Deskripsi atau catatan dokumen"></textarea>
+		<textarea name="desc" id="desc" class="span10" rows="5"  value="<?php echo set_value('desc'); ?>" placeholder="Deskripsi atau catatan dokumen"></textarea>
 		<?php echo '<span style="color:red;"><br>'.form_error('desc').'</span>'?>
 	</div>
 </div>
 
 <div class="form-actions">
-	<button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="sedang menyimpan..." onclick="nicEditors.findEditor('desc').saveContent();">Simpan</button>
+	<button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="Sedang menyimpan..." onclick="nicEditors.findEditor('desc').saveContent();">Simpan</button>
 	<button type="reset" id="resetBtn" class="btn">Batal</button>
 </div>
 
@@ -102,15 +102,24 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/chosen.min.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/nicEdit.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/form.js')?>"></script>
+
 <script type="text/javascript">
-$(function() { 
-	
-	new nicEditor({iconsPath : '<?php echo base_url('assets/js/nicEditIcons-latest.gif')?>'}).panelInstance('desc'); 	
-	
-$("#resetBtn").click(function(e){
+    $(function () {
+
+        document.desc = new nicEditor({iconsPath : '<?php echo base_url('assets/js/nicEditIcons-latest.gif')?>'}).panelInstance('desc'); 	
+        $("#categories").chosen({disable_search_threshold: 10});
+        $("#resetBtn").click(function(e){
 		var link_ = "<?php echo site_url('categories')?>/";
 		location.href=link_;
 	});
-}); 
+        $("#submitBtn").click(function (e) {
+
+            // send nicEditor data - Bug : chrome tidak mengirim data nicEditor - 2015/01/04
+            $('#desc').text(document.desc.nicInstances[0].getContent());
+
+            // finally do submit - Bug : jika menggunakan button[type=submit] chrome tidak bisa otomatis submit
+            $('#xform').submit();
+        });
+    });
 
 </script>
