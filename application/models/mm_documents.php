@@ -690,7 +690,7 @@ class Mm_documents extends CI_Model {
         $this->load->library('MY_Upload');
         // use same as you did in the input field      
         $this->upload->initialize(array(
-            "upload_path" => "./uploads/lampiran_dokpro/",
+            "upload_path" => UPLOAD_DOKPRO_LAMPIRAN,
             "remove_spaces" => TRUE,
             "allowed_types" => "pdf",
             "max_size" => 700000,
@@ -749,50 +749,20 @@ class Mm_documents extends CI_Model {
         return TRUE;
     }
 
-    public function insert_attachment() {
+    public function update_attachment() {
         $user_id = $this->input->post('uid');
         $documents_id = $this->input->post('documents_id');
-        $process_status = $this->input->post('process_status');
-        $version_id = $this->input->post('version_id');
+        $imageData = $this->upload->data();
+        $date = date('Y-m-d H:i:s');
 
-        $upload_path = UPLOADDIR . $user_id . '/';
+        $metadata = array(
+            'DOCUMENTS_ATC_SYSTEM' => $imageData['file_name'],
+            'DOCUMENTS_UBY' => $user_id,
+            'DOCUMENTS_UDT' => $date
+        );
 
-        if (!realpath($upload_path)) {
-            $this->load->helper('file');
-            mkdir($upload_path);
-            $indexPhp = '<?php header("Location: ../"); exit();?>';
-            write_file($upload_path . 'index.php', $indexPhp);
-        }
-
-        $config['upload_path'] = $upload_path;
-        $config['allowed_types'] = UPLOADFILETYPE;
-        $config['max_size'] = UPLOADSIZE;
-        $config['overwrite'] = TRUE;
-        $config['encrypt_name'] = TRUE;
-
-        $this->load->library('upload', $config);
-
-        if (!$this->upload->do_upload()) {
-            $data['response'] = $this->upload->display_errors('<span>', '</span><br>');
-            // $data['error'] = 1;
-            // echo json_encode($data);
-            return false;
-        } else {
-
-            $imageData = $this->upload->data();
-            $date = date('Y-m-d H:i:s');
-
-            $metadata = array(
-                'DOCUMENTS_ATC_SYSTEM' => $imageData['file_name'],
-                'DOCUMENTS_UBY' => $user_id,
-                'DOCUMENTS_UDT' => $date
-            );
-
-            $this->db->where('PK_DOCUMENTS_ID', $documents_id);
-            $this->db->update('T_DOCUMENTS', $metadata);
-
-            return true;
-        }
+        $this->db->where('PK_DOCUMENTS_ID', $documents_id);
+        $this->db->update('T_DOCUMENTS', $metadata);            
     }
     
     public function is_attachment_exists($documents_id) {

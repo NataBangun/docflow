@@ -55,8 +55,14 @@ define('NOTA_CLOSED', 'Publikasi/Final');
 
 /* Directory */
 define('UPLOADDIR', './uploads/');
-define('UPLOADSIZE', '8024');//8MB
+define('UPLOADSIZE', 5 * 1024); //5MB
 define('UPLOADFILETYPE', 'pdf');
+
+/* Upload Configuration untuk : Dokumen Prosedur, Lampiran Dokumen Prosedur. */
+define('UPLOAD_DOKPRO', UPLOADDIR . 'dokpro/');
+define('UPLOAD_DOKPRO_LAMPIRAN', UPLOADDIR . 'lampiran_dokpro/');
+define('UPLOAD_DOKPRO_SIZE_MB', 5); // 5MB
+define('UPLOAD_DOKPRO_FILE_TYPE', 'pdf');
 
 /* SYS */
 define('CACHE_MIN_EXP', 120);

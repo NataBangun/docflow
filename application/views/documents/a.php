@@ -90,7 +90,7 @@
         <div id="wraper-atch">
             <div class="input-prepend">
                 <input type="file" accept="application/pdf" class="span3" name="files[]">
-                <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"> Jenis File: pdf; Ukuran Maks: 5MB</span>
+                <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"><?php echo "Jenis File: ".UPLOAD_DOKPRO_FILE_TYPE.";  Ukuran Maks: ".UPLOAD_DOKPRO_SIZE_MB."MB"; ?></span>
             </div>
         </div>
         <?php

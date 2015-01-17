@@ -650,6 +650,7 @@ EOD;
 	
 	public function upload()
 	{
+            // fungsi ini tidak digunakan, by heru - 2015/01/16
 		return $this->mm_nota->insert_attachment();
 	}
 

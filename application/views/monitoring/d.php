@@ -61,7 +61,7 @@
 		<?php foreach($ex_name as $key=>$val):?>
 		<tr>
 		<td><?php echo $val?></td>
-		<td><a target="_blank" href="<?php echo base_url(); ?>uploads/lampiran_dokpro/<?php echo $val;?>"> View </a></td>
+		<td><a target="_blank" href="<?php echo base_url() . UPLOAD_DOKPRO_LAMPIRAN . $val; ?>"> View </a></td>
 		</tr>
 		<?php endforeach;?>	
 	</tr>

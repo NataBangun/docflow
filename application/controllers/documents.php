@@ -175,11 +175,11 @@ EOD;
     public function update() {
 
         $this->setup_form_validation();
-        $result_validate_lampiran = $this->validate_lampiran();
+        $result_upload = $this->validate_upload_lampiran();
 
         $id = $this->uri->segment(3);
 
-        if ($this->form_validation->run() == FALSE || $result_validate_lampiran == FALSE) {
+        if ($this->form_validation->run() == FALSE || $result_upload == FALSE) {
             $this->edit($id);
         } else {
             $update = $this->mm_documents->update_documents($this->data['userInfo']['uID']);
@@ -268,14 +268,14 @@ EOD;
         $this->form_validation->set_rules('distribution[]', 'Distribusi Kepada', 'required|valid_text');
     }
 
-    public function validate_lampiran() {
+    public function validate_upload_lampiran() {
         $this->load->library('upload');
         $this->load->library('MY_Upload');
         $this->upload->initialize(array(
-            "upload_path" => "./uploads/lampiran_dokpro/",
+            "upload_path" => UPLOAD_DOKPRO_LAMPIRAN,
             "remove_spaces" => TRUE,
-            "allowed_types" => "pdf",
-            "max_size" => 5 * 1024 // 5MB = 5 x 1024
+            "allowed_types" => UPLOAD_DOKPRO_FILE_TYPE,
+            "max_size" => (UPLOAD_DOKPRO_SIZE_MB * 1024) 
         ));
 
         $result = TRUE; // Di sini upload file Lampiran tidak mandatory
@@ -289,17 +289,45 @@ EOD;
             $result = $this->upload->do_multi_upload("files", $validate_only = TRUE);
         }
         if ($result == FALSE) {
-            $this->data['files_error'] = $this->upload->display_errors();
+            $this->data['files_error'] = $this->upload->display_errors('', '');
         }
         return $result;
+    }
+    
+    public function validate_upload() {
+        $documents_id = $this->input->post('documents_id');
+
+        $upload_path = UPLOAD_DOKPRO . $documents_id . '/';
+
+        if (!realpath($upload_path)) {
+            $this->load->helper('file');
+            mkdir($upload_path);
+            $indexPhp = '<?php header("Location: ../"); exit();?>';
+            write_file($upload_path . 'index.php', $indexPhp);
+        }
+
+        $config['upload_path'] = $upload_path;
+        $config['allowed_types'] = UPLOAD_DOKPRO_FILE_TYPE;
+        $config['max_size'] = UPLOAD_DOKPRO_SIZE_MB * 1024;
+        $config['overwrite'] = TRUE;
+        $config['encrypt_name'] = TRUE;
+
+        $this->load->library('upload', $config);
+        
+        if (!$this->upload->do_upload()) {
+            $this->data['files_error'] = $this->upload->display_errors('','');
+            return FALSE;
+        } else {
+            return TRUE;
+        }
     }
 
     public function insert() {
 
         $this->setup_form_validation();
-        $result_validate_lampiran = $this->validate_lampiran();
+        $result_upload = $this->validate_upload_lampiran();
 
-        if ($this->form_validation->run() == FALSE || $result_validate_lampiran == FALSE) {
+        if ($this->form_validation->run() == FALSE || $result_upload == FALSE) {
             $this->add();
         } else {
             $insertID = $this->mm_documents->insert_documents($this->session->userdata('uID'));
@@ -498,7 +526,7 @@ EOD;
         foreach ($arr_atc_name as $k => $v) {
             if ($v == $atc_name) {
                 unset($arr_atc_name[$k]);
-                @unlink(realpath('uploads/lampiran_dokpro/' . $v));
+                @unlink(realpath(UPLOAD_DOKPRO_LAMPIRAN . $v));
             }
         }
 
@@ -579,12 +607,13 @@ EOD;
     }
 
     public function upload() {
-        $upload = $this->mm_documents->insert_attachment();
-        if ($upload) {
+        $result_upload = $this->validate_upload();
+        if ($result_upload == TRUE) {
+            $this->mm_documents->update_attachment();
             $this->session->set_flashdata('success', 'File berhasil diupload.');
             redirect(site_url('documents/edit/' . $this->input->post('documents_id')));
         } else {
-            $this->session->set_flashdata('error', 'File gagal diupload.');
+            $this->session->set_flashdata('error', $this->data['files_error']);
             redirect(site_url('documents/edit/' . $this->input->post('documents_id')));
         }
     }

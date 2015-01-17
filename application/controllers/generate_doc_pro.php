@@ -648,7 +648,7 @@ EOD;
 		}
 		
 		$file_dock = $this->create($doc_id);
-		$file_lampiran = dirname($_SERVER['SCRIPT_FILENAME'])."/uploads/".$records['DOCUMENTS_CBY']."/".$files['DOCUMENTS_ATC_SYSTEM']."";	
+		$file_lampiran = dirname($_SERVER['SCRIPT_FILENAME']).UPLOAD_DOKPRO.$records['PK_DOCUMENTS_ID']."/".$files['DOCUMENTS_ATC_SYSTEM']."";	
 		$file_merge = dirname($_SERVER['SCRIPT_FILENAME'])."/assets/dokumen_prosedur/merger_".$records['PK_DOCUMENTS_ID'].".pdf";
 		
 		$file_finish = dirname($_SERVER['SCRIPT_FILENAME'])."/assets/dokumen_prosedur/".$records['DOCUMENTS_NO'].".pdf";

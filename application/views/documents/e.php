@@ -143,7 +143,7 @@
                                             <i class="fam-cancel"></i>
                                         </a> 
                                         &nbsp 
-                                        <a class="btn btn-mini btn-info" href="<?php echo base_url('uploads/lampiran_dokpro/' . $val) ?>" target="_blank"> 
+                                        <a class="btn btn-mini btn-info" href="<?php echo base_url(UPLOAD_DOKPRO_LAMPIRAN . $val) ?>" target="_blank"> 
                                             <i class="fam-zoom"></i>
                                         </a> 
                                     </li>
@@ -151,7 +151,7 @@
                             </ul>
                         <?php } ?>
                         <input type="file" accept="application/pdf" class="span3" name="files[]">
-                        <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info">  Jenis File: pdf; Ukuran Maks: 5MB</span>
+                        <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"><?php echo "Jenis File: ".UPLOAD_DOKPRO_FILE_TYPE.";  Ukuran Maks: ".UPLOAD_DOKPRO_SIZE_MB."MB"; ?></span>
                         <input type="hidden" name="file_name" value="<?php echo $records['DOCUMENTS_ATC_NAME'] ?>">
                     </div>
                 </div>
@@ -286,7 +286,7 @@
                         <td><?php echo $num ?>.</td>	
                         <td><?php echo $records['DOCUMENTS_ATC_SYSTEM'] ?></td>
                         <td><?php echo $doc_version[0] . '.' . $doc_version[1] ?><?php echo ($doc_version[2] == 0) ? NULL : ' Revisi Ke - ' . $doc_version[2]; ?></td>					
-                        <td><a href="<?php echo base_url('uploads/' . $records['DOCUMENTS_CBY'] . '/' . $records['DOCUMENTS_ATC_SYSTEM']) ?>" target="_blank">View</a></td>	
+                        <td><a href="<?php echo base_url(UPLOAD_DOKPRO . $records['PK_DOCUMENTS_ID'] . '/' . $records['DOCUMENTS_ATC_SYSTEM']) ?>" target="_blank">View</a></td>	
                     </tr>
                     <?php
                     $name_img .= $records['DOCUMENTS_ATC_SYSTEM'];
@@ -307,8 +307,8 @@
             <input type="file" name="userfile" accept="application/pdf" id="userfile">
             <div class="help help-block">
                 <h5 style="text-decoration:underline;">CATATAN</h5>
-                <span><?php echo 'Jenis File yang diperbolehkan : pdf'; ?></span><br>
-                <span><?php echo 'Maksimum file : 5MB'; ?></span>	
+                <span><?php echo 'Jenis File yang diperbolehkan : '.UPLOAD_DOKPRO_FILE_TYPE; ?></span><br>
+                <span><?php echo 'Maksimum file : '.UPLOAD_DOKPRO_SIZE_MB.'MB'; ?></span>	
             </div>
         </div>
 
