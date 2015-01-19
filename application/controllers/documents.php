@@ -189,7 +189,6 @@ EOD;
     }
 
     public function edit_revisi() {
-        $data['response'] = $this->form_validation->set_error_delimiters('<span>', '</span><br>');
         $this->load->model(array('mm_categories', 'mm_users'));
         $this->data['categories'] = $this->mm_categories->get();
         $this->data['num'] = $this->mm_categories->get_num();
@@ -213,14 +212,13 @@ EOD;
     }
 
     public function update_revisi() {
-        $this->form_validation->set_rules('title', 'Judul', 'required|max_length[50]');
-        $this->form_validation->set_rules('no', 'No', 'required|max_length[50]|callback_no_check');
-        $id = $this->uri->segment(3);
-        // if($this->input->post('dist_name') == 0 || $this->input->post('dist_name') == ''){
-        // $this->form_validation->set_rules('distribution[]', 'Distribusi', 'required');	
-        // }
+        
+        $this->setup_form_validation();
+        $result_upload = $this->validate_upload_lampiran();
 
-        if ($this->form_validation->run() == FALSE) {
+        $id = $this->uri->segment(3);
+
+        if ($this->form_validation->run() == FALSE || $result_upload == FALSE) {
             $this->edit_revisi($id);
         } else {
             $update = $this->mm_documents->update_documents_revision($this->data['userInfo']['uID']);

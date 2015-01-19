@@ -686,56 +686,34 @@ class Mm_documents extends CI_Model {
     }
 
     public function update_documents_revision($users_id) {
-        $this->load->library('upload'); // Load Library
-        $this->load->library('MY_Upload');
-        // use same as you did in the input field      
-        $this->upload->initialize(array(
-            "upload_path" => UPLOAD_DOKPRO_LAMPIRAN,
-            "remove_spaces" => TRUE,
-            "allowed_types" => "pdf",
-            "max_size" => 700000,
-            "xss_clean" => FALSE
-        ));
 
-        $image_data = Null;
+        $image_data = FALSE;
         if ($this->upload->do_multi_upload("files")) {
             $image_data = $this->upload->get_multi_upload_data();
-        };
+        }
+
         $img_data = '';
         if ($image_data) {
             foreach ($image_data as $file) { // loop over the upload data 
                 $img_data .= $file['file_name'] . ',';
             }
         }
-
+        
         $timestamp = date('Y-m-d H:i:s');
         $doc_id = $this->input->post('documents_id');
         $versi = $this->input->post('versi');
         $versi = implode($versi);
 
-        $desc = $this->input->post('desc');
-        if ($desc == '<br />') {
-            $desc = NULL;
-        }
-
-        $D = '';
         $DISTRIBUTION = '';
-        if ($this->input_arr_form($this->input->post('distribution')) != '') {
-            $D = $this->input_arr_form($this->input->post('distribution'));
-            if ($this->input->post('dist_name') != '') {
-                $DISTRIBUTION = $this->input->post('dist_name') . ',' . $D;
-            } else {
-                $DISTRIBUTION = $D;
-            }
-        } else {
-            $DISTRIBUTION = $this->input->post('dist_name');
+        if ($this->input->post('distribution') != 0) {
+            $DISTRIBUTION = $this->input_arr_form($this->input->post('distribution'));
         }
 
         /* documents - metadata */
         $documents = array(
             'DOCUMENTS_NO' => $this->input->post('no'),
             'DOCUMENTS_TITLE' => $this->input->post('title'),
-            'DOCUMENTS_DESCRIPTION' => $desc,
+            'DOCUMENTS_DESCRIPTION' => $this->input->post('descrip'),
             'DOCUMENTS_ATC_NAME' => $this->input->post('file_name') . $img_data,
             'DOCUMENTS_DATEPUB' => $this->input->post('datepub'),
             'DOCUMENTS_DISTRIBUTION' => $DISTRIBUTION,

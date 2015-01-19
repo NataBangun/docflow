@@ -81,7 +81,7 @@
 	<?php if($records['DOCUMENTS_ATC_SYSTEM']):?>
 	<tr>
 		<td><?php echo '1'?>.</td>
-		<td><a href="<?php echo base_url(UPLOAD_DOKPRO.$records['PK_DOCUMENTS_ID'].'/'.$records['DOCUMENTS_ATC_SYSTEM'])?>" target="_blank"><?php echo $records['DOCUMENTS_ATC_SYSTEM']?></a></td>				
+		<td><a href="<?php echo base_url(UPLOAD_DOKPRO.$records['FK_DOCUMENTS_ID'].'/'.$records['DOCUMENTS_ATC_SYSTEM'])?>" target="_blank"><?php echo $records['DOCUMENTS_ATC_SYSTEM']?></a></td>				
 	</tr>
 	<?php else:?>
 	<tr>

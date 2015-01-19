@@ -8,7 +8,6 @@
 <div class="page-header">
     <div class="pull-right">	
         <?php
-        // Jika dokumen baru, gunakan fungsi dist() untuk submit form
         if ($records['PROCESS_STATUS'] == DOC_DRAFT) {
             echo form_open('', array('id' => 'distForm'))
             ?>
@@ -19,7 +18,6 @@
             </form>
             <?php
         }
-        // If revisi dokumen, gunakan fungsi commit() untuk submit form
         if ($records['PROCESS_STATUS'] == DOC_EDIT) {
             echo form_open('', array('id' => 'commitForm'))
             ?>
@@ -28,7 +26,8 @@
             <input type="hidden" name="vI" value="<?php echo $records['VERSION_ID'] ?>">
             <a id="commitBtn" href=":;" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan mensosialisasikan Dokumen"><i class="fam-arrow-switch"></i> Submit</a>
             </form>
-        <?php }
+            <?php
+        }
         ?>
     </div>
     <h4>
@@ -40,8 +39,7 @@
     <div class="clearfix" style="height: 10px;"></div>
 </div>
 
-<div id="messageWrapper">
-</div>
+<div id="messageWrapper"></div>
 
 <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a href="#metadata" data-toggle="tab">Info Dokumen</a></li>
@@ -115,7 +113,8 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on btn disabled"><i class="fam-date"></i></span>
-                    <input type="text" name="datepub" id="datepub" placeholder="yyyy-mm-dd" class="input-small" value="<?php echo set_value('datepub', $records['DOCUMENTS_DATEPUB']); ?>" readonly> 
+                    <input type="text" name="datepub" id="datepub" placeholder="yyyy-mm-dd" class="input-small" value="<?php echo set_value('datepub', $records['DOCUMENTS_DATEPUB']); ?>" readonly>
+                    <?php echo form_error('datepub') ?>
                 </div>
             </div>
         </div>
@@ -151,7 +150,7 @@
                             </ul>
                         <?php } ?>
                         <input type="file" accept="application/pdf" class="span3" name="files[]">
-                        <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"><?php echo "Jenis File: ".UPLOAD_DOKPRO_FILE_TYPE.";  Ukuran Maks: ".UPLOAD_DOKPRO_SIZE_MB."MB"; ?></span>
+                        <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"><?php echo "Jenis File: " . UPLOAD_DOKPRO_FILE_TYPE . ";  Ukuran Maks: " . UPLOAD_DOKPRO_SIZE_MB . "MB"; ?></span>
                         <input type="hidden" name="file_name" value="<?php echo $records['DOCUMENTS_ATC_NAME'] ?>">
                     </div>
                 </div>
@@ -254,12 +253,12 @@
 //        echo validation_errors(); // for debuging
         ?>
 
-        <?php if ($records['PROCESS_STATUS'] == DOC_DRAFT || $records['PROCESS_STATUS'] == DOC_EDIT): ?>
+        <?php if ($records['PROCESS_STATUS'] == DOC_DRAFT || $records['PROCESS_STATUS'] == DOC_EDIT) { ?>
             <div class="form-actions">
                 <button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="Sedang Menyimpan...">Simpan</button>
                 <button type="reset" id="resetBtn" class="btn">Batal</button>
             </div>
-        <?php endif; ?>
+        <?php } ?>
         </form>
 
     </div><!--//metadata-->
@@ -307,8 +306,8 @@
             <input type="file" name="userfile" accept="application/pdf" id="userfile">
             <div class="help help-block">
                 <h5 style="text-decoration:underline;">CATATAN</h5>
-                <span><?php echo 'Jenis File yang diperbolehkan : '.UPLOAD_DOKPRO_FILE_TYPE; ?></span><br>
-                <span><?php echo 'Maksimum file : '.UPLOAD_DOKPRO_SIZE_MB.'MB'; ?></span>	
+                <span><?php echo 'Jenis File yang diperbolehkan : ' . UPLOAD_DOKPRO_FILE_TYPE; ?></span><br>
+                <span><?php echo 'Maksimum file : ' . UPLOAD_DOKPRO_SIZE_MB . 'MB'; ?></span>	
             </div>
         </div>
 
@@ -343,12 +342,12 @@
         $("#datepub").datepicker({format: 'yyyy-mm-dd', weekStart: 1, noDefault: true});
         $("#categories").chosen({disable_search_threshold: 10});
 
-        var pS = '<?php echo $records['PROCESS_STATUS'] ?>';
+//        var pS = '<?php echo $records['PROCESS_STATUS'] ?>';
 
-        if (pS == '<?php echo DOC_DRAFT ?>')
-        {
-            $("#xform > input, #xform > textarea").attr('readonly');
-        }
+//        if (pS == '<?php echo DOC_DRAFT ?>')
+//        {
+//            $("#xform > input, #xform > textarea").attr('readonly');
+//        }
 
         $("#resetBtn,#resetUploadBtn").click(function (e) {
             location.href = "<?php echo site_url('documents') ?>/";
@@ -403,18 +402,6 @@
         };
 
         $('#commitForm').ajaxForm(optionsDist);
-
-        var optionsUpload = {
-            target: '#messageWrapper',
-            beforeSubmit: validateFiles,
-            success: showResponseFiles,
-            url: '<?php echo site_url('documents/upload') ?>',
-            type: 'post',
-            dataType: 'json',
-            clearForm: true
-        };
-
-        $('#uploadform').ajaxForm(optionsUpload);
 
         function validateDist(formData, jqForm, options)
         {
