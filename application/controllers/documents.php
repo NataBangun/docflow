@@ -191,29 +191,19 @@ EOD;
     public function edit_revisi() {
         $this->load->model(array('mm_categories', 'mm_users'));
         $this->data['categories'] = $this->mm_categories->get();
-        $this->data['num'] = $this->mm_categories->get_num();
-        $this->data['process'] = $this->mm_categories->get_process();
-        $this->data['users'] = $this->mm_users->get_sign();
-
-        $name = '';
-        foreach ($this->data['users'] as $key => $val) {
-            $name .= $val['EMPLOYEE_NAME'] . '(' . $val['EMPLOYEE_NO'] . ')' . ',';
-        }
-        $this->data['name'] = $name;
 
         $doc_id = intval($this->uri->segment(3));
 
         $documents = $this->mm_documents->get_detail($doc_id, $this->data['userInfo']['uID']);
 
         $this->data['records'] = $documents;
-        $this->data['penandatangan'] = $this->mm_documents->get_penandatangan($doc_id);
         $this->data['layout'] = $this->folder . 'e_revisi';
         $this->load->view('layout', $this->data);
     }
 
     public function update_revisi() {
-        
-        $this->setup_form_validation();
+
+        $this->setup_form_validation("revisi");
         $result_upload = $this->validate_upload_lampiran();
 
         $id = $this->uri->segment(3);
@@ -242,7 +232,7 @@ EOD;
         $this->load->view('layout', $this->data);
     }
 
-    public function setup_form_validation() {
+    public function setup_form_validation($form_type = "") {
         $this->form_validation->set_error_delimiters('<div style="color:red;">', '</div>');
 
         $this->form_validation->set_rules('no', 'Nomor Dokumen', 'required|max_length[50]|valid_filename|callback_duplicate_documents_no');
@@ -254,12 +244,14 @@ EOD;
         $this->form_validation->set_rules('datepub', 'Tanggal Terbit', 'required');
         $this->form_validation->set_rules('descrip', 'Histori Perubahan', 'max_length[1000]|valid_html');
 
-        if ($this->input->post('categories') > 0) {
-            $this->load->model(array('mm_categories'));
-            $process = $this->mm_categories->get_process($this->input->post('categories'));
-            foreach ($process as $k => $v) {
-                $penandatangan = 'penandatangan_' . $v['FK_CATEGORIES_ID'] . '_' . $v['PROCESS_SORT'];
-                $this->form_validation->set_rules($penandatangan, $v['PROCESS_NAME'], 'callback_required_penandatangan');
+        if ($form_type != "revisi") {
+            if ($this->input->post('categories') > 0) {
+                $this->load->model(array('mm_categories'));
+                $process = $this->mm_categories->get_process($this->input->post('categories'));
+                foreach ($process as $k => $v) {
+                    $penandatangan = 'penandatangan_' . $v['FK_CATEGORIES_ID'] . '_' . $v['PROCESS_SORT'];
+                    $this->form_validation->set_rules($penandatangan, $v['PROCESS_NAME'], 'callback_required_penandatangan');
+                }
             }
         }
 
@@ -273,7 +265,7 @@ EOD;
             "upload_path" => UPLOAD_DOKPRO_LAMPIRAN,
             "remove_spaces" => TRUE,
             "allowed_types" => UPLOAD_DOKPRO_FILE_TYPE,
-            "max_size" => (UPLOAD_DOKPRO_SIZE_MB * 1024) 
+            "max_size" => (UPLOAD_DOKPRO_SIZE_MB * 1024)
         ));
 
         $result = TRUE; // Di sini upload file Lampiran tidak mandatory
@@ -291,7 +283,7 @@ EOD;
         }
         return $result;
     }
-    
+
     public function validate_upload() {
         $documents_id = $this->input->post('documents_id');
 
@@ -311,9 +303,9 @@ EOD;
         $config['encrypt_name'] = TRUE;
 
         $this->load->library('upload', $config);
-        
+
         if (!$this->upload->do_upload()) {
-            $this->data['files_error'] = $this->upload->display_errors('','');
+            $this->data['files_error'] = $this->upload->display_errors('', '');
             return FALSE;
         } else {
             return TRUE;
@@ -606,13 +598,18 @@ EOD;
 
     public function upload() {
         $result_upload = $this->validate_upload();
+        if ($this->input->post('process_status') == 2) {
+            $redirect_method = "edit_revisi";
+        } else {
+            $redirect_method = "edit";
+        }
         if ($result_upload == TRUE) {
             $this->mm_documents->update_attachment();
             $this->session->set_flashdata('success', 'File berhasil diupload.');
-            redirect(site_url('documents/edit/' . $this->input->post('documents_id')));
+            redirect(site_url('documents/'.$redirect_method.'/' . $this->input->post('documents_id')));
         } else {
             $this->session->set_flashdata('error', $this->data['files_error']);
-            redirect(site_url('documents/edit/' . $this->input->post('documents_id')));
+            redirect(site_url('documents/'.$redirect_method.'/' . $this->input->post('documents_id')));
         }
     }
 
