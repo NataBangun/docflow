@@ -85,14 +85,14 @@ class Generate_doc_pro2 extends CI_Controller {
 		<p><b>Disusun Oleh : </b></p>
 		<table style="width:100%;" border="1" cellspacing="0" cellpadding="4" class="bordered">
 		<tr class="header">
-			<td> NO. </td>
+			<td style="width:5%;"> NO </td>
 			<td> NAMA </td>
 			<td> JABATAN </td>
 			<td> TANDA TANGAN </td>
 			<td> TANGGAL </td>
 		</tr>
 		<tr>
-			<td>1</td>
+			<td style="width:5%;">1</td>
 			<td>'.ucwords(strtolower($records['EMPLOYEE_NAME'])).'</td>
 			<td>'.$records['ORGANIZATION_CODE'].'<br>'.$records['JOB_POSITION_CODE'].'</td>
 			<td>&nbsp;</td>
@@ -107,7 +107,7 @@ class Generate_doc_pro2 extends CI_Controller {
 			<p><b>'.ucwords(strtolower($val['PROCESS_PDF_NAME'])).' Oleh :</b></p>
 			<table style="width:100%;" border="1" cellspacing="0" cellpadding="4" class="bordered">
 			<tr class="header">
-				<td> NO. </td>
+				<td style="width:5%;"> NO. </td>
 				<td> NAMA </td>
 				<td> JABATAN </td>
 				<td> TANDA TANGAN </td>
@@ -118,7 +118,7 @@ class Generate_doc_pro2 extends CI_Controller {
 				if($user['STEP_LAYER']==$key) {
 					$html .= '	
 					<tr>
-						<td>'.$num.'</td>
+						<td style="width:5%;">'.$num.'</td>
 						<td>'.ucwords(strtolower($user['EMPLOYEE_NAME'])).'</td>
 						<td>'.$user['ORGANIZATION_CODE'].'<br>'.$user['JOB_POSITION_CODE'].'</td>
 						<td>&nbsp;</td>

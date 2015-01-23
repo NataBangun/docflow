@@ -85,7 +85,7 @@
 <div class="control-group">
 	<label class="control-label">Deskripsi/Catatan </label>
 	<div class="controls">
-		<textarea name="desc" id="desc" class="span10" rows="5"  value="<?php echo set_value('desc'); ?>" placeholder="Deskripsi atau catatan dokumen"></textarea>
+		<textarea name="desc" id="desc" class="span10" rows="5"  value="<?php echo set_value('desc'); ?>" placeholder="Deskripsi atau catatan dokumen"><?php echo set_value('desc'); ?></textarea>
 		<?php echo '<span style="color:red;"><br>'.form_error('desc').'</span>'?>
 	</div>
 </div>
