@@ -779,9 +779,9 @@ class Mm_documents extends CI_Model {
                 OR TRIM(T1.USERS_SIGNATURE) = '0'
                 OR TRIM(T1.USERS_PARAF) = '0'";
         $query = $this->db->query($sql, array($documents_id));
+        $rows = $query->result_array();
 
-        if ($query) {
-            $rows = $query->result_array();
+        if (is_array($rows) && count($rows) > 0) {
             $this->_error_signature = "Paraf dan/atau Tanda Tangan User belum diupload :";
             foreach ($rows as $row) {
                 $this->_error_signature.= "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
