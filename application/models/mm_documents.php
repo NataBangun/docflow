@@ -5,6 +5,8 @@ if (!defined('BASEPATH'))
 
 class Mm_documents extends CI_Model {
 
+    private $_error_signature; 
+    
     function __construct() {
         parent::__construct();
     }
@@ -751,6 +753,49 @@ class Mm_documents extends CI_Model {
         } else {
             return FALSE;
         }
+    }
+    
+    public function is_signature_exists($documents_id) {
+        $this->_error_signature = "";
+        $sql = "SELECT * FROM
+            (
+                SELECT DISTINCT
+                    T1.EMPLOYEE_NO,
+                    T2.EMPLOYEE_NAME,
+                    T3.USERS_SIGNATURE,
+                    T3.USERS_PARAF                
+                FROM
+                    H_DOCUMENTS_STEP T1, 
+                    V_EMPLOYEE_DOKUMEN_PROSEDUR T2,
+                    T_USERS T3
+                WHERE T1.EMPLOYEE_NO = T2.EMPLOYEE_NO 
+                    AND T1.FK_DOCUMENTS_ID = ? AND T1.FK_TYPE_ID = 1
+                    AND T1.EMPLOYEE_NO = T3.EMPLOYEE_NO(+)    
+                ORDER BY
+                    T1.EMPLOYEE_NO ASC
+            ) T1
+            WHERE T1.USERS_SIGNATURE IS NULL 
+                OR T1.USERS_PARAF IS NULL
+                OR TRIM(T1.USERS_SIGNATURE) = '0'
+                OR TRIM(T1.USERS_PARAF) = '0'";
+        $query = $this->db->query($sql, array($documents_id));
+
+        if ($query) {
+            $rows = $query->result_array();
+            $this->_error_signature = "Paraf dan/atau Tanda Tangan User belum diupload :";
+            foreach ($rows as $row) {
+                $this->_error_signature.= "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+                        .$row['EMPLOYEE_NAME']." (".$row['EMPLOYEE_NO'].")";
+            }
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+        
+    }
+    
+    public function get_error_signature() {
+        return $this->_error_signature;
     }
 
     public function check_process($cat_id) {

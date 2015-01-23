@@ -396,6 +396,11 @@ EOD;
                 if ($this->mm_documents->is_attachment_exists($doc_id) == FALSE) {
                     $data['response'] = 'Data belum lengkap. Dokumen Prosedur belum di upload.';
                     $data['error'] = 1;
+                } else {
+                    if ($this->mm_documents->is_signature_exists($doc_id) == FALSE) {
+                        $data['response'] = $this->mm_documents->get_error_signature();
+                        $data['error'] = 1;
+                    }
                 }
             }
         }
