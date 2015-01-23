@@ -14,7 +14,7 @@
             <input type="hidden" name="dI" value="<?php echo $records['PK_DOCUMENTS_ID'] ?>">
             <input type="hidden" name="dS" value="<?php echo $records['PROCESS_STATUS'] ?>">
             <input type="hidden" name="vI" value="<?php echo $records['VERSION_ID'] ?>">
-            <a id="distBtn" class="btn btn-primary" href="javascript:;" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan mensosialisasikan Dokumen"><i class="fam-arrow-switch"></i> Submit</a>
+            <a id="distBtn" class="btn btn-primary" href="javascript:;" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan melakukan submit Dokumen ?"><i class="fam-arrow-switch"></i> Submit</a>
             </form>
             <?php
         }
@@ -24,7 +24,7 @@
             <input type="hidden" name="dI" value="<?php echo $records['PK_DOCUMENTS_ID'] ?>">
             <input type="hidden" name="dS" value="<?php echo $records['PROCESS_STATUS'] ?>">
             <input type="hidden" name="vI" value="<?php echo $records['VERSION_ID'] ?>">
-            <a id="commitBtn" href=":;" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan mensosialisasikan Dokumen"><i class="fam-arrow-switch"></i> Submit</a>
+            <a id="commitBtn" href=":;" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan melakukan submit Dokumen ?"><i class="fam-arrow-switch"></i> Submit</a>
             </form>
             <?php
         }
@@ -377,7 +377,13 @@
         });
 
         $("#commitBtn").click(function (e) {
-            $('#commitForm').submit();
+            var data_c = $(this).attr('data-confirm');
+            var cnf = confirm(data_c);
+            if (cnf) {
+                $('#commitForm').submit();
+            } else {
+                return false;
+            }
             e.preventDefault();
         });
 
