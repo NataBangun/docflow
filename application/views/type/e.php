@@ -17,7 +17,7 @@
 <div class="control-group">
 	<label class="control-label">Judul <span class="important">*</span></label>
 	<div class="controls">
-		<input type="text" name="title" id="title" class="span10" placeholder="ketikkan Tipe dokumen" value="<?php echo $records['TYPE_NAME']?>">
+		<input type="text" name="title" id="title" class="span10" placeholder="ketikkan Tipe dokumen" value="<?php echo set_value('title',$records['TYPE_NAME']); ?>">
 		<?php echo '<span style="color:red;"><br>'.form_error('title').'</span>'?>
 	</div>
 </div>
@@ -25,7 +25,9 @@
 <div class="control-group">
 	<label class="control-label">Deskripsi/Catatan</label>
 	<div class="controls">
-		<textarea name="desc" id="desc" class="span10" rows="5" placeholder="Deskripsi atau catatan dokumen"><?php echo $records['TYPE_DESC']?></textarea>
+		<textarea name="desc" id="desc" class="span10" rows="5" placeholder="Deskripsi atau catatan dokumen">
+		<?php echo set_value('desc',$records['TYPE_DESC']); ?>
+		</textarea>
 		<?php echo '<span style="color:red;"><br>'.form_error('desc').'</span>'?>
 	</div>
 </div>

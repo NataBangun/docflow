@@ -86,7 +86,7 @@ class Generate_doc_pro2 extends CI_Controller {
 		<table style="width:100%;" border="1" cellspacing="0" cellpadding="4" class="bordered">
 		<tr class="header">
 			<td style="width:5%;"> NO </td>
-			<td> NAMA </td>
+			<td style="width:10%;"> NAMA </td>
 			<td> JABATAN </td>
 			<td> TANDA TANGAN </td>
 			<td> TANGGAL </td>

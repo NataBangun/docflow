@@ -212,7 +212,7 @@ class Categories extends CI_Controller
 	
 	public function add1_check($str)
 	{
-		// pengecekan duplikasi data
+		
 		$sql = array();
 		if($this->input->post('val')){
 			$val = $this->input->post('val');
@@ -241,11 +241,19 @@ class Categories extends CI_Controller
 		echo "<!--". $sql ."-->";	
 		$query = $this->db->query($sql);
 		$result = $query->result_array();
+		for ($x=1; $x<=$val; $x++) {
+		$cekttd = $this->input->post('add'.$x);
 		// echo ($result[0]['JML']);
 		if ($result[0]['JML'] > 0) {
 			$this->form_validation->set_message('add1_check', 'Kolom %s tidak boleh berisi data yang sama (Duplikasi Data)');
 			return false; // error, duplikasi data
 		}
+			if(empty($cekttd)){
+			$this->form_validation->set_message('add1_check', 'Kolom Penandatangan harus terisi.');
+			return false; // error, duplikasi data
+			}
+			}
+		
 		return true;
-	}
+		}
 }

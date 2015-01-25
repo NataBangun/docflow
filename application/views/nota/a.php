@@ -54,12 +54,15 @@
 	</div>
 
 	<div class="control-group">		
-		<label class="control-label">Kepada</label>
+		<label class="control-label">Kepada <span class="important">*</span></label>
 		<div class="controls">
+		<span style="color:grey;font-style:italic;margin-top:15px;">
+					Redaksional tujuan/sasaran Nota Dinas, misal : Tim Pengembangan Aplikasi, Procurement Manager, dsb...
+				</span>
 		<ul id="targetKpd" style="margin-left:0;" class="no-bulets">
-			<li>
+			<li>				
 				<input class="span5" id="appendedInputButton" style="float: left;" type="text" placeholder="Ketikkan Kepada" name="kepada[]">	
-				<button class="btn btn-info" id="addKpd" type="button"><i class="fam-add"></i></button>
+				<button class="btn btn-info" id="addKpd" type="button"><i class="fam-add"></i></button>		
 				<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>	
 			</li>
 		</ul>		
@@ -68,7 +71,7 @@
 	<div class="clearfix"></div>
 		
 	<div class="control-group">
-		<label class="control-label"><span class="important">*</span></label>
+		<label class="control-label"></label>
 		<div class="controls">        
 			<select name="kepada1[]" id="kepada1" multiple="multiple" data-placeholder="Pilih Kepada" >
 				<?php if($users_nota_kepada):?>
@@ -111,7 +114,7 @@
 	<div class="control-group">
 		<label class="control-label">Isi<span class="important">*</span></label>
 		<div class="controls">
-			<textarea name="desc" id="desc" class="span10" rows="5" placeholder="isi Nota Dinas"></textarea>		
+			<textarea name="desc" id="desc" class="span10" rows="5" placeholder="isi Nota Dinas"><?php echo set_value('desc'); ?></textarea>		
 			<br><?php echo '<span style="color:red;">'.form_error('desc').'</span>'?>
 		</div>
 	</div>
@@ -215,7 +218,7 @@
 	<div class="control-group">
 		<label class="control-label">Lampiran</label>
 		<div class="controls">
-			<input type="file" accept="application/pdf" onchange="checkFile(this)"name="lampiran" id="lampiran"/>
+			<input type="file"  accept=".pdf" onchange="checkFile(this)"name="lampiran" id="lampiran"/>
 		</div>
 	</div>
 
@@ -252,7 +255,8 @@
         {
             var error = "Tipe file : "+ FileExt+"\n\n";
             error += "Ukuran file: " + FileSizeMB + " MB \n\n";
-            error += "Tipe file lampiran harus PDF dan tidak boleh lebih dari 125 MB.\n\n";
+            error += "Tipe file lampiran harus PDF dan tidak boleh lebih dari 125 MB.\n.";
+			document.getElementById('lampiran').value=''
             alert(error);
             return false;
         }

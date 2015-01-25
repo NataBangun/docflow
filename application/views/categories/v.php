@@ -11,7 +11,8 @@
 	<tr>
 		<th width="140">#</th>
 		<th>Judul</th>			
-		<th>Jenis</th>			
+		<th>Jenis</th>	
+		<th>Status</th>			
 	</tr>
 </thead>
 <tfoot>
@@ -33,6 +34,13 @@
 
 	<td><?php echo $val['CATEGORIES_TITLE']?></td>	
 	<td><?php echo $val['TYPE_NAME']?></td>	
+	<?php if($val['CATEGORIES_STATUS'] == 1):?>
+	<td>Status Aktif
+	</td>
+	<?php else:?>
+	<td>Status Tidak Aktif
+	</td>
+	<?php endif;?>
 </tr>
 <?php endforeach;?>
 </tbody>

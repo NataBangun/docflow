@@ -205,7 +205,8 @@ $(function () {
         $('.data-load').submit();
         var load = $(this).attr('data-loading');
         $(this).text(load);
-        $(this).enable(false);
+        $(this).attr('disabled', 'disabled');
+        //$(this).enable(false);
     });
 
 });

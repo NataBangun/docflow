@@ -75,13 +75,13 @@ class Mm_users extends CI_Model {
         $this->load->helper('date');
         $timestamp = date('Y-m-d H:i:s');
 
-        $config['upload_path'] = "./uploads/paraf/ttd/";
-        $config['allowed_types'] = "jpg|jpeg|png|bmp";
+        $config['upload_path'] = UPLOAD_TTD;
+        $config['allowed_types'] = UPLOAD_TTD_PARAF_FILE_TYPE;
         $config['file_name'] = $id;
         $config['overwrite'] = true;
-        $config['max_size'] = UPLOADSIZE;
+        $config['max_size'] = UPLOAD_TTD_PARAF_SIZE_KB;
 
-        $this->load->library('upload', $config);
+        //$this->load->library('upload', $config);
         $this->upload->initialize($config);
 
         if (isset($_FILES['userfile']['name']) && $_FILES['userfile']['name'] != '') {
@@ -94,15 +94,15 @@ class Mm_users extends CI_Model {
             $tanda = $this->input->post('ttd_file');
         }
 
-        $config['upload_path'] = "./uploads/paraf/prf/";
-        $config['allowed_types'] = "jpg|jpeg|png|bmp";
+        $config['upload_path'] = UPLOAD_PARAF;
+        $config['allowed_types'] = UPLOAD_TTD_PARAF_FILE_TYPE;
         $config['file_name'] = $id;
         $config['overwrite'] = true;
-        $config['max_size'] = UPLOADSIZE;
+        $config['max_size'] = UPLOAD_TTD_PARAF_SIZE_KB;
 
-        $this->load->library('upload', $config);
+        //$this->load->library('upload', $config);
         $this->upload->initialize($config);
-        $this->upload->do_upload('paraf');
+        //$this->upload->do_upload('paraf');
 
         if (isset($_FILES['paraf']['name']) && $_FILES['paraf']['name'] != '') {
             if (!$this->upload->do_upload('paraf')) {
@@ -127,8 +127,8 @@ class Mm_users extends CI_Model {
             $this->db->where('EMPLOYEE_NO', $id);
             $db = $this->db->update('T_USERS', $documents);
         } else {
-            $ttd_data = $this->upload->data();
-            $paraf_data = $this->upload->data('paraf');
+            //$ttd_data = $this->upload->data();
+            //$paraf_data = $this->upload->data('paraf');
             $documents = array(
                 'USERS_SIGNATURE' => $tanda,
                 'USERS_PARAF' => $paraf,

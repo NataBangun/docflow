@@ -31,18 +31,22 @@
 <div class="control-group" id="close-doc-type">
 	<label class="control-label">Stempel</label>
 	<div class="controls">
-	<div class="input-prepend">
-		<input type="file" class="span5" name="userfile">		
-	</div>
+		<div class="input-prepend">
+			<input type="file" class="span5" name="userfile">		
+		</div>
+		<p style="color:red;font-style:italic;margin-top:15px;">
+			<b>Keterangan :</b><br />
+			Type file yang boleh diupload : *.png, maksimal size : 512 KB
+		</p>
 	</div>
 </div>
 <?php if($records['CATEGORIES_IMAGE']){?>
 <div class="control-group">
-	<label class="control-label">image</label>
+	<label class="control-label">Stempel</label>
 	<div class="controls">
 	<div class="input-prepend">	
-		<img src="<?php echo base_url()?>uploads/category/<?php echo $records['CATEGORIES_IMAGE']?>" style="width:20%;">
-		<a href="<?php echo site_url('categories/delete_img/'.$records['PK_CATEGORIES_ID'])?>" style="margin-left: -5px;"><i class="fam-cancel" style="width: 17px; margin-left: -16px; margin-top: -42px;"></i></a>
+		<img src="<?php echo base_url()?>uploads/category/<?php echo $records['CATEGORIES_IMAGE']?>" style="height:75px;">
+		<a href="<?php echo site_url('categories/delete_img/'.$records['PK_CATEGORIES_ID'])?>" style="margin-left: -5px;"><i class="fam-cancel" style="width:17px; margin-top:-30px; margin-left:5px;"></i></a>
 	</div>
 	</div>
 </div>

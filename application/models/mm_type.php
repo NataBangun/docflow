@@ -56,9 +56,9 @@ class Mm_type extends CI_Model {
 	public function insert()
 	{				
 		$timestamp = date('Y-m-d H:i:s');
-		$desc = sanitize_filename($this->input->post('desc'));		
+		$desc = $this->input->post('desc');		
 		$data = array(			
-			'TYPE_NAME' => sanitize_filename($this->input->post('title')),
+			'TYPE_NAME' => $this->input->post('title'),
 			'TYPE_DESC' => $desc,						
 			'TYPE_CBY' => $this->session->userdata('uID'),				
 			'TYPE_STATUS' =>0,				
@@ -73,9 +73,9 @@ class Mm_type extends CI_Model {
 	{	
 		$id = $this->input->post('id');					
 		$timestamp = date('Y-m-d H:i:s');
-		$desc = sanitize_filename($this->input->post('desc'));		
+		$desc = $this->input->post('desc');		
 		$data = array(			
-			'TYPE_NAME' => sanitize_filename($this->input->post('title')),
+			'TYPE_NAME' => $this->input->post('title'),
 			'TYPE_DESC' => $desc,						
 			'TYPE_UBY' => $this->session->userdata('uID'),				
 			'TYPE_UDT' => $timestamp					

@@ -91,8 +91,8 @@ class Type extends CI_Controller
 	
 	public function update()
 	{		
-		$this->form_validation->set_rules('title', 'Judul', 'required|max_length[20]|callback_title_check');
-		$this->form_validation->set_rules('desc', 'Deskripsi', 'required|max_length[100]');			
+		$this->form_validation->set_rules('title', 'Judul', 'required|max_length[20]|valid_text|callback_title_check');
+		$this->form_validation->set_rules('desc', 'Deskripsi', 'required|max_length[100]|valid_html');			
 			
 		if ($this->form_validation->run() == FALSE)
 		{
@@ -124,8 +124,8 @@ class Type extends CI_Controller
 	
 	public function insert()
 	{		
-		$this->form_validation->set_rules('title', 'Judul', 'required|max_length[20]|callback_title_check');
-		$this->form_validation->set_rules('desc', 'Deskripsi', 'required|max_length[100]');
+		$this->form_validation->set_rules('title', 'Judul', 'required|max_length[20]|valid_text|callback_title_check');
+		$this->form_validation->set_rules('desc', 'Deskripsi', 'required|max_length[100]|valid_html');
 					
 		if ($this->form_validation->run() == FALSE)
 		{

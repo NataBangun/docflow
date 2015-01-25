@@ -13,7 +13,7 @@
 			<div class="control-group">
 				<label class="control-label">Tanda tangan</label>
 				<div class="controls">
-					<input type="file" name="userfile" id="userfile" onchange="cekttd(this);" accept="image/png">
+					<input type="file" name="userfile" id="userfile"  accept="image/png">
 					<?php if($records){?>
 					<?php if($records['USERS_SIGNATURE']){?>
 					<input type="hidden" name="ttd_file" value="<?php echo $records['USERS_SIGNATURE'];?>" id="ttd">
@@ -24,7 +24,7 @@
 				
 				<label class="control-label">Paraf</label>
 				<div class="controls">
-					<input type="file" name="paraf" id="paraf" onchange="cekparaf(this);" accept="image/png">
+					<input type="file" name="paraf" id="paraf"  accept="image/png">
 					
 					<?php if($records){?>
 					<?php if($records['USERS_PARAF']){?>
@@ -35,70 +35,18 @@
 					
 				</div>
 				
-				
 			</div>
 			<div class="control-group">
 			<div class="controls">
-			<input type="submit" class="btn btn-primary" value="Simpan">
+			<button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="Sedang Menyimpan...">Simpan</button>
 			<button type="reset" id="resetBtn" class="btn">Batal</button>
 			</div>
+			<?php echo "<font color='red'>Keterangan:<br>Jenis File ".UPLOAD_TTD_PARAF_FILE_TYPE." dan ukuran ".UPLOAD_TTD_PARAF_SIZE_KB." KB</font>"; ?>
 			</div>
 </form>
-<script type="text/javascript">
-   function cekttd(fieldObj)
-    {
-		var _URL = window.URL || window.webkitURL;
-        var FileName  = fieldObj.value;
-        var FileExt = FileName.substr(FileName.lastIndexOf('.')+1);
-
-        if (FileExt.toLowerCase() != "png")
-        {
-            var error = "Tipe file : "+ FileExt+"\n\n";
-            error += "Tipe file tanda tangan harus tipe PNG.\n\n";
-            alert(error);
-			location.reload();
-            return false;
-        }
-        cekdimensi(this);
-    }
-</script>
-<script>
-var _URL = window.URL || window.webkitURL;
-$("#userfile,#paraf").change(function(e) {
-    var file, img;
 
 
-    if ((file = this.files[0])) {
-        img = new Image();
-        img.onload = function() {
-		if(this.width != this.height){
-            alert("ERROR! Dimensi gambar tidak valid.\nLebar: "+this.width + "\nTinggi: " + this.height+"\n\nSilakan pilih gambar dengan tinggi dan lebar yang sama (tinggi = lebar).");
-			location.reload();
-		}
-        };
-        img.src = _URL.createObjectURL(file);
 
-
-    }
-});
-</script>
-<script type="text/javascript">
-   function cekparaf(fieldObj)
-    {
-        var FileName  = fieldObj.value;
-        var FileExt = FileName.substr(FileName.lastIndexOf('.')+1);
-
-        if (FileExt.toLowerCase() != "png")
-        {
-            var error = "Tipe file : "+ FileExt+"\n\n";
-            error += "Tipe file paraf harus tipe PNG.\n\n";
-            alert(error);
-			location.reload();
-            return false;
-        }
-        return true;
-    }
-</script>
 <script type="text/javascript">
 $(function() { 	
 	

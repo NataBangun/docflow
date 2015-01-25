@@ -9,6 +9,8 @@ class Usr extends CI_Controller {
 		parent::__construct();
 		$this->mm_session->islogin();		
 		$this->load->model('mm_users');
+		$this->load->library('upload');
+		$this->load->helper(array('form', 'url'));
 		$this->setter();
 	}
 	public function index()
@@ -29,19 +31,36 @@ class Usr extends CI_Controller {
 	
 	public function uploads()
 	{
-		$id = $this->uri->segment(3);
+	$id = $this->uri->segment(3);
+
 			if($_FILES['userfile']['name'] == '' && $_FILES['paraf']['name'] == '')
 			{
 				$this->session->set_flashdata('error', 'Isi data dengan benar.');
 				redirect(site_url('usr/add/'.$id));
-			}			
+			}
+// $typettd= $_FILES["userfile"]["type"];
+// $sizettd= $_FILES["userfile"]["size"];
+// $typeprf= $_FILES["paraf"]["type"];
+// $sizeprf= $_FILES["paraf"]["size"];
+// if(($typettd!=="image/png") || ($sizettd > 524288)) 
+    // {
+// $this->session->set_flashdata('error', 'Format bukan png atau ukuran lebih dari 512kb');
+				// redirect(site_url('usr/add/'.$id));
+    // }
+// if(($typeprf!=="image/png") || ($sizeprf > 524288))
+    // {
+// $this->session->set_flashdata('error', 'Format bukan png atau ukuran lebih dari 512kb');
+				// redirect(site_url('usr/add/'.$id));
+    // }	
+
 			$uploads = $this->mm_users->uploads();
 			if($uploads)
 			{
 				$this->session->set_flashdata('success', 'Data telah tersimpan.');
 				redirect(site_url('usr/add/'.$id));
 			}else{
-				$this->session->set_flashdata('error', 'Gagal mengupload tanda tangan dan paraf.');
+				$error_message = $this->upload->display_errors('', '');
+				$this->session->set_flashdata('error', $error_message);
 				redirect(site_url('usr/add/'.$id));
 			}		
 	}

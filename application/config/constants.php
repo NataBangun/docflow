@@ -64,6 +64,12 @@ define('UPLOAD_DOKPRO_LAMPIRAN', UPLOADDIR . 'lampiran_dokpro/');
 define('UPLOAD_DOKPRO_SIZE_MB', 5); // 5MB
 define('UPLOAD_DOKPRO_FILE_TYPE', 'pdf');
 
+/* Upload Configuration untuk : Paraf & Tanda Tangan. */
+define('UPLOAD_TTD', UPLOADDIR . 'paraf/ttd/'); 
+define('UPLOAD_PARAF', UPLOADDIR . 'paraf/prf/'); 
+define('UPLOAD_TTD_PARAF_SIZE_KB', 512); // 512KB
+define('UPLOAD_TTD_PARAF_FILE_TYPE', 'png');
+
 /* SYS */
 define('CACHE_MIN_EXP', 120);
 define('CACHE_MID_EXP', 300);//5min

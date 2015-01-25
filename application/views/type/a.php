@@ -23,13 +23,13 @@
 <div class="control-group">
 	<label class="control-label">Deskripsi/Catatan</label>
 	<div class="controls">
-		<textarea name="desc" id="desc" class="span10" rows="5" placeholder="Deskripsi atau catatan dokumen"></textarea>
+		<textarea name="desc" id="desc" class="span10" rows="5" placeholder="Deskripsi atau catatan dokumen"><?php echo set_value('desc'); ?></textarea>
 		<?php echo '<span style="color:red;"><br>'.form_error('desc').'</span>'?>
 	</div>
 </div>
 
 <div class="form-actions">
-	<button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="sedang menyimpan...">Simpan</button>
+	<button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="Sedang menyimpan...">Simpan</button>
 	<button type="reset" id="resetBtn" class="btn">Batal</button>
 </div>
 

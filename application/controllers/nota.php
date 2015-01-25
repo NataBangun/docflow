@@ -387,7 +387,13 @@ EOD;
 		$this->form_validation->set_rules('tempat', 'Tempat', 'required|max_length[50]');
 		$this->form_validation->set_rules('pengesahan_1', 'Pengesahan Kanan', 'required');		
 		$this->form_validation->set_rules('desc', 'Isi', 'required');
-
+$typelampiran= $_FILES["paraf"]["type"];
+$sizelampiran= $_FILES["paraf"]["size"];
+if($typelampiran!=="application/pdf" || $sizelampiran > 125485760 ) 
+    {
+$this->session->set_flashdata('error', 'Tipe file lampiran harus PDF dan tidak boleh lebih dari 125 MB.');
+				redirect( site_url('nota/add/') );
+    }			
 		if ($this->form_validation->run() == FALSE)
 		{
 			$this->add();
