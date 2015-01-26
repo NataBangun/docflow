@@ -202,11 +202,11 @@
 	<div class="control-group">
 		<label class="control-label">Pembuat Konsep</label>
 		<div class="controls">
-			<select name="pembuat_konsep[]" id="pembuat_konsep" multiple="multiple" data-placeholder="Pilih Inisial" >
-				<?php if($users_nota_pengesahan):?>
-					<?php foreach($users_nota_pengesahan as $key=>$val):?>
+			<select name="pembuat_konsep[]" id="pembuat_konsep" multiple="multiple" data-placeholder="Pilih Pembuat Konsep" >
+				<?php if($users_nota_pembuat_konsep):?>
+					<?php foreach($users_nota_pembuat_konsep as $key=>$val):?>
 						<option value="<?php echo $val['EMPLOYEE_NO']?>">
-							<?php echo $val['EMPLOYEE_NO'].' - '.$val['EMPLOYEE_NAME'].' ('.$val['PENGESAHAN'].')' ?>
+							<?php echo $val['EMPLOYEE_NO'].' - '.$val['EMPLOYEE_NAME'].' ('.$val['PEMBUAT_KONSEP'].')' ?>
 						</option>
 					<?php endforeach;?>
 				<?php endif;?>

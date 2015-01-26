@@ -142,8 +142,7 @@ EOD;
 		$this->data['users_nota_dari'] = $this->mm_nota_kepada->get_dari();
 		$this->data['users_nota_pengesahan'] = $this->mm_nota_kepada->get_pengesahan();
 		$this->data['users_nota_tembusan'] = $this->mm_nota_kepada->get_tembusan();
-		$this->data['users_nota_paraf'] = $this->mm_nota_kepada->get_tembusan();
-		$this->data['users_nota_inisial'] = $this->mm_nota_kepada->get_tembusan();
+		$this->data['users_nota_pembuat_konsep'] = $this->mm_nota_kepada->get_pembuat_konsep();
 
 
 		$nota_id = intval( $this->uri->segment(3) );
@@ -189,9 +188,7 @@ EOD;
 		$this->data['users_nota_dari'] = $this->mm_nota_kepada->get_dari();
 		$this->data['users_nota_pengesahan'] = $this->mm_nota_kepada->get_pengesahan();
 		$this->data['users_nota_tembusan'] = $this->mm_nota_kepada->get_tembusan();
-		$this->data['users_nota_paraf'] = $this->mm_nota_kepada->get_tembusan();
-		$this->data['users_nota_inisial'] = $this->mm_nota_kepada->get_tembusan();
-
+		$this->data['users_nota_pembuat_konsep'] = $this->mm_nota_kepada->get_pembuat_konsep();
 
 		$nota_id = intval( $this->uri->segment(3) );
 		if( ! $nota_id )
@@ -289,9 +286,7 @@ EOD;
 		$this->data['users_nota_dari'] = $this->mm_nota_kepada->get_dari();
 		$this->data['users_nota_pengesahan'] = $this->mm_nota_kepada->get_pengesahan();
 		$this->data['users_nota_tembusan'] = $this->mm_nota_kepada->get_tembusan();
-		$this->data['users_nota_paraf'] = $this->mm_nota_kepada->get_tembusan();
-		$this->data['users_nota_inisial'] = $this->mm_nota_kepada->get_tembusan();
-
+		$this->data['users_nota_pembuat_konsep'] = $this->mm_nota_kepada->get_pembuat_konsep();
 
 		$nota_id = intval( $this->uri->segment(3) );
 		if( ! $nota_id )
@@ -365,15 +360,13 @@ EOD;
 		$this->form_validation->set_error_delimiters('<span>', '</span><br>');
 		$this->load->model(array('mm_nota_kepada'));
 		$this->data['categories'] = $this->mm_categories->get();
-		//$this->data['users'] = $this->mm_users->get();
 		$this->data['process'] = $this->mm_categories->get_process();
-        $this->data['users_nota_klasifikasi'] = $this->mm_nota_kepada->get_klasifikasi();
+                $this->data['users_nota_klasifikasi'] = $this->mm_nota_kepada->get_klasifikasi();
 		$this->data['users_nota_kepada'] = $this->mm_nota_kepada->get_kepada();
 		$this->data['users_nota_dari'] = $this->mm_nota_kepada->get_dari();
 		$this->data['users_nota_pengesahan'] = $this->mm_nota_kepada->get_pengesahan();
 		$this->data['users_nota_tembusan'] = $this->mm_nota_kepada->get_tembusan();
-		$this->data['users_nota_paraf'] = $this->mm_nota_kepada->get_tembusan();
-		$this->data['users_nota_inisial'] = $this->mm_nota_kepada->get_tembusan();
+		$this->data['users_nota_pembuat_konsep'] = $this->mm_nota_kepada->get_pembuat_konsep();
 		$this->data['layout'] = $this->folder.'a';
 		$this->load->view('layout', $this->data);		
 	}
