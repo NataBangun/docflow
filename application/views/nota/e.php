@@ -1,5 +1,5 @@
 <ul class="breadcrumb">
-  <li class="btn-back"><a href="javascript:history.go(-1);" class="btn btn-mini btn-info">Kembali</a></li>
+  <li class="btn-back"><a href="<?php echo site_url('nota')?>" class="btn btn-mini btn-info">Kembali</a></li>
   <li><a href="<?php echo site_url()?>" class="btn btn-mini"><i class="icon-home"></i></a></li>
   <li><a href="<?php echo site_url('nota')?>" class="btn btn-mini">Daftar Nota Dinas</a></li>
   <li><a href="javascript:;" class="btn btn-mini disabled">Posting Nota Dinas</a></li>
@@ -12,7 +12,7 @@
 				<input type="hidden" name="dI" value="<?php echo $records['PK_NOTA_ID']?>">
 				<input type="hidden" name="dS" value="<?php echo $records['PROCESS_STATUS']?>">
 				<input type="hidden" name="vI" value="<?php echo $records['VERSION_ID']?>">
-				<a id="distBtn" class="btn btn-primary data-load" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan mensosialisasikan Dokumen">
+				<a id="distBtn" class="btn btn-primary data-load" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan submit Dokumen?">
 					<i class="fam-arrow-switch"></i> Submit
 				</a>
 			</form>
@@ -22,7 +22,7 @@
 				<input type="hidden" name="dI" value="<?php echo $records['PK_NOTA_ID']?>">
 				<input type="hidden" name="dS" value="<?php echo $records['PROCESS_STATUS']?>">
 				<input type="hidden" name="vI" value="<?php echo $records['VERSION_ID']?>">
-				<a id="commitBtn" class="btn btn-primary data-load" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan mensosialisasikan Dokumen">
+				<a id="commitBtn" class="btn btn-primary data-load" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan submit Dokumen?">
 					<i class="fam-arrow-switch"></i> Submit
 				</a>
 			</form>
@@ -114,9 +114,14 @@
 				<li>
 					<input class="span5" id="appendedInputButton" style="float: left;" type="text" placeholder="Ketikkan Kepada" name="kepada[]">	
 					<button class="btn btn-info" id="addKpd" type="button"><i class="fam-add"></i></button>
-					<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>	
+					<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>		
 				</li>
-			</ul>		
+			</ul>
+	
+			<span class="alert alert-info" style="font-size:11px;">
+				<i class="fam-information"></i> Redaksional tujuan/sasaran Nota Dinas, misal : Tim Pengembangan Aplikasi, Procurement Manager, dsb...
+			</span>	
+			<br /><br />
 		</div>		    
 	</div>
 	<div class="clearfix"></div>
@@ -131,12 +136,17 @@
 							<?php foreach($rec as $k=>$v):?>
 								<?php echo ($val['EMPLOYEE_NO'] == $v)?'selected':NULL;?>
 							<?php endforeach;?>>
-							<?php echo $val['EMPLOYEE_NO'].' - '.$val['EMPLOYEE_NAME'].' ('.$val['KEPADA'].')' ?>
+							<?php echo $val['EMPLOYEE_NO'].' - '.$val['EMPLOYEE_NAME'].' ('.$val['KEPADA'].')' ?> 
 						</option>	
 					<?php endforeach;?>
 				<?php endif;?>
 			</select>
-			<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>	
+			<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>
+			<br />
+			<span class="alert alert-info" style="font-size:11px; margin-top:15px">
+				<i class="fam-information"></i> Daftar penerima Nota Dinas (orang-orang yg menerima Nota Dinas)
+			</span>	
+			<br /><br />			
 		</div>
 	</div>
 
@@ -232,7 +242,11 @@
 					<button class="btn btn-info" id="addTmb" type="button"><i class="fam-add"></i></button>
 					<br><?php echo '<span style="color:red;">'.form_error('tembusan1[]').'</span>'?>	
 				</li>
-			</ul>		
+			</ul>
+			<span class="alert alert-info" style="font-size:11px;">
+				<i class="fam-information"></i> Redaksional tembusan Nota Dinas (yang tercetak di Nota Dinas)
+			</span>	
+			<br /><br />
 		</div>		    
 	</div>
 	<div class="clearfix"></div>
@@ -279,6 +293,11 @@
 				<?php endif;?>
 			</select>
 			<br><?php echo '<span style="color:red;">'.form_error('tembusan1[]').'</span>'?>
+			<br />
+			<span class="alert alert-info" style="font-size:11px; margin-top:15px">
+				<i class="fam-information"></i> Daftar tembusan Nota Dinas (orang-orang yg menerima tembusan Nota Dinas)
+			</span>
+			<br /><br />
 		</div>
 	</div>
 	<input type="hidden" name="list_tembusan" value="<?php echo $records['TEMBUSAN_TEXT']?>">
@@ -347,13 +366,12 @@ endif;
         var FileName  = fieldObj.value;
         var FileExt = FileName.substr(FileName.lastIndexOf('.')+1);
         var FileSize = fieldObj.files[0].size;
-        var FileSizeMB = (FileSize/125485760).toFixed(2);
+        var FileSizeMB = (FileSize/8000001).toFixed(2);
 
-        if ( (FileExt != "pdf") || FileSize>125485760)
+        if ( (FileExt != "pdf") || FileSize>8000001)
         {
-            var error = "Tipe file : "+ FileExt+"\n\n";
-            error += "Ukuran file: " + FileSizeMB + " MB \n\n";
-            error += "Tipe file lampiran harus PDF dan tidak boleh lebih dari 125 MB.\n\n";
+            var error = "Tipe file lampiran harus PDF dan tidak boleh lebih dari 8 MB.\n.";
+			document.getElementById('lampiran').value=''
             alert(error);
             return false;
         }

@@ -1,5 +1,5 @@
 <ul class="breadcrumb">
-  <li class="btn-back"><a href="javascript:history.go(-1);" class="btn btn-mini btn-info">Kembali</a></li>
+  <li class="btn-back"><a href="<?php echo site_url('nota')?>" class="btn btn-mini btn-info">Kembali</a></li>
   <li><a href="<?php echo site_url()?>" class="btn btn-mini"><i class="icon-home"></i></a></li>
   <li><a href="<?php echo site_url('nota')?>" class="btn btn-mini">Daftar Nota Dinas</a></li>
   <li><a href="javascript:;" class="btn btn-mini disabled">Posting Nota Dinas</a></li>
@@ -22,7 +22,7 @@
 				<input type="hidden" name="dI" value="<?php echo $records['PK_NOTA_ID']?>">
 				<input type="hidden" name="dS" value="<?php echo $records['PROCESS_STATUS']?>">
 				<input type="hidden" name="vI" value="<?php echo $records['VERSION_ID']?>">
-				<a id="commitBtn" class="btn btn-primary data-load" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan mensosialisasikan Dokumen">
+				<a id="commitBtn" class="btn btn-primary data-load" title="Sosialisasikan Dokumen" data-confirm="Anda yakin akan submit Dokumen?">
 					<i class="fam-arrow-switch"></i> Submit
 				</a>
 			</form>
@@ -108,7 +108,7 @@
 		</div>
 	<?php endif;?>
 	<div class="control-group">		
-		<label class="control-label">Kepada<span class="important">*</span></label>
+		<label class="control-label">Kepada <span class="important">*</span></label>
 		<div class="controls">
 			<ul id="targetKpd" style="margin-left:0;" class="no-bulets">
 				<li>
@@ -116,13 +116,16 @@
 					<button class="btn btn-info" id="addKpd" type="button"><i class="fam-add"></i></button>
 					<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>	
 				</li>
-			</ul>		
+			</ul>	
+			<span class="alert alert-info" style="font-size:11px;">
+				<i class="fam-information"></i> Redaksional tujuan/sasaran Nota Dinas, misal : Tim Pengembangan Aplikasi, Procurement Manager, dsb...
+			</span>	
+			<br /><br />
 		</div>		    
 	</div>
 	<div class="clearfix"></div>
 	<input type="hidden" name="list_kepada" value="<?php echo $records['KEPADA_TEXT']?>">		
 	<div class="control-group">
-		<label class="control-label"><span class="important">*</span></label>
 		<div class="controls">        
 			<select name="kepada1[]" id="kepada1" multiple="multiple" data-placeholder="Pilih Kepada" >
 				<?php if($users_nota_kepada):?>
@@ -136,7 +139,12 @@
 					<?php endforeach;?>
 				<?php endif;?>
 			</select>
-			<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>	
+			<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>
+			<br />
+			<span class="alert alert-info" style="font-size:11px">
+				<i class="fam-information"></i> Daftar penerima Nota Dinas (orang-orang yg menerima Nota Dinas)
+			</span>	
+			<br /><br />
 		</div>
 	</div>
 
@@ -203,7 +211,11 @@
 					<button class="btn btn-info" id="addTmb" type="button"><i class="fam-add"></i></button>
 					<br><?php echo '<span style="color:red;">'.form_error('tembusan1[]').'</span>'?>	
 				</li>
-			</ul>		
+			</ul>
+			<span class="alert alert-info" style="font-size:11px;">
+				<i class="fam-information"></i> Redaksional tembusan Nota Dinas (yang tercetak di Nota Dinas)
+			</span>	
+			<br /><br />
 		</div>		    
 	</div>
 	<div class="clearfix"></div>
@@ -235,7 +247,6 @@
 	<?php endif;?>
 
 	<div class="control-group">
-		<label class="control-label"><span class="important">*</span></label>
 		<div class="controls">
 			<select name="tembusan[]" id="tembusan" multiple="multiple" data-placeholder="Pilih Tembusan" >
 				<?php if($users_nota_tembusan):?>
@@ -250,6 +261,11 @@
 				<?php endif;?>
 			</select>
 			<br><?php echo '<span style="color:red;">'.form_error('tembusan1[]').'</span>'?>
+			<br />
+			<span class="alert alert-info" style="font-size:11px; margin-top:15px">
+				<i class="fam-information"></i> Daftar tembusan Nota Dinas (orang-orang yg menerima tembusan Nota Dinas)
+			</span>
+			<br /><br />
 		</div>
 	</div>
 	<input type="hidden" name="list_tembusan" value="<?php echo $records['TEMBUSAN_TEXT']?>">

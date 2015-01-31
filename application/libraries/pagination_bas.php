@@ -135,7 +135,7 @@ class CI_Pagination_Bas {
             $res .= '<td><input type="text" id="'.$field['field'].'" name="'.$field['field'].'" onkeyup="'.$this->component_id.'_cari(1)" '.$this->set_attr($field['attribut']).'/></td>'; 
         }
 		if (count($this->link) > 0) {
-			$res .= '<td></td>';
+			$res .= '<td id="'.$field['field'].'"></td>';
 		}
         $res .= '</tr></thead>';
         return $res;

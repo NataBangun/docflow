@@ -1,5 +1,5 @@
 <ul class="breadcrumb">
-  <li class="btn-back"><a href="javascript:history.go(-1);" class="btn btn-mini btn-info">Kembali</a></li>
+  <li class="btn-back"><a href="<?php echo base_url()?>usr" class="btn btn-mini btn-info">Kembali</a></li>
   <li><a href="<?php echo site_url()?>" class="btn btn-mini"><i class="icon-home"></i></a></li>
   <li><a href="<?php echo site_url('usr')?>" class="btn btn-mini">Daftar Paraf & Tanda Tangan</a></li>
   <li><a href="javascript:;" class="btn btn-mini disabled">Posting Paraf & Tanda Tangan</a></li>
@@ -41,7 +41,7 @@
 			<button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="Sedang Menyimpan...">Simpan</button>
 			<button type="reset" id="resetBtn" class="btn">Batal</button>
 			</div>
-			<?php echo "<font color='red'>Keterangan:<br>Jenis File ".UPLOAD_TTD_PARAF_FILE_TYPE." dan ukuran ".UPLOAD_TTD_PARAF_SIZE_KB." KB</font>"; ?>
+			<?php echo "<font color='red'>Keterangan:<br>Jenis file yang diperbolehkan ".UPLOAD_TTD_PARAF_FILE_TYPE." maksimal size ".UPLOAD_TTD_PARAF_SIZE_KB." KB</font>"; ?>
 			</div>
 </form>
 

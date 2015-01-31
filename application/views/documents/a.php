@@ -1,5 +1,5 @@
 <ul class="breadcrumb">
-    <li class="btn-back"><a href="javascript:history.go(-1);" class="btn btn-mini btn-info">Kembali</a></li>
+    <li class="btn-back"><a href="<?php echo site_url('documents') ?>" class="btn btn-mini btn-info">Kembali</a></li>
     <li><a href="<?php echo site_url() ?>" class="btn btn-mini"><i class="icon-home"></i></a></li>
     <li><a href="<?php echo site_url('documents') ?>" class="btn btn-mini">Daftar Dokumen</a></li>
     <li><a href="javascript:;" class="btn btn-mini disabled">Posting Dokumen</a></li>
@@ -19,7 +19,7 @@
 <div class="control-group">
     <label class="control-label">Nomor Dokumen <span class="important">*</span></label>
     <div class="controls">
-        <input type="text" name="no" id="no" class="span10" placeholder="Ketikkan Nomor Dokumen" value="<?php echo set_value('no') ?>">		
+        <input type="text" name="no" id="no" class="span10" placeholder="Ketikkan Nomor Dokumen" maxlength="50" value="<?php echo set_value('no') ?>">		
         <?php echo form_error('no'); ?>
     </div>	
 </div>
@@ -27,7 +27,7 @@
 <div class="control-group">
     <label class="control-label">Judul Dokumen <span class="important">*</span></label>
     <div class="controls">
-        <input type="text" name="title" id="title" class="span10" placeholder="Ketikkan Judul Dokumen" value="<?php echo set_value('title') ?>">		
+        <input type="text" name="title" id="title" class="span10" placeholder="Ketikkan Judul Dokumen" maxlength="255" value="<?php echo set_value('title') ?>">		
         <?php echo form_error('title'); ?>
     </div>
 </div>
@@ -89,7 +89,7 @@
     <div class="controls">
         <div id="wraper-atch">
             <div class="input-prepend">
-                <input type="file" accept="application/pdf" class="span3" name="files[]">
+                <input type="file" accept="application/pdf" class="span3" id="lampiran" onchange="checkFile(this)" name="files[]">
                 <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"><?php echo "Jenis File: ".UPLOAD_DOKPRO_FILE_TYPE.";  Ukuran Maks: ".UPLOAD_DOKPRO_SIZE_MB."MB"; ?></span>
             </div>
         </div>
@@ -105,7 +105,7 @@
 <div class="control-group">
     <label class="control-label">Histori Perubahan</label>
     <div class="controls">
-        <textarea name="descrip" id="descrip" class="span10" rows="5" placeholder="Histori Perubahan"><?php echo set_value('descrip'); ?></textarea>
+        <textarea name="descrip" id="descrip" class="span10" rows="5" maxlength="1000" placeholder="Histori Perubahan"><?php echo set_value('descrip'); ?></textarea>
         <?php echo form_error('descrip'); ?>
     </div>
 </div>
@@ -196,6 +196,24 @@ foreach ($process as $key => $val) {
 <script type="text/javascript" src="<?php echo base_url('assets/js/jquery.chained.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/magicsuggest.js') ?>"></script>
 <script type="text/javascript">
+   function checkFile(fieldObj)
+    {
+        var FileName  = fieldObj.value;
+        var FileExt = FileName.substr(FileName.lastIndexOf('.')+1);
+        var FileSize = fieldObj.files[0].size;
+        var FileSizeMB = (FileSize/5000001).toFixed(2);
+
+        if ( (FileExt != "pdf") || FileSize>5000001)
+        {
+            var error = "Tipe file lampiran harus PDF dan tidak boleh lebih dari 5MB.\n.";
+			document.getElementById('lampiran').value=''
+            alert(error);
+            return false;
+        }
+        return true;
+    }
+</script>
+<script type="text/javascript">
     $(function () {
         var ms_keys = $('#data_ms_key').attr('data-id');
         $(ms_keys).magicSuggest({
@@ -204,6 +222,15 @@ foreach ($process as $key => $val) {
         });
 
         document.descrip = new nicEditor({iconsPath: '<?php echo base_url('assets/js/nicEditIcons-latest.gif') ?>'}).panelInstance('descrip');
+		
+			var len = 1000;    
+$(".nicEdit-main").keydown(function () {
+    if($(".nicEdit-main").html().length>len){
+        var string = $('.nicEdit-main').html();
+        $('.nicEdit-main').html(string.substring(0, len));
+        placeCaretAtEnd($('.nicEdit-main').get(0));
+    }
+});
 
         $("#datepub").datepicker({format: 'yyyy-mm-dd', weekStart: 1, noDefault: true});
         $("#categories").chosen({disable_search_threshold: 10});
@@ -219,5 +246,7 @@ foreach ($process as $key => $val) {
             $('#xform').submit();
         });
     });
+	
+
 
 </script>

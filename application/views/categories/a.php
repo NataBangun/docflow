@@ -1,12 +1,12 @@
 <ul class="breadcrumb">
-  <li class="btn-back"><a href="javascript:history.go(-1);" class="btn btn-mini btn-info">Kembali</a></li>
+  <li class="btn-back"><a href="<?php echo site_url('categories')?>" class="btn btn-mini btn-info">Kembali</a></li>
   <li><a href="<?php echo site_url()?>" class="btn btn-mini"><i class="icon-home"></i></a></li>
   <li><a href="<?php echo site_url('categories')?>" class="btn btn-mini">Daftar kategori</a></li>
   <li><a href="javascript:;" class="btn btn-mini disabled">Posting kategori</a></li>
 </ul>
 
 <div class="page-header">
-	<h4>Posting kategorio</h4>
+	<h4>Posting kategori</h4>
 </div>
 
 <?php echo form_open_multipart(site_url('categories/insert'), array('class'=>'form-horizontal alt1', 'id'=>'xform'))?>
@@ -28,8 +28,13 @@
 <div class="control-group" id="close-doc-type">
 	<label class="control-label">Stempel</label>
 	<div class="controls">
-	<div class="input-prepend">
-		<input type="file" class="span5" name="userfile">
+<div class="input-prepend">
+		<input type="file" class="span5" name="userfile" id="userfile">
+		<?php echo '<span style="color:red;"><br>'.form_error('userfile').'</span>'?>
+<p style="color:red;font-style:italic;margin-top:15px;">
+			<b>Keterangan :</b><br />
+			Type file stempel yang boleh diupload : jpg atau png, maksimal size : 512 KB
+		</p>
 	</div>
 	</div>
 </div>
@@ -102,6 +107,15 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/chosen.min.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/nicEdit.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/form.js')?>"></script>
+<script type="text/javascript">
+$(document).ready(function(){	
+var nyut = document.getElementById('doc-type');
+  if(nyut.value== '1')
+  {
+  $('#close-doc-type').show();
+  }
+ });
+</script>
 
 <script type="text/javascript">
     $(function () {

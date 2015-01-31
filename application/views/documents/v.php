@@ -42,7 +42,7 @@
 	<?php else:?>
 	<td><?php echo 0 ;?></td>
 	<?php endif;?>	
-	<td><?php echo $config['doc_user'][ $val['PROCESS_STATUS'] ]?></td>
+	<td id='kolomstatus'><?php echo $config['doc_user'][ $val['PROCESS_STATUS'] ]?></td>
 	<td><?php echo ($val['PROCESS_STATUS'] > 1)? $config['doc_status'][ $val['CURRENT_LAYER'] ] : 'Proses Belum dimulai';?></td>
 	<td><?php echo $val['DOCUMENTS_CDT']?></td>
 </tr>
@@ -90,7 +90,7 @@
 	<td><?php echo $val['DOCUMENTS_TITLE']?></td>
 	<?php $ver = $val['VERSION_ID'];?>
 	<td><?php echo $ver[0].'.'.$ver[1]?><?php echo ($ver[2] == 0)? NULL : ' Revisi Ke - '. $ver[2] ;?></td>
-	<td><?php echo 'Selesai'?></td>
+	<td id='kolomstatus'><?php echo 'Selesai'?></td>
 	<td><?php echo $val['DOCUMENTS_CDT']?></td>
 	<td><?php echo $val['UDT']?></td>
 </tr>

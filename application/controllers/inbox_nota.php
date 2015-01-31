@@ -212,6 +212,7 @@ class Inbox_nota extends CI_Controller
 							
 							$table['CURRENT_LAYER'] = ACTION_FINAL;
 							$table['PROCESS_STATUS'] = DOC_FINAL;
+							$return['message'] .= 'DOkumen telah mencapai final.';
 						} else {
 							/************************************
 							 bila belum final, insert step baru

@@ -1,6 +1,6 @@
 
 <ul class="breadcrumb">
-  <li class="btn-back"><a href="javascript:history.go(-1);" class="btn btn-mini btn-info">Kembali</a></li>
+  <li class="btn-back"><a href="<?php echo site_url('nota')?>" class="btn btn-mini btn-info">Kembali</a></li>
   <li><a href="<?php echo site_url()?>" class="btn btn-mini"><i class="icon-home"></i></a></li>
   <li><a href="<?php echo site_url('nota')?>" class="btn btn-mini">Daftar Nota Dinas</a></li>
   <li><a href="javascript:;" class="btn btn-mini disabled">Posting Nota Dinas</a></li>
@@ -15,7 +15,7 @@
 <link href="<?php echo base_url('assets/css/magicsuggest.css')?>" rel="stylesheet">
 
 <!-- start form -->
-<?php echo form_open_multipart(site_url('nota/insert'), array('class'=>'form-horizontal form-inline alt1', 'id'=>'xform'))?>
+<?php echo form_open_multipart(site_url('nota/insert'), array('class'=>'form-horizontal form-inline alt1', 'id'=>'xform', 'onchange' => 'getData(this);'))?>
 	<div id="messageWrapper"></div>
 	<?php if($categories):?>
 		<?php $idCat = '';?>
@@ -55,25 +55,25 @@
 
 	<div class="control-group">		
 		<label class="control-label">Kepada <span class="important">*</span></label>
-		<div class="controls">
-		<span style="color:grey;font-style:italic;margin-top:15px;">
-					Redaksional tujuan/sasaran Nota Dinas, misal : Tim Pengembangan Aplikasi, Procurement Manager, dsb...
-				</span>
-		<ul id="targetKpd" style="margin-left:0;" class="no-bulets">
-			<li>				
-				<input class="span5" id="appendedInputButton" style="float: left;" type="text" placeholder="Ketikkan Kepada" name="kepada[]">	
-				<button class="btn btn-info" id="addKpd" type="button"><i class="fam-add"></i></button>		
-				<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>	
-			</li>
-		</ul>		
+		<div class="controls">	
+			<ul id="targetKpd" style="margin-left:0;" class="no-bulets">
+				<li>
+					<input class="span5" id="appendedInputButton" style="float: left;" type="text" maxlength="100" placeholder="Ketikkan Kepada" name="kepada[]" id="kepada[]" value="<?php echo set_value('kepada[]'); ?>" >
+					<button class="btn btn-info" id="addKpd" type="button"><i class="fam-add"></i></button>		
+					<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>	
+				</li>
+			</ul>
+			<span class="alert alert-info" style="font-size:11px;">
+				<i class="fam-information"></i> Redaksional tujuan/sasaran Nota Dinas, misal : Tim Pengembangan Aplikasi, Procurement Manager, dsb...
+			</span>	
+			<br /><br />
 		</div>		    
 	</div>
 	<div class="clearfix"></div>
 		
 	<div class="control-group">
-		<label class="control-label"></label>
 		<div class="controls">        
-			<select name="kepada1[]" id="kepada1" multiple="multiple" data-placeholder="Pilih Kepada" >
+			<select name="kepada1[]" id="kepada1" multiple="multiple" data-placeholder="Pilih Kepada">
 				<?php if($users_nota_kepada):?>
 					<?php foreach($users_nota_kepada as $key=>$val):?>
 						<option value="<?php echo $val['EMPLOYEE_NO']?>">
@@ -82,7 +82,12 @@
 					<?php endforeach;?>
 				<?php endif;?>
 			</select>
-			<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>		
+			<?php echo '<br /><span style="color:red;">'.form_error('kepada[]').'</span>'?>	
+			<br />
+			<span class="alert alert-info" style="font-size:11px">
+				<i class="fam-information"></i> Daftar penerima Nota Dinas (orang-orang yg menerima Nota Dinas)
+			</span>	
+			<br /><br />
 		</div>
 	</div>
 
@@ -106,7 +111,7 @@
 	<div class="control-group">
 		<label class="control-label">Hal<span class="important">*</span></label>
 		<div class="controls">
-			<input type="text" name="hal" id="hal" class="span10" placeholder="ketikkan Hal" value="<?php echo $this->input->post('hal')?>">
+			<input type="text" name="hal" id="hal" class="span10" maxlength="100" placeholder="ketikkan Hal" value="<?php echo set_value('hal');?>">
 			<br><?php echo '<span style="color:red;">'.form_error('hal').'</span>'?>		
 		</div>
 	</div>
@@ -145,7 +150,16 @@
 			}
 		?>
 		<div class="control-group <?php echo $val['FK_CATEGORIES_ID']?>" <?php echo ($val['FK_CATEGORIES_ID'] == $idCat) ? 'style="display:block"' : 'style="display:none"';?> id="close">
-			<label class="control-label"><?php echo $val['PROCESS_NAME']?></label>
+			
+			<?php 
+				if ($val['PROCESS_NAME'] == 'Pengesahan Kanan') {
+				echo '<label class="control-label">'.$val['PROCESS_NAME'].'<span class="important">*</span></label>';
+			}else{
+							echo '<label class="control-label">'.$val['PROCESS_NAME'].'</label>';
+						}
+			?>
+			
+			
 			<div class="controls">
 				<select name="pengesahan_<?php echo $val['PROCESS_SORT']?>" class="pengesahan_<?php echo $val['PROCESS_SORT']?>" id="pengesahan_<?php echo $val['FK_CATEGORIES_ID']?>" data-placeholder="Pilih <?php echo $val['PROCESS_NAME']?>" multiple>
 					<option value=""></option>
@@ -162,29 +176,31 @@
 	<?php endforeach?>
 
 	<div class="control-group">		
-		<label class="control-label"></label>
 		<div class="controls">
 			<br><?php echo '<span style="color:red;">'.form_error('pengesahan_1').'</span>'?>
 		</div>
 	</div>
 
 	<div class="control-group">		
-	<label class="control-label">Tembusan</label>
+	<label class="control-label">Tembusan <span class="important">*</span></label>
 		<div class="controls">
 		<ul id="targetTmb" style="margin-left:0;" class="no-bulets">
 			<li>
-				<input class="span5" id="appendedInputButton" style="float: left;" type="text" placeholder="Ketikkan Tembusan" name="tembusan1[]">	
+				<input class="span5" id="appendedInputButton" style="float: left;" type="text" maxlength="100" placeholder="Ketikkan Tembusan" name="tembusan1[]">	
 				<button class="btn btn-info" id="addTmb" type="button"><i class="fam-add"></i></button>
 				<br><?php echo '<span style="color:red;">'.form_error('tembusan1[]').'</span>'?>	
 			</li>
-		</ul>		
+		</ul>
+		<span class="alert alert-info" style="font-size:11px;">
+			<i class="fam-information"></i> Redaksional tembusan Nota Dinas (yang tercetak di Nota Dinas)
+		</span>	
+		<br /><br />
 		</div>		    
 	</div>
 	
 	<div class="clearfix"></div>
 
 	<div class="control-group">
-		<label class="control-label"><span class="important">*</span></label>
 		<div class="controls">
 			<select name="tembusan[]" id="tembusan" multiple="multiple" data-placeholder="Pilih Tembusan" >
 				<?php if($users_nota_tembusan):?>
@@ -195,7 +211,12 @@
 					<?php endforeach;?>
 				<?php endif;?>
 			</select>
-			<br><?php echo '<span style="color:red;">'.form_error('tembusan1[]').'</span>'?>		
+			<?php echo '<br /><span style="color:red;">'.form_error('tembusan1[]').'</span>'?>	
+			<br />
+			<span class="alert alert-info" style="font-size:11px; margin-top:15px">
+				<i class="fam-information"></i> Daftar tembusan Nota Dinas (orang-orang yg menerima tembusan Nota Dinas)
+			</span>
+			<br /><br />
 		</div>
 	</div>
 
@@ -219,7 +240,12 @@
 		<label class="control-label">Lampiran</label>
 		<div class="controls">
 			<input type="file"  accept=".pdf" onchange="checkFile(this)"name="lampiran" id="lampiran"/>
+			<p style="color:red;font-style:italic;margin-top:15px;">
+			<b>Keterangan :</b><br />
+			Type file yang boleh diupload : *.pdf, maksimal size : 8 MB
+		</p>
 		</div>
+		
 	</div>
 
 	<div class="form-actions">
@@ -243,19 +269,18 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/chosen.min.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/tinymce.min.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/form.js')?>"></script>
+
 <script type="text/javascript">
    function checkFile(fieldObj)
     {
         var FileName  = fieldObj.value;
         var FileExt = FileName.substr(FileName.lastIndexOf('.')+1);
         var FileSize = fieldObj.files[0].size;
-        var FileSizeMB = (FileSize/125485760).toFixed(2);
+        var FileSizeMB = (FileSize/8000001).toFixed(2);
 
-        if ( (FileExt != "pdf") || FileSize>125485760)
+        if ( (FileExt != "pdf") || FileSize>8000001)
         {
-            var error = "Tipe file : "+ FileExt+"\n\n";
-            error += "Ukuran file: " + FileSizeMB + " MB \n\n";
-            error += "Tipe file lampiran harus PDF dan tidak boleh lebih dari 125 MB.\n.";
+            var error = "Tipe file lampiran harus PDF dan tidak boleh lebih dari 8 MB.\n.";
 			document.getElementById('lampiran').value=''
             alert(error);
             return false;
@@ -275,12 +300,15 @@ $('input:text').keydown(function(e){
 		selector: "textarea",
 		element: "#desc",
 		theme: "modern",
+		
 		plugins: [
 			"advlist autolink lists link image charmap print preview hr anchor pagebreak",
 			"searchreplace wordcount visualblocks visualchars code fullscreen",
 			"insertdatetime media nonbreaking save table contextmenu directionality responsivefilemanager",
 			"emoticons template paste textcolor"
 		],
+
+
 		relative_urls: false,
 		remove_script_host: false,
 		toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent link image",
@@ -306,6 +334,15 @@ $('input:text').keydown(function(e){
 			data: DP
 		});
 	
+			var len = 1000;    
+$(".mce-content-body").keydown(function () {
+    if($(".mce-content-body").html().length>len){
+        var string = $('.mce-content-body').html();
+        $('.mce-content-body').html(string.substring(0, len));
+        placeCaretAtEnd($('.mce-content-body').get(0));
+    }
+}); 
+
 		$(".pengesahan_1,.pengesahan_2,.pengesahan_3").chosen({
 			max_selected_options : 1,
 			width:"60%"

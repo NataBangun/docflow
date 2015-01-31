@@ -117,7 +117,7 @@ class mm_documents_email extends CI_Model {
 			</td>
 			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 310.1pt; border-style: none solid solid none; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; border-right-color: rgb(79, 129, 189); border-right-width: 1pt; padding: 0in 5.4pt; min-height: 0.2in;" width="413">
 				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
-					<span style="font-size: 8pt;">$versi</span></p>
+					<span style="font-size: 8pt;">$versi.0.0</span></p>
 			</td>
 		</tr>
 	</tbody>
@@ -209,7 +209,7 @@ EOD;
 			</td>
 			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 310.1pt; border-style: none solid solid none; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; border-right-color: rgb(79, 129, 189); border-right-width: 1pt; padding: 0in 5.4pt; min-height: 0.2in;" width="413">
 				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
-					<span style="font-size: 8pt;">$versi</span></p>
+					<span style="font-size: 8pt;">$versi.0.0</span></p>
 			</td>
 		</tr>
 	</tbody>
@@ -301,7 +301,7 @@ EOD;
 			</td>
 			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 310.1pt; border-style: none solid solid none; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; border-right-color: rgb(79, 129, 189); border-right-width: 1pt; padding: 0in 5.4pt; min-height: 0.2in;" width="413">
 				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
-					<span style="font-size: 8pt;">$versi</span></p>
+					<span style="font-size: 8pt;">$versi.0.0</span></p>
 			</td>
 		</tr>
 	</tbody>

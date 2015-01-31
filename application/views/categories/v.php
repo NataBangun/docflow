@@ -35,10 +35,10 @@
 	<td><?php echo $val['CATEGORIES_TITLE']?></td>	
 	<td><?php echo $val['TYPE_NAME']?></td>	
 	<?php if($val['CATEGORIES_STATUS'] == 1):?>
-	<td>Status Aktif
+	<td><span class="label label-important"> Tidak Aktif </span>
 	</td>
 	<?php else:?>
-	<td>Status Tidak Aktif
+	<td><span class="label label-info"> Aktif </span>
 	</td>
 	<?php endif;?>
 </tr>

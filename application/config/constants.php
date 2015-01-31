@@ -70,6 +70,12 @@ define('UPLOAD_PARAF', UPLOADDIR . 'paraf/prf/');
 define('UPLOAD_TTD_PARAF_SIZE_KB', 512); // 512KB
 define('UPLOAD_TTD_PARAF_FILE_TYPE', 'png');
 
+/* Upload Configuration untuk : stempel. */
+define('UPLOAD_STEMPEL', UPLOADDIR . 'category/'); 
+define('UPLOAD_STEMPEL_SIZE_KB', 512); // 512KB
+define('UPLOAD_STEMPEL_FILE_TYPE', 'png');
+
+
 /* SYS */
 define('CACHE_MIN_EXP', 120);
 define('CACHE_MID_EXP', 300);//5min

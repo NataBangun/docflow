@@ -112,7 +112,7 @@ class Mm_categories extends CI_Model {
         $config['upload_path'] = './uploads/category/';
         $config['remove_spaces'] = true;
         $config['allowed_types'] = 'png|jpg';
-        $config['max_size'] = '70000';
+        $config['max_size'] = '51200';
         $this->load->library('upload', $config);
         $this->upload->do_upload();
 
@@ -178,7 +178,7 @@ class Mm_categories extends CI_Model {
         $config['file_name'] = $this->input->post('fname');
         $config['overwrite'] = true;
         $config['allowed_types'] = 'png|jpg';
-        $config['max_size'] = '70000';
+        $config['max_size'] = '51200';
         $this->load->library('upload', $config);
         $this->upload->do_upload();
 

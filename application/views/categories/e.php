@@ -1,5 +1,5 @@
 <ul class="breadcrumb">
-  <li class="btn-back"><a href="javascript:history.go(-1);" class="btn btn-mini btn-info">Kembali</a></li>
+  <li class="btn-back"><a href="<?php echo site_url('categories')?>" class="btn btn-mini btn-info">Kembali</a></li>
   <li><a href="<?php echo site_url()?>" class="btn btn-mini"><i class="icon-home"></i></a></li>
   <li><a href="<?php echo site_url('categories')?>" class="btn btn-mini">Daftar Kategori</a></li>
   <li><a href="javascript:;" class="btn btn-mini disabled">Edit Kategori</a></li>
@@ -34,15 +34,16 @@
 		<div class="input-prepend">
 			<input type="file" class="span5" name="userfile">		
 		</div>
+				<?php echo '<span style="color:red;"><br>'.form_error('userfile').'</span>'?>
 		<p style="color:red;font-style:italic;margin-top:15px;">
 			<b>Keterangan :</b><br />
-			Type file yang boleh diupload : *.png, maksimal size : 512 KB
+			Type file stempel yang boleh diupload : jpg atau png, maksimal size : 512 KB
 		</p>
 	</div>
 </div>
 <?php if($records['CATEGORIES_IMAGE']){?>
 <div class="control-group">
-	<label class="control-label">Stempel</label>
+	<label class="control-label">Stempel Sebelumnya</label>
 	<div class="controls">
 	<div class="input-prepend">	
 		<img src="<?php echo base_url()?>uploads/category/<?php echo $records['CATEGORIES_IMAGE']?>" style="height:75px;">
@@ -129,5 +130,15 @@ $("#resetBtn").click(function(e){
 	});
 	
 }); 
-
+ 
+</script>
+<script type="text/javascript">
+$(document).ready(function(){	
+var nyut = document.getElementById('doc-type');
+  if(nyut.value== '1')
+  {
+  $('#close-doc-type').show();
+  }
+  
+ });
 </script>

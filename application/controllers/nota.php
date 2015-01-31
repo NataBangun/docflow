@@ -19,7 +19,7 @@ class Nota extends CI_Controller
 		
 		// Nota Dinas
         $this->field_nota=array(
-            array('field'=>'PK_NOTA_ID', 'label'=>'No', 'attribut'=>array('class'=>'form-control', 'style'=>'width:50px')),
+            array('field'=>'PK_NOTA_ID', 'label'=>'ID', 'attribut'=>array('class'=>'form-control', 'style'=>'width:50px')),
             array('field'=>'NO_SURAT', 'label'=>'Nomor Surat', 'attribut'=>array('class'=>'form-control', 'style'=>'width:150px')),
             array('field'=>'HAL', 'label'=>'Judul', 'attribut'=>array('class'=>'form-control', 'style'=>'width:200px')),
             array('field'=>'DARI', 'label'=>'Dari', 'attribut'=>array('class'=>'form-control', 'style'=>'width:200px')),
@@ -367,6 +367,7 @@ EOD;
 		$this->data['users_nota_pengesahan'] = $this->mm_nota_kepada->get_pengesahan();
 		$this->data['users_nota_tembusan'] = $this->mm_nota_kepada->get_tembusan();
 		$this->data['users_nota_pembuat_konsep'] = $this->mm_nota_kepada->get_pembuat_konsep();
+		$this->data['lampiran'] = $this->mm_nota_kepada->get_pembuat_konsep();
 		$this->data['layout'] = $this->folder.'a';
 		$this->load->view('layout', $this->data);		
 	}
@@ -380,13 +381,7 @@ EOD;
 		$this->form_validation->set_rules('tempat', 'Tempat', 'required|max_length[50]');
 		$this->form_validation->set_rules('pengesahan_1', 'Pengesahan Kanan', 'required');		
 		$this->form_validation->set_rules('desc', 'Isi', 'required');
-$typelampiran= $_FILES["paraf"]["type"];
-$sizelampiran= $_FILES["paraf"]["size"];
-if($typelampiran!=="application/pdf" || $sizelampiran > 125485760 ) 
-    {
-$this->session->set_flashdata('error', 'Tipe file lampiran harus PDF dan tidak boleh lebih dari 125 MB.');
-				redirect( site_url('nota/add/') );
-    }			
+			
 		if ($this->form_validation->run() == FALSE)
 		{
 			$this->add();

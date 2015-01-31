@@ -111,12 +111,21 @@ class Categories extends CI_Controller
 	}
 	
 	public function update()
+	{
+	if ($this->input->post('type') !== '1')
 	{		
 		$this->form_validation->set_rules('title', 'Judul', 'required|max_length[50]|callback_title_check');		
 		$this->form_validation->set_rules('add1', 'Penandatangan', 'required|max_length[20]|callback_add1_check');		
 		$this->form_validation->set_rules('desc', 'Deskripsi', 'required|max_length[1000]');		
 		$this->form_validation->set_rules('type', 'Jenis Dokumen', 'required|greater_than[0]');	
-			
+	}	
+	if ($this->input->post('type') == '1'){		
+		$this->form_validation->set_rules('title', 'Judul', 'required|max_length[50]|callback_title_check');		
+		$this->form_validation->set_rules('add1', 'Penandatangan', 'required|max_length[20]|callback_add1_check');		
+		$this->form_validation->set_rules('desc', 'Deskripsi', 'required|max_length[1000]');
+		$this->form_validation->set_rules('userfile', 'Stempel', 'callback_stempelcek');				
+		$this->form_validation->set_rules('type', 'Jenis Dokumen', 'required|greater_than[0]');	
+	}
 		if ($this->form_validation->run() == FALSE)
 		{
 			$cat_id = intval( $this->uri->segment(3) );
@@ -140,13 +149,22 @@ class Categories extends CI_Controller
 	}
 	
 	public function insert()
-	{		
+	{	
+	if ($this->input->post('type') !== '1'){	
 		
 		$this->form_validation->set_rules('title', 'Judul', 'required|max_length[50]|callback_title_check');		
 		$this->form_validation->set_rules('add1', 'Penandatangan', 'required|max_length[20]|callback_add1_check');		
 		$this->form_validation->set_rules('desc', 'Deskripsi', 'required|max_length[1000]');		
 		$this->form_validation->set_rules('type', 'Jenis Dokumen', 'required|greater_than[0]');		
-					
+	}
+if ($this->input->post('type') == '1'){	
+		
+		$this->form_validation->set_rules('title', 'Judul', 'required|max_length[50]|callback_title_check');		
+		$this->form_validation->set_rules('add1', 'Penandatangan', 'required|max_length[20]|callback_add1_check');		
+		$this->form_validation->set_rules('desc', 'Deskripsi', 'required|max_length[1000]');	
+		$this->form_validation->set_rules('userfile', 'Stempel', 'callback_stempelcek');				
+		$this->form_validation->set_rules('type', 'Jenis Dokumen', 'required|greater_than[0]');		
+	}	
 		if ($this->form_validation->run() == FALSE)
 		{
 			$this->add();	
@@ -210,6 +228,19 @@ class Categories extends CI_Controller
 		return true;
 	}
 	
+	 function stempelcek()
+  {
+    if (isset($_FILES['userfile']) && !empty($_FILES['userfile']['name']))
+    {
+    //donothing
+    }
+    else
+    {
+	$this->form_validation->set_message(__FUNCTION__, 'Kolom stempel tidak terisi.');
+      return false;
+    }
+  }
+
 	public function add1_check($str)
 	{
 		

@@ -8,6 +8,7 @@ class Documents extends CI_Controller {
     var $folder = 'documents/';
     var $data = array();
 
+
     function __construct() {
         parent::__construct();
         $this->mm_session->islogin();
@@ -19,16 +20,18 @@ class Documents extends CI_Controller {
         $this->load->library('pagination_bas', '', 'pg_doc2');
         $this->setter();
 
-        // Document Procedure 		
+        // Document Procedure 	
+		
         $this->field_doc = array(
-            array('field' => 'PK_DOCUMENTS_ID', 'label' => 'ID', 'attribut' => array('class' => 'form-control', 'style' => 'width:50px')),
-            array('field' => 'DOCUMENTS_NO', 'label' => 'Nomor', 'attribut' => array('class' => 'form-control', 'style' => 'width:200px')),
-            array('field' => 'DOCUMENTS_TITLE', 'label' => 'Judul', 'attribut' => array('class' => 'form-control', 'style' => 'width:200px')),
+            array('field' => 'PK_DOCUMENTS_ID', 'label' => 'ID', 'attribut' => array('class' => 'form-control', 'style' => 'width:40px')),
+            array('field' => 'DOCUMENTS_NO', 'label' => 'Nomor', 'attribut' => array('class' => 'form-control', 'style' => 'width:150px')),
+            array('field' => 'DOCUMENTS_TITLE', 'label' => 'Judul', 'attribut' => array('class' => 'form-control', 'style' => 'width:330px')),
             array('field' => 'VERSION_DTL', 'label' => 'Versi', 'attribut' => array('class' => 'form-control', 'style' => 'width:100px')),
             array('field' => 'PROCESS_STATUS_DTL', 'label' => 'Status', 'attribut' => array('class' => 'form-control', 'style' => 'width:100px')),
             array('field' => 'CREATE_BY_NAME', 'label' => 'Penyusun', 'attribut' => array('class' => 'form-control', 'style' => 'width:200px')),
             array('field' => 'DOCUMENTS_DATEPUB', 'label' => 'Tgl. Publikasi', 'attribut' => array('class' => 'form-control', 'style' => 'width:80px')),
-            array('field' => 'DOCUMENTS_CDT', 'label' => 'Tgl. Buat', 'attribut' => array('class' => 'form-control', 'style' => 'width:80px'))
+            array('field' => 'DOCUMENTS_CDT', 'label' => 'Tgl. Buat', 'attribut' => array('class' => 'form-control', 'style' => 'width:80px')),
+			array('field' => 'PROCESS_STATUS_DTL', 'label' => 'Action', 'attribut' => array('class' => 'form-control', 'style' => 'width:40px'))
         );
 
         $this->field_doc[0]['script'] = <<<EOD
@@ -46,11 +49,15 @@ EOD;
 <span class=\"font-disabled\">({\$value['E_MAIL_ADDR']})</span>";
 EOD;
 
+        $this->field_doc[8]['script'] = <<<EOD
+"<span><button id='hapuscoy' onClick='parent.location=http://www.plus2net.com/'>HAPUS</button></span>";
+EOD;
         $this->pg_doc1->set_component_id('pg_doc1');
         $this->pg_doc1->set_field($this->field_doc);
 
         $this->pg_doc2->set_component_id('pg_doc2');
         $this->pg_doc2->set_field($this->field_doc);
+
     }
 
     public function index() {
@@ -171,6 +178,12 @@ EOD;
         $this->data['layout'] = $this->folder . 'e';
         $this->load->view('layout', $this->data);
     }
+	
+    public function caridraft() {
+if (in_array("DOC_DRAFT", $field)) {
+    echo "TES";
+}
+}
 
     public function update() {
 
