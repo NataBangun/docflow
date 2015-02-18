@@ -404,8 +404,8 @@ class Generate_doc_pro extends CI_Controller {
 			$ttd_size = getimagesize($ttd_stempel);
 		}
 		
-		$dest = imagecreatetruecolor($width=260, $height=185);
-		//$dest = imagecreatetruecolor($width=150, $height=95);
+		//$dest = imagecreatetruecolor($width=260, $height=185);
+		$dest = imagecreatetruecolor($width=150, $height=95);
 		imagecolortransparent($dest, imagecolorallocatealpha($dest, 255, 255, 255, 127));
 		imagealphablending($dest, false);
 		imagesavealpha($dest, true);		
@@ -416,16 +416,18 @@ class Generate_doc_pro extends CI_Controller {
 		
 		if (isset($ttd_size)) {
 			// add ttd stempel
-			$width_ttd=100; 
-			$height_ttd=30;
-			//$width_ttd=50; 
-			//$height_ttd=10;
+			//$width_ttd=100; 
+			//$height_ttd=30;
+			$width_ttd=70; 
+			$height_ttd=10;
 			$ttd_stempel_png = imagecreatefrompng($ttd_stempel);
-			imagecopyresampled($dest, $ttd_stempel_png, 135, 150, 0, 0, $width_ttd, $height_ttd, $ttd_size[0], $ttd_size[1]);
+			//imagecopyresampled($dest, $ttd_stempel_png, 135, 150, 0, 0, $width_ttd, $height_ttd, $ttd_size[0], $ttd_size[1]);
+			imagecopyresampled($dest, $ttd_stempel_png, 65, 80, 0, 0, $width_ttd, $height_ttd, $ttd_size[0], $ttd_size[1]);
 		}
 		
 		// add tgl stempel
-		imagettftext($dest, 9, 0, 75, 153, imagecolorallocate($dest, 0, 0, 0), "application/libraries/MPDF/ttfonts/DejaVuSans.ttf", $tgl_stempel);
+		//imagettftext($dest, 9, 0, 75, 153, imagecolorallocate($dest, 0, 0, 0), "application/libraries/MPDF/ttfonts/DejaVuSans.ttf", $tgl_stempel);
+		imagettftext($dest, 6, 0, 45, 79, imagecolorallocate($dest, 0, 0, 0), "application/libraries/MPDF/ttfonts/DejaVuSans.ttf", $tgl_stempel);
 		
 		header("Content-type: image/png");
 		imagePng($dest);		
