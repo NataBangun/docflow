@@ -38,8 +38,9 @@ class mm_documents_email extends CI_Model {
                 T2.CATEGORIES_TITLE,
                 T3.EMPLOYEE_NO,
                 T3.EMPLOYEE_NAME,
+				T1.DOCUMENTS_CDT,
                 T3.E_MAIL_ADDR,
-                T4.VERSION_ID 
+                F_GET_DOCUMENTS_VERSION(T4.VERSION_ID) as VERSION_ID
             FROM T_DOCUMENTS T1, P_CATEGORIES T2, V_EMPLOYEE T3, H_DOCUMENTS_PROCESS T4
             WHERE T1.FK_CATEGORIES_ID=T2.PK_CATEGORIES_ID
                 AND T1.DOCUMENTS_CBY=T3.EMPLOYEE_NO
@@ -59,6 +60,7 @@ class mm_documents_email extends CI_Model {
 		$kategori_prosedur = $row->CATEGORIES_TITLE;
 		$penyusun = $row->EMPLOYEE_NAME.' ('.$row->E_MAIL_ADDR.')';
 		$versi = $row->VERSION_ID;
+		$tanggalpembuatan = $row->DOCUMENTS_CDT;
 		$base_url = base_url();
 	
 		$message = <<<EOD
@@ -117,7 +119,17 @@ class mm_documents_email extends CI_Model {
 			</td>
 			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 310.1pt; border-style: none solid solid none; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; border-right-color: rgb(79, 129, 189); border-right-width: 1pt; padding: 0in 5.4pt; min-height: 0.2in;" width="413">
 				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
-					<span style="font-size: 8pt;">$versi.0.0</span></p>
+					<span style="font-size: 8pt;">$versi</span></p>
+			</td>
+		</tr>
+				<tr style="min-height: 0.2in;">
+			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 99pt; border-style: none none solid solid; border-left-color: rgb(79, 129, 189); border-left-width: 1pt; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; background-color: rgb(198, 217, 241); padding: 0in 5.4pt; min-height: 0.2in;" width="132">
+				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
+					<b><span style="font-size: 8pt;">Tanggal Pembuatan</span></b></p>
+			</td>
+			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 310.1pt; border-style: none solid solid none; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; border-right-color: rgb(79, 129, 189); border-right-width: 1pt; padding: 0in 5.4pt; min-height: 0.2in;" width="413">
+				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
+					<span style="font-size: 8pt;">$tanggalpembuatan</span></p>
 			</td>
 		</tr>
 	</tbody>
@@ -209,7 +221,17 @@ EOD;
 			</td>
 			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 310.1pt; border-style: none solid solid none; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; border-right-color: rgb(79, 129, 189); border-right-width: 1pt; padding: 0in 5.4pt; min-height: 0.2in;" width="413">
 				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
-					<span style="font-size: 8pt;">$versi.0.0</span></p>
+					<span style="font-size: 8pt;">$versi</span></p>
+			</td>
+		</tr>
+						<tr style="min-height: 0.2in;">
+			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 99pt; border-style: none none solid solid; border-left-color: rgb(79, 129, 189); border-left-width: 1pt; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; background-color: rgb(198, 217, 241); padding: 0in 5.4pt; min-height: 0.2in;" width="132">
+				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
+					<b><span style="font-size: 8pt;">Tanggal Pembuatan</span></b></p>
+			</td>
+			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 310.1pt; border-style: none solid solid none; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; border-right-color: rgb(79, 129, 189); border-right-width: 1pt; padding: 0in 5.4pt; min-height: 0.2in;" width="413">
+				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
+					<span style="font-size: 8pt;">$tanggalpembuatan</span></p>
 			</td>
 		</tr>
 	</tbody>
@@ -301,7 +323,17 @@ EOD;
 			</td>
 			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 310.1pt; border-style: none solid solid none; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; border-right-color: rgb(79, 129, 189); border-right-width: 1pt; padding: 0in 5.4pt; min-height: 0.2in;" width="413">
 				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
-					<span style="font-size: 8pt;">$versi.0.0</span></p>
+					<span style="font-size: 8pt;">$versi</span></p>
+			</td>
+		</tr>
+						<tr style="min-height: 0.2in;">
+			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 99pt; border-style: none none solid solid; border-left-color: rgb(79, 129, 189); border-left-width: 1pt; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; background-color: rgb(198, 217, 241); padding: 0in 5.4pt; min-height: 0.2in;" width="132">
+				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
+					<b><span style="font-size: 8pt;">Tanggal Pembuatan</span></b></p>
+			</td>
+			<td colspan="1" rowspan="1" style="border-spacing: 2px; width: 310.1pt; border-style: none solid solid none; border-bottom-color: rgb(79, 129, 189); border-bottom-width: 1pt; border-right-color: rgb(79, 129, 189); border-right-width: 1pt; padding: 0in 5.4pt; min-height: 0.2in;" width="413">
+				<p style="padding: 0px; margin: 0px 0in; font-size: 12pt;">
+					<span style="font-size: 8pt;">$tanggalpembuatan</span></p>
 			</td>
 		</tr>
 	</tbody>

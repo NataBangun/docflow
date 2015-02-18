@@ -1,7 +1,7 @@
 <ul class="breadcrumb">
     <li class="btn-back"><a href="<?php echo site_url('documents') ?>" class="btn btn-mini btn-info">Kembali</a></li>
     <li><a href="<?php echo site_url() ?>" class="btn btn-mini"><i class="icon-home"></i></a></li>
-    <li><a href="<?php echo site_url('documents') ?>" class="btn btn-mini">Daftar Dokumen</a></li>
+    <li><a href="<?php echo site_url('documents') ?>" class="btn btn-mini" onclick="localStorage.clear();">Daftar Dokumen</a></li>
     <li><a href="javascript:;" class="btn btn-mini disabled">Posting Dokumen</a></li>
 </ul>
 
@@ -27,7 +27,7 @@
 <div class="control-group">
     <label class="control-label">Judul Dokumen <span class="important">*</span></label>
     <div class="controls">
-        <input type="text" name="title" id="title" class="span10" placeholder="Ketikkan Judul Dokumen" maxlength="255" value="<?php echo set_value('title') ?>">		
+        <input type="text" name="title" id="title" class="span10" placeholder="Ketikkan Judul Dokumen" maxlength="150" value="<?php echo set_value('title') ?>">		
         <?php echo form_error('title'); ?>
     </div>
 </div>
@@ -87,12 +87,11 @@
 <div class="control-group">
     <label class="control-label">Lampiran</label>
     <div class="controls">
-        <div id="wraper-atch">
-            <div class="input-prepend">
+	<div class="input-prepend">
                 <input type="file" accept="application/pdf" class="span3" id="lampiran" onchange="checkFile(this)" name="files[]">
                 <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"><?php echo "Jenis File: ".UPLOAD_DOKPRO_FILE_TYPE.";  Ukuran Maks: ".UPLOAD_DOKPRO_SIZE_MB."MB"; ?></span>
             </div>
-        </div>
+        <div id="wraper-atch"></div>
         <?php
         if (isset($files_error)) {
             echo "<div  style=\"color:red;\">" . $files_error . "</div>";
@@ -156,7 +155,7 @@ foreach ($process as $key => $val) {
         ?> >
             <label class="control-label"><?php echo $val['PROCESS_NAME'] ?> <span class="important">*</span></label>
             <div class="controls">
-                <input style="width:560px;" type="text" placeholder="Ketikkan <?php echo $val['PROCESS_NAME'] ?>" 
+                <input style="width:560px;" type="text" class="pilihankategori" onchange="simpankategori(this);" placeholder="Pilih <?php echo $val['PROCESS_NAME'] ?>" 
                        id="ms<?php echo $key ?>" name="<?php echo $penandatangan_key; ?>"
                        <?php
                        if (set_value('categories') == $val['FK_CATEGORIES_ID']) {
@@ -184,7 +183,7 @@ foreach ($process as $key => $val) {
 ?>
 
 <div class="form-actions">
-    <button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="Sedang Menyimpan..."  >Simpan</button>
+    <button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" onclick="simpandilokal();" data-loading="Sedang Menyimpan..."  >Simpan</button>
     <button type="reset" id="resetBtn" class="btn">Batal</button>
 </div>
 
@@ -206,11 +205,28 @@ foreach ($process as $key => $val) {
         if ( (FileExt != "pdf") || FileSize>5000001)
         {
             var error = "Tipe file lampiran harus PDF dan tidak boleh lebih dari 5MB.\n.";
-			document.getElementById('lampiran').value=''
+			fieldObj.value='';
             alert(error);
             return false;
         }
         return true;
+    }
+</script>
+<script type="text/javascript">
+document.getElementById("wraper-atch").innerHTML = localStorage.getItem("daftarnya"); 
+document.getElementsByClassName("pilihankategori").innerHTML = localStorage.getItem("daftarpilihankategori"); 
+
+function simpandilokal() {
+	var daftarttd = document.getElementById("wraper-atch").innerHTML;
+	var ambildaftarkategori = document.getElementsByClassName("pilihankategori").innerHTML;
+	localStorage.setItem("daftarnya", daftarttd);
+	localStorage.setItem("daftarpilihankategori", ambildaftarkategori);
+    return true;
+}
+</script>
+<script type="text/javascript">
+    function simpankategori(sel) {
+	sel.setAttribute('value', sel.value);
     }
 </script>
 <script type="text/javascript">
@@ -247,6 +263,14 @@ $(".nicEdit-main").keydown(function () {
         });
     });
 	
+	$('body').on('click', '#atch', function () {
+        $('#wraper-atch').append('<div id="atch-container"><input type="file" class="span3 daftarlampiran" onchange="checkFile(this)" name="files[]"><a class="btn btn-danger atch-close" style="margin-left: 3px;"><i class="fam-cancel"></i></a></div>');
+    });
+	
+		$('body').on('click', '.atch-close', function (e) {
+            $(this).closest("#atch-container").remove();
+            e.preventDefault();
+        });
 
 
 </script>

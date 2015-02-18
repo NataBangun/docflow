@@ -28,11 +28,23 @@
 	</div>
 </div>
 
-<div class="control-group" id="close-doc-type">
+<?php if(!empty($records['CATEGORIES_IMAGE'])){?>
+<div class="control-group">
 	<label class="control-label">Stempel</label>
 	<div class="controls">
+	<div class="input-prepend">	
+		<img id="stempelsebelumnya" src="<?php echo base_url()?>uploads/category/<?php echo $records['CATEGORIES_IMAGE']?>" style="height:75px;">
+		<a href="<?php echo site_url('categories/delete_img/'.$records['PK_CATEGORIES_ID'])?>" style="margin-left: -5px;"><i class="fam-cancel" style="width:17px; margin-top:-30px; margin-left:5px;"></i></a>
+	</div>
+	</div>
+</div>
+<?php } if(empty($records['CATEGORIES_IMAGE'])) {
+?>
+<div class="control-group" id="close-doc-type">
+	<label class="control-label">Upload Stempel</label>
+	<div class="controls">
 		<div class="input-prepend">
-			<input type="file" class="span5" name="userfile">		
+			<input type="file" class="span5" name="userfile" id="userfile" onchange="checkFile(this)">		
 		</div>
 				<?php echo '<span style="color:red;"><br>'.form_error('userfile').'</span>'?>
 		<p style="color:red;font-style:italic;margin-top:15px;">
@@ -41,22 +53,11 @@
 		</p>
 	</div>
 </div>
-<?php if($records['CATEGORIES_IMAGE']){?>
-<div class="control-group">
-	<label class="control-label">Stempel Sebelumnya</label>
-	<div class="controls">
-	<div class="input-prepend">	
-		<img src="<?php echo base_url()?>uploads/category/<?php echo $records['CATEGORIES_IMAGE']?>" style="height:75px;">
-		<a href="<?php echo site_url('categories/delete_img/'.$records['PK_CATEGORIES_ID'])?>" style="margin-left: -5px;"><i class="fam-cancel" style="width:17px; margin-top:-30px; margin-left:5px;"></i></a>
-	</div>
-	</div>
-</div>
-<?php }?>
-
+<?php } ?>
 <div class="control-group">
 	<label class="control-label">Judul <span class="important">*</span></label>
 	<div class="controls">
-		<input type="text" name="title" id="title" class="span10" placeholder="ketikkan judul" value="<?php echo $records['CATEGORIES_TITLE'];?>">
+		<input type="text" name="title" id="title" class="span10" placeholder="ketikkan judul" maxlength="75" value="<?php echo $records['CATEGORIES_TITLE'];?>">
 		<?php echo '<span style="color:red;"><br>'.form_error('title').'</span>'?>
 	</div>
 </div>
@@ -73,7 +74,7 @@
 	<div class="controls" style="margin-bottom: 10px;" id="e_close">
 		<div class="input-append">			
 			<input class="span1" type="hidden" name="order_status<?php echo $x?>" placeholder="urutan 1" value="<?php echo $val['PROCESS_SORT']?>">
-			<input class="span3"  type="text" placeholder="Masukan Judul Kategori" name="add<?php echo $x?>" value="<?php echo $val['PROCESS_NAME']?>">
+			<input class="span3"  type="text" placeholder="Masukkan Nama Grup Penandatangan" name="add<?php echo $x?>" value="<?php echo $val['PROCESS_NAME']?>">
 			<input class="span2" id="appendedInputButton" type="text" name="pdf_title<?php echo $x?>" placeholder="Judul Pada Pdf" value="<?php echo ($val['PROCESS_PDF_NAME'])? $val['PROCESS_PDF_NAME']:'Tidak Ada';?>">
 			<input type="radio" name="check_status<?php echo $x?>" value="0" <?php echo ($val['PROCESS_TYPE'] == 0)? 'checked':NULL;?>> seri<i> &nbsp &nbsp </i>
 			<input type="radio" name="check_status<?php echo $x?>" value="1" <?php echo ($val['PROCESS_TYPE'] == 1)? 'checked':NULL;?>> pararel<i> &nbsp &nbsp </i>
@@ -120,6 +121,24 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/nicEdit.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/form.js')?>"></script>
 <script type="text/javascript">
+   function checkFile(fieldObj)
+    {
+        var FileName  = fieldObj.value;
+        var FileExt = FileName.substr(FileName.lastIndexOf('.')+1);
+        var FileSize = fieldObj.files[0].size;
+        var FileSizeMB = (FileSize/512001).toFixed(2);
+
+        if ( (FileExt != "png") && (FileExt != "jpg") || FileSize>512001)
+        {
+            var error = "Tipe file lampiran harus png atau jpg, dan tidak boleh lebih dari 512kb.\n.";
+			document.getElementById('userfile').value='';
+            alert(error);
+            return false;
+        }
+        return true;
+    }
+</script>
+<script type="text/javascript">
 $(function() { 
 	
 	new nicEditor({iconsPath : '<?php echo base_url('assets/js/nicEditIcons-latest.gif')?>'}).panelInstance('desc'); 	
@@ -133,12 +152,13 @@ $("#resetBtn").click(function(e){
  
 </script>
 <script type="text/javascript">
-$(document).ready(function(){	
+$(document).ready(function() {
 var nyut = document.getElementById('doc-type');
   if(nyut.value== '1')
   {
   $('#close-doc-type').show();
   }
+
   
  });
 </script>

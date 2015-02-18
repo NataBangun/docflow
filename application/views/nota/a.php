@@ -2,8 +2,8 @@
 <ul class="breadcrumb">
   <li class="btn-back"><a href="<?php echo site_url('nota')?>" class="btn btn-mini btn-info">Kembali</a></li>
   <li><a href="<?php echo site_url()?>" class="btn btn-mini"><i class="icon-home"></i></a></li>
-  <li><a href="<?php echo site_url('nota')?>" class="btn btn-mini">Daftar Nota Dinas</a></li>
-  <li><a href="javascript:;" class="btn btn-mini disabled">Posting Nota Dinas</a></li>
+  <li><a href="<?php echo site_url('nota')?>" class="btn btn-mini" onclick="localStorage.clear();">Daftar Nota Dinas</a></li>
+  <li><a href="javascript:;" class="btn btn-mini disabled" onclick="localStorage.clear();">Posting Nota Dinas</a></li>
 </ul>
 
 <div class="page-header">
@@ -15,7 +15,7 @@
 <link href="<?php echo base_url('assets/css/magicsuggest.css')?>" rel="stylesheet">
 
 <!-- start form -->
-<?php echo form_open_multipart(site_url('nota/insert'), array('class'=>'form-horizontal form-inline alt1', 'id'=>'xform', 'onchange' => 'getData(this);'))?>
+<?php echo form_open_multipart(site_url('nota/insert'), array('class'=>'form-horizontal form-inline alt1', 'id'=>'xform'))?>
 	<div id="messageWrapper"></div>
 	<?php if($categories):?>
 		<?php $idCat = '';?>
@@ -27,6 +27,7 @@
 					<option value="<?php echo $val['PK_CATEGORIES_ID']?>" selected>
 						<?php echo $val['CATEGORIES_TITLE']?>
 					</option>
+
 				<?php endif;?>
 			<?php endforeach;?>
 		</select>
@@ -36,16 +37,18 @@
 
 	<div class="control-group">
 		<label class="control-label">Klasifikasi Informasi</label>
+		<input type=hidden id ="selection" name="selection" value="">
 		<div class="controls">
 			<?php if($users_nota_klasifikasi):?>
-				<select name="klasifikasi" id="klasifikasi" data-placeholder="Pilih klasifikasi">
-					<option value=""></option>
+		<select name="klasifikasi" id="klasifikasi" data-placeholder="Pilih klasifikasi">
+		<option value=""></option>
 					<?php foreach($users_nota_klasifikasi as $key=>$val):?>
-						<option value="<?php echo $val['PK_KLASIFIKASI_ID']?>">
+			 <option value="<?php echo $val['PK_KLASIFIKASI_ID']?>">
 							<?php echo $val['DESKRIPSI']?>
 						</option>
 					<?php endforeach;?>
 				</select>
+	
 			<?php else:?>
 				<span class="important">Please tell administrators to fill some categories.</span>
 			<?php endif;?>
@@ -54,15 +57,18 @@
 	</div>
 
 	<div class="control-group">		
-		<label class="control-label">Kepada <span class="important">*</span></label>
-		<div class="controls">	
-			<ul id="targetKpd" style="margin-left:0;" class="no-bulets">
-				<li>
-					<input class="span5" id="appendedInputButton" style="float: left;" type="text" maxlength="100" placeholder="Ketikkan Kepada" name="kepada[]" id="kepada[]" value="<?php echo set_value('kepada[]'); ?>" >
-					<button class="btn btn-info" id="addKpd" type="button"><i class="fam-add"></i></button>		
-					<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>	
-				</li>
-			</ul>
+		<label class="control-label">Kepada</label>
+		<div class="controls">
+			<ul id="kpdlist" style="margin-left:0;" class="no-bulets">
+			<li>
+				<input class="span5 listkepada" id="appendedInputButton" style="float: left;" type="text" maxlength="100" placeholder="Ketikkan Kepada" value="<?php echo set_value('kepada[]');?>" name="kepada[]" >	
+				<button class="btn btn-info" id="addKpd" type="button" onclick="k++"><i class="fam-add"></i></button>
+				<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?>	
+			</li>
+		</ul>	
+		<ul id="targetKpd" style="margin-left:0;" class="no-bulets">
+		
+		</ul>		
 			<span class="alert alert-info" style="font-size:11px;">
 				<i class="fam-information"></i> Redaksional tujuan/sasaran Nota Dinas, misal : Tim Pengembangan Aplikasi, Procurement Manager, dsb...
 			</span>	
@@ -70,20 +76,23 @@
 		</div>		    
 	</div>
 	<div class="clearfix"></div>
+
+    <div>
+    </div>
 		
 	<div class="control-group">
+		<label class="control-label"><span class="important">*</span></label>
 		<div class="controls">        
-			<select name="kepada1[]" id="kepada1" multiple="multiple" data-placeholder="Pilih Kepada">
+			<select name="kepada1[]" id="kepada1" multiple="multiple" data-placeholder="Pilih Kepada" >
 				<?php if($users_nota_kepada):?>
 					<?php foreach($users_nota_kepada as $key=>$val):?>
-						<option value="<?php echo $val['EMPLOYEE_NO']?>">
+                       <option value="<?php echo $val['EMPLOYEE_NO']?>">
 							<?php echo $val['EMPLOYEE_NO'].' - '.$val['EMPLOYEE_NAME'].' ('.$val['KEPADA'].')' ?>
-						</option>
+						</option>         
 					<?php endforeach;?>
 				<?php endif;?>
 			</select>
-			<?php echo '<br /><span style="color:red;">'.form_error('kepada[]').'</span>'?>	
-			<br />
+<br><?php echo '<span style="color:red;">'.form_error('kepada[]').'</span>'?><br />
 			<span class="alert alert-info" style="font-size:11px">
 				<i class="fam-information"></i> Daftar penerima Nota Dinas (orang-orang yg menerima Nota Dinas)
 			</span>	
@@ -127,7 +136,7 @@
 	<div class="control-group">
 		<label class="control-label">Tempat<span class="important">*</span></label>
 		<div class="controls">
-			<input type="text" name="tempat" id="tempat" class="span3" placeholder="cth.Jakarta" value="<?php echo $this->input->post('tempat')?>">
+			<input type="text" name="tempat" id="tempat" class="span3" placeholder="cth.Jakarta" value="<?php echo set_value('tempat'); ?>">
 			<br><?php echo '<span style="color:red;">'.form_error('tempat').'</span>'?>		
 		</div>
 	</div>
@@ -137,7 +146,7 @@
 		<div class="controls">
 			<div class="input-prepend">
 				<span class="add-on btn disabled"><i class="fam-date"></i></span>
-				<input type="text" name="datepub" id="datepub" placeholder="yyyy-mm-dd" class="input-small" value="<?php echo ($this->input->post('date_publish'))?$this->input->post('datepub'):NULL?>" readonly>
+				<input type="text" name="datepub" id="datepub" placeholder="yyyy-mm-dd" class="input-small" value="<?php echo ($this->input->post('datepub'))?$this->input->post('datepub'):NULL?>" readonly>
 				<br><?php echo '<span style="color:red;">'.form_error('datepub').'</span>'?>
 			</div>
 		</div>
@@ -159,9 +168,13 @@
 						}
 			?>
 			
+
 			
-			<div class="controls">
-				<select name="pengesahan_<?php echo $val['PROCESS_SORT']?>" class="pengesahan_<?php echo $val['PROCESS_SORT']?>" id="pengesahan_<?php echo $val['FK_CATEGORIES_ID']?>" data-placeholder="Pilih <?php echo $val['PROCESS_NAME']?>" multiple>
+	<?php 
+				if ($val['PROCESS_NAME'] == 'Pengesahan Kanan') {
+?>				
+<div class="controls">
+				<select name="pengesahan_<?php echo $val['PROCESS_SORT']?>" class="pengesahan_<?php echo $val['PROCESS_SORT']?> pengesahankanan" id="pengesahan_<?php echo $val['FK_CATEGORIES_ID']?>" data-placeholder="Pilih <?php echo $val['PROCESS_NAME']?>" multiple>
 					<option value=""></option>
 					<?php if($users_nota_pengesahan):?>
 						<?php foreach($users_nota_pengesahan as $key=>$val):?>
@@ -172,6 +185,40 @@
 				<?php echo form_error('pengesahan_'.$key)?>		
 				<?php echo form_error('posisi_'.$key)?>
 			</div>
+
+				<?php
+			}else if ($val['PROCESS_NAME'] == 'Pengesahan Tengah') {
+			?>
+<div class="controls">
+				<select name="pengesahan_<?php echo $val['PROCESS_SORT']?>" class="pengesahan_<?php echo $val['PROCESS_SORT']?> pengesahantengah" id="pengesahan_<?php echo $val['FK_CATEGORIES_ID']?>" data-placeholder="Pilih <?php echo $val['PROCESS_NAME']?>" multiple>
+					<option value=""></option>
+					<?php if($users_nota_pengesahan):?>
+						<?php foreach($users_nota_pengesahan as $key=>$val):?>
+							<option value="<?php echo $val['EMPLOYEE_NO']?>"><?php echo $val['EMPLOYEE_NO'].' - '.$val['EMPLOYEE_NAME'].' ('.$val['PENGESAHAN'].')'?></option>
+						<?php endforeach;?>
+					<?php endif;?>
+				</select>
+				<?php echo form_error('pengesahan_'.$key)?>		
+				<?php echo form_error('posisi_'.$key)?>
+			</div>				
+		<?php
+			}else if ($val['PROCESS_NAME'] == 'Pengesahan Kiri') {
+			?>
+<div class="controls">
+				<select name="pengesahan_<?php echo $val['PROCESS_SORT']?>" class="pengesahan_<?php echo $val['PROCESS_SORT']?> pengesahankiri" id="pengesahan_<?php echo $val['FK_CATEGORIES_ID']?>" data-placeholder="Pilih <?php echo $val['PROCESS_NAME']?>" multiple>
+					<option value=""></option>
+					<?php if($users_nota_pengesahan):?>
+						<?php foreach($users_nota_pengesahan as $key=>$val):?>
+							<option value="<?php echo $val['EMPLOYEE_NO']?>"><?php echo $val['EMPLOYEE_NO'].' - '.$val['EMPLOYEE_NAME'].' ('.$val['PENGESAHAN'].')'?></option>
+						<?php endforeach;?>
+					<?php endif;?>
+				</select>
+				<?php echo form_error('pengesahan_'.$key)?>		
+				<?php echo form_error('posisi_'.$key)?>
+			</div>				
+			<?php		}
+			?>
+
 		</div>
 	<?php endforeach?>
 
@@ -186,7 +233,7 @@
 		<div class="controls">
 		<ul id="targetTmb" style="margin-left:0;" class="no-bulets">
 			<li>
-				<input class="span5" id="appendedInputButton" style="float: left;" type="text" maxlength="100" placeholder="Ketikkan Tembusan" name="tembusan1[]">	
+				<input class="span5" id="appendedInputButton" style="float: left;" type="text" maxlength="100" placeholder="Ketikkan Tembusan" name="tembusan1[]" value="<?php echo set_value('tembusan1[]'); ?>" >	
 				<button class="btn btn-info" id="addTmb" type="button"><i class="fam-add"></i></button>
 				<br><?php echo '<span style="color:red;">'.form_error('tembusan1[]').'</span>'?>	
 			</li>
@@ -249,7 +296,7 @@
 	</div>
 
 	<div class="form-actions">
-		<button type="submit" id="submitBtn" class="btn btn-primary data-load" title="Simpan" data-loading="Sedang Menyimpan...">Simpan</button>
+		<button type="submit" id="submitBtn" class="btn btn-primary data-load" onclick="simpankuki()" title="Simpan" >Simpan</button>
 		<button type="reset" id="resetBtn" class="btn">Batal</button>
 	</div>
 
@@ -265,10 +312,251 @@
 	endif;
 ?>
 <div id="DP" data-pengesahan="<?php echo trim($data, ", ");?>"></div>
+
 <script type="text/javascript" src="<?php echo base_url('assets/js/datepicker.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/chosen.min.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/tinymce.min.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/form.js')?>"></script>
+<script>
+var k = 0;
+$('#kepada1').change(function() {
+	var selected = []; // create an array to hold all currently selected motivations
+ 
+	// loop through each available motivation
+	$('#kepada1 option').each(function() {
+		// if it's selected, add it to the array above
+		if (this.selected) {
+			selected.push(this.value);
+		}
+	});
+ 
+	// store the array of selected options
+	localStorage.setItem('kepada', JSON.stringify(selected));
+});
+ 
+// check for stored motivations
+var kepada = JSON.parse(localStorage.getItem('kepada'));
+if (kepada !== null) {
+	$('#kepada1 option').each(function() {
+		for (var i = 0; i < kepada.length; i++) {
+			if (this.value == kepada[i]) {
+				this.selected = true;
+			}
+		}
+	});
+}
+
+
+$('#close-kpd').change(function() {
+	var selected = []; // create an array to hold all currently selected motivations
+ 
+	// loop through each available motivation
+	$('#close-kpd input').each(function() {
+		// if it's selected, add it to the array above
+		if (this.selected) {
+			selected.push(this.value);
+		}
+	});
+ 
+	// store the array of selected options
+	localStorage.setItem('kpdnya', JSON.stringify(selected));
+});
+ 
+// check for stored motivations
+var kepadanya = JSON.parse(localStorage.getItem('kpdnya'));
+if (kepadanya !== null) {
+	$('#close-kpd input').each(function() {
+		for (var i = 0; i < kepadanya.length; i++) {
+			if (this.value == kepadanya[i]) {
+				this.selected = true;
+			}
+		}
+	});
+}
+
+
+
+
+$('#tembusan').change(function() {
+	var selected = []; // create an array to hold all currently selected motivations
+ 
+	// loop through each available motivation
+	$('#tembusan option').each(function() {
+		// if it's selected, add it to the array above
+		if (this.selected) {
+			selected.push(this.value);
+		}
+	});
+ 
+	// store the array of selected options
+	localStorage.setItem('tembusan', JSON.stringify(selected));
+});
+ 
+// check for stored motivations
+var tembusan = JSON.parse(localStorage.getItem('tembusan'));
+if (tembusan !== null) {
+	$('#tembusan option').each(function() {
+		for (var i = 0; i < tembusan.length; i++) {
+			if (this.value == tembusan[i]) {
+				this.selected = true;
+			}
+		}
+	});
+}
+
+$('#pembuat_konsep').change(function() {
+	var selected = []; // create an array to hold all currently selected motivations
+ 
+	// loop through each available motivation
+	$('#pembuat_konsep option').each(function() {
+		// if it's selected, add it to the array above
+		if (this.selected) {
+			selected.push(this.value);
+		}
+	});
+ 
+	// store the array of selected options
+	localStorage.setItem('pembuat_konsep', JSON.stringify(selected));
+});
+ 
+// check for stored motivations
+var pembuat_konsep = JSON.parse(localStorage.getItem('pembuat_konsep'));
+if (pembuat_konsep !== null) {
+	$('#pembuat_konsep option').each(function() {
+		for (var i = 0; i < pembuat_konsep.length; i++) {
+			if (this.value == pembuat_konsep[i]) {
+				this.selected = true;
+			}
+		}
+	});
+}
+
+
+
+$('.pengesahankanan').change(function() {
+	var selected = []; // create an array to hold all currently selected motivations
+ 
+	// loop through each available motivation
+	$('.pengesahankanan option').each(function() {
+		// if it's selected, add it to the array above
+		if (this.selected) {
+			selected.push(this.value);
+		}
+	});
+ 
+	// store the array of selected options
+	localStorage.setItem('pengesahankanan', JSON.stringify(selected));
+});
+ 
+// check for stored motivations
+var pengkanan = JSON.parse(localStorage.getItem('pengesahankanan'));
+if (pengkanan !== null) {
+	$('.pengesahankanan option').each(function() {
+		for (var i = 0; i < pengkanan.length; i++) {
+			if (this.value == pengkanan[i]) {
+				this.selected = true;
+			}
+		}
+	});
+}
+
+$('.pengesahantengah').change(function() {
+	var selected = []; // create an array to hold all currently selected motivations
+ 
+	// loop through each available motivation
+	$('.pengesahantengah option').each(function() {
+		// if it's selected, add it to the array above
+		if (this.selected) {
+			selected.push(this.value);
+		}
+	});
+ 
+	// store the array of selected options
+	localStorage.setItem('pengesahanktengah', JSON.stringify(selected));
+});
+ 
+// check for stored motivations
+var pengtengah = JSON.parse(localStorage.getItem('pengesahanktengah'));
+if (pengtengah !== null) {
+	$('.pengesahantengah option').each(function() {
+		for (var i = 0; i < pengtengah.length; i++) {
+			if (this.value == pengtengah[i]) {
+				this.selected = true;
+			}
+		}
+	});
+}
+
+$('.pengesahankiri').change(function() {
+	var selected = []; // create an array to hold all currently selected motivations
+ 
+	// loop through each available motivation
+	$('.pengesahankiri option').each(function() {
+		// if it's selected, add it to the array above
+		if (this.selected) {
+			selected.push(this.value);
+		}
+	});
+ 
+	// store the array of selected options
+	localStorage.setItem('pengesahankiri', JSON.stringify(selected));
+});
+ 
+// check for stored motivations
+var pengkiri = JSON.parse(localStorage.getItem('pengesahankiri'));
+if (pengkiri !== null) {
+	$('.pengesahankiri option').each(function() {
+		for (var i = 0; i < pengkiri.length; i++) {
+			if (this.value == pengkiri[i]) {
+				this.selected = true;
+			}
+		}
+	});
+}
+
+var r;
+ $('body').on('click', '#addKpd', function () {
+        $('#targetKpd').append('<li id="close-kpd" style="margin-top: 5px;"><input class="span5" id="appendedInputButton" type="text" name="kepada[]"  placeholder="Ketikan Kepada"  onchange="simpanlistdaftar(this);"><button class="btn btn-danger remove"  onclick="k--" type="button"><i class="fam-cancel"></i></button></li>');
+    });
+	
+//$(document).on('change','.listkepada',function(){
+//    alert('Id:'+this.id+'\nName:'+this.name+'\nValue:'+this.value);
+//});
+	
+
+
+
+	    $('body').on('click', '.remove', function (e) {
+            $(this).closest("#close-kpd").remove();
+            e.preventDefault();
+        });
+		
+
+
+</script>
+
+<script type="text/javascript">
+    function simpanlistdaftar(sel) {
+	sel.setAttribute('value', sel.value);
+    }
+</script>
+
+<script type="text/javascript">
+document.getElementById("klasifikasi").value = localStorage.getItem("kelasin");
+document.getElementById("dari").value = localStorage.getItem("darimana");
+document.getElementById("targetKpd").innerHTML = localStorage.getItem("listkepada");
+
+function simpankuki() {
+    var kelas = document.getElementById("klasifikasi").value;
+	var dari = document.getElementById("dari").value;
+	var listkepada = document.getElementById("targetKpd").innerHTML;
+    localStorage.setItem("kelasin", kelas);
+    localStorage.setItem("darimana", dari);
+	localStorage.setItem("listkepada", listkepada);
+    return true;
+}
+</script>
+
 
 <script type="text/javascript">
    function checkFile(fieldObj)
@@ -281,7 +569,7 @@
         if ( (FileExt != "pdf") || FileSize>8000001)
         {
             var error = "Tipe file lampiran harus PDF dan tidak boleh lebih dari 8 MB.\n.";
-			document.getElementById('lampiran').value=''
+			fieldObj.value='';
             alert(error);
             return false;
         }
@@ -324,7 +612,6 @@ $('input:text').keydown(function(e){
 	});
 </script>
 <script type="text/javascript">
-
 	$(function() 
 	{       
 		var DP = $('#DP').attr('data-pengesahan');
@@ -417,11 +704,13 @@ $(".mce-content-body").keydown(function () {
 	
 		$( document ).ajaxStart(function() {
 			$( "#submitBtn" ).prop({
-				disabled: true,
+				disabled: false,
 				value:'Loading...'
 			});
 		});
 	}
 
 </script>
+	
+
 <script type="text/javascript" src="<?php echo base_url('assets/js/magicsuggest.js')?>"></script>

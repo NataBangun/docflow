@@ -184,7 +184,8 @@ class Mm_inbox_nota extends CI_Model {
 			'COMMENTS_DESC' => $array['comment'],
 			'COMMENTS_CBY' => $array['uID'],
 			'FK_TYPE_ID' => 2,
-			'COMMENTS_CDT' => $time
+			'COMMENTS_CDT' => $time,
+            'STEP_LAYER' => $array['sL']
 		);
 		$this->db->insert('H_DOCUMENTS_COMMENTS', $data);
 	}

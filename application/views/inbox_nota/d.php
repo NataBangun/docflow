@@ -137,7 +137,12 @@
 	foreach($versioning as $key):
 	//$version_formatted  = wordwrap($key['VERSION_ID'], 1, '.', true);
 	if($version != $key['VERSION_ID']) {
-		echo '<tr><th colspan="5" style="background:#eee;">'.$key['VERSION_ID'].'</th></tr>';
+		$ver_version = $key['VERSION_ID'];
+		$val_ver_version = 'Versi '.$ver_version;
+		if($ver_version != 0){
+			$val_ver_version = 'Revisi Versi '.$ver_version; 
+		}
+		echo '<tr><th colspan="5" style="background:#eee;">'.$val_ver_version.'</th></tr>';
 	}
 	?>
 	<tr>
@@ -152,8 +157,18 @@
 		if( $make_approval && $key['EMPLOYEE_NO'] == $userInfo['uID'] && $key['APPROVAL_STATUS']<=ACTION_READ)
 		{
 			echo '<a href="javascript:;" id="commentBtn"><i class="fam-comment"></i> Mohon berikan approval</a>';
-		}		
+		}
 		?>		
+		<!--
+		<?php 
+		echo "
+		\$make_approval = $make_approval  
+		\$key['EMPLOYEE_NO'] = {$key['EMPLOYEE_NO']}
+		\$userInfo['uID'] = {$userInfo['uID']}
+		\$key['APPROVAL_STATUS'] = {$key['APPROVAL_STATUS']}
+		";
+		?>
+		-->
 		</td>
 		<td><?php echo $key['APPROVAL_UDT']?></td>
 	</tr>
@@ -175,7 +190,11 @@
 			foreach($comments as $key):
 				if($version != $key['VERSION_ID']) {
 					$ver = $key['VERSION_ID'];
-					echo '<h5 class="rev">Versi : '. $ver.'</h5>';
+					$val_ver = 'Versi '.$ver;
+					if($ver != 0){
+						$val_ver = 'Revisi Versi '.$ver; 
+					}
+					echo '<h5 class="rev">'. $val_ver.'</h5>';
 				}
 				?>
 				<div class="accordion-group">
@@ -183,6 +202,10 @@
 						<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_meta" href="#cmt<?php echo $key['PK_DOCUMENTS_COMMENTS_ID']?>">
 						<span class="pull-right font-disabled"><em><?php echo ' mengomentari pada: ' . $key['COMMENTS_CDT']?></em></span>
 						<?php echo $key['EMPLOYEE_NAME']?>
+                            
+                            
+                            <?php echo ' | <i class="'.(($key['APPROVAL_STATUS']==ACTION_APPROVE) ? 'fam-accept' : 'fam-error' ).'"></i> '.$config['act_status'][ $key['APPROVAL_STATUS'] ]?>  
+                            
 						</a>
 					</div>
 					<div id="cmt<?php echo $key['PK_DOCUMENTS_COMMENTS_ID']?>" class="accordion-body collapse">
@@ -206,7 +229,7 @@
 </div><!--//tab-content-->
 
 
-<div id="commentModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="commentModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="border-radius:15px;" aria-hidden="true">
 	<div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon-remove"></i></button>
 	<h3 id="modalLabel"><i class="fam-comment"></i> Berikan Saran Anda</h3>

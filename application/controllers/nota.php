@@ -4,6 +4,7 @@ class Nota extends CI_Controller
 {
 	var $folder = 'nota/';
 	var $data=array();
+    //var $kepada = array();
 
 	function __construct()
 	{
@@ -12,6 +13,7 @@ class Nota extends CI_Controller
 		$this->load->model('mm_nota');
 		$this->load->model('mm_categories');
 		$this->load->helper('oci8_helper');
+		//$this->load->helper('firephp');
 		$this->load->model('mm_nota_email');	
 		$this->load->library('pagination_bas', '', 'pg_nota1');
 		$this->load->library('pagination_bas', '', 'pg_nota2');
@@ -26,7 +28,9 @@ class Nota extends CI_Controller
             array('field'=>'PROCESS_STATUS_DTL', 'label'=>'Status', 'attribut'=>array('class'=>'form-control', 'style'=>'width:100px')),
             array('field'=>'CREATE_BY_NAME', 'label'=>'Penyusun', 'attribut'=>array('class'=>'form-control', 'style'=>'width:200px')),
             array('field'=>'TANGGAL_NOTA', 'label'=>'Tgl. Publikasi', 'attribut'=>array('class'=>'form-control', 'style'=>'width:80px')),
-            array('field'=>'CREATE_DATE', 'label'=>'Tgl. Buat', 'attribut'=>array('class'=>'form-control', 'style'=>'width:80px'))
+            array('field'=>'CREATE_DATE', 'label'=>'Tgl. Buat', 'attribut'=>array('class'=>'form-control', 'style'=>'width:80px')),
+		   array('field'=>'CREATE_DATE', 'label'=>'Action', 'attribut'=>array('class'=>'form-control', 'style'=>'width:40px'))
+
         );
 		
 		$this->field_nota[0]['script'] = <<<EOD
@@ -42,6 +46,9 @@ EOD;
 		$this->field_nota[5]['script'] = <<<EOD
 "{\$value['CREATE_BY_NAME']} <br>
 <span class=\"font-disabled\">({\$value['E_MAIL_ADDR']})</span>";
+EOD;
+  $this->field_nota[8]['script'] = <<<EOD
+"{\$value['HAPUS']}";
 EOD;
 
 		$this->pg_nota1->set_component_id('pg_nota1');
@@ -76,13 +83,53 @@ EOD;
 		$this->data['layout'] = $this->folder.'v';
 		$this->load->view('layout', $this->data);
 	}
+	
+	 public function hapus() {
+        $this->load->model('mm_nota');
+        $idnota = intval($this->uri->segment(3));
+        if (!$idnota) {
+            $this->session->set_flashdata('error', $this->data['config']['msg_no_data']);
+            redirect(404);
+        }
+		
+		$sql = "select T1.HAL,T1.CREATE_DATE from T_NOTA t1 WHERE T1.PK_NOTA_ID=? ";
+		
+		$tanggal_buat = $this->db->query($sql, array($idnota))->row()->CREATE_DATE;
+$judule = $this->db->query($sql, array($idnota))->row()->HAL;
+        $hapus1 = $this->mm_nota->delete_draft_process($idnota);
+		$hapus2 = $this->mm_nota->delete_draft_step($idnota);
+		$hapus3 = $this->mm_nota->delete_draft_nota($idnota);
+
+        if (!$hapus1) {
+            $this->session->set_flashdata('error', 'Data 1 Gagal Dihapus.');
+			            redirect(site_url('nota'));
+
+        }
+		    if (!$hapus2) {
+            $this->session->set_flashdata('error', 'Data 2 Gagal Dihapus.');
+			 redirect(site_url('nota'));
+        }
+				    if (!$hapus3) {
+            $this->session->set_flashdata('error', 'Data 3 Gagal Dihapus.');
+			 redirect(site_url('nota'));
+        }
+            $this->session->set_flashdata('success', 'Data Dengan Judul '.$judule.' (Dibuat Tanggal '.$tanggal_buat.') Berhasil Dihapus.');
+
+			 redirect(site_url('nota'));
+ 
+    }
 
     public function search_nota1($page){
         $this->pg_nota1->set_table('V_DAFTAR_NOTA');
 		if (in_array("Admin Sekretaris", explode("|", $this->session->userdata('umc_feature')))) {
-			$where = array('PROCESS_STATUS <'=>NOTA_FINAL);
+			$where = array(
+						'PROCESS_STATUS <'=>NOTA_FINAL
+						);
 		} else {
-			$where = array('PROCESS_STATUS <'=>NOTA_FINAL, 'CREATE_BY'=>$this->data['userInfo']['uID']);
+			$where = array(
+						'PROCESS_STATUS <'=>NOTA_FINAL, 
+						'CREATE_BY'=>$this->data['userInfo']['uID']
+						);
 		}
 		$this->pg_nota1->set_where($where);
         $this->pg_nota1->set_paging($_POST,10,$page);
@@ -92,9 +139,14 @@ EOD;
     public function search_nota2($page){
         $this->pg_nota2->set_table('V_DAFTAR_NOTA');
 		if (in_array("Admin Sekretaris", explode("|", $this->session->userdata('umc_feature')))) {
-			$where = array('PROCESS_STATUS'=>NOTA_FINAL);
+			$where = array(
+						'PROCESS_STATUS'=>NOTA_FINAL
+						);
 		} else {
-			$where = array('PROCESS_STATUS'=>NOTA_FINAL, 'CREATE_BY'=>$this->data['userInfo']['uID']);
+			$where = array(
+						'PROCESS_STATUS'=>NOTA_FINAL, 
+						'CREATE_BY'=>$this->data['userInfo']['uID']
+						);
 		}
 		$this->pg_nota2->set_where($where);
         $this->pg_nota2->set_paging($_POST,10,$page);
@@ -368,12 +420,14 @@ EOD;
 		$this->data['users_nota_tembusan'] = $this->mm_nota_kepada->get_tembusan();
 		$this->data['users_nota_pembuat_konsep'] = $this->mm_nota_kepada->get_pembuat_konsep();
 		$this->data['lampiran'] = $this->mm_nota_kepada->get_pembuat_konsep();
+        //$this->data['kepada']= $kepada;
 		$this->data['layout'] = $this->folder.'a';
 		$this->load->view('layout', $this->data);		
 	}
 	
 	public function insert()
-	{			
+	{	
+        
 		$this->form_validation->set_rules('kepada[]', 'Kepada', 'required|max_length[100]');
 		$this->form_validation->set_rules('dari', 'Dari', 'required');
 		$this->form_validation->set_rules('hal', 'Hal', 'required|max_length[100]');
@@ -381,10 +435,11 @@ EOD;
 		$this->form_validation->set_rules('tempat', 'Tempat', 'required|max_length[50]');
 		$this->form_validation->set_rules('pengesahan_1', 'Pengesahan Kanan', 'required');		
 		$this->form_validation->set_rules('desc', 'Isi', 'required');
+        //$kepada = $this->input->post('kepada1[]');
 			
 		if ($this->form_validation->run() == FALSE)
 		{
-			$this->add();
+		$this->add();
 		}
 		else
 		{
@@ -425,6 +480,7 @@ EOD;
 			$this->load->model('mm_inbox');
 			$clone = $this->mm_inbox->clone_to_approval_nota($nota_id, 1);
 			
+			
 			$documents_process = array(
 				'PROCESS_STATUS' => DOC_REVIEW,
 				'CURRENT_LAYER' => 1, // initial layer always 1
@@ -436,6 +492,7 @@ EOD;
 			$this->db->where('FK_TYPE_ID', 2);
 			$this->db->update('H_DOCUMENTS_PROCESS', $documents_process);
 			
+			//var_dump($this->db);
 			/************************************
 			Kirim email untuk penandatangan 
 			**********************************/
@@ -502,7 +559,7 @@ EOD;
 			$this->db->where('FK_DOCUMENTS_ID', $nota_id);
 			$this->db->where('FK_TYPE_ID', 2);
 			$this->db->update('H_DOCUMENTS_PROCESS', $documents_process);
-			
+			//var_dump($this->db);
 			$this->db->where('FK_DOCUMENTS_ID',$nota_id);
 			$this->db->where('FK_TYPE_ID',2);
 			$row = $this->db->get('H_DOCUMENTS_PROCESS')->row();			
@@ -510,8 +567,7 @@ EOD;
 			$this->load->model('mm_inbox_nota');
 			$this->mm_inbox_nota->clone_to_approval_nota( $nota_id, $row->CURRENT_LAYER );
 			
-			// TODO create email notification to all user in step DD
-			
+			// TODO create email notification to all user in step DD			
 			/************************************
 			Kirim email untuk penandatangan 
 			**********************************/

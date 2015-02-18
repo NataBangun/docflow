@@ -20,6 +20,7 @@ class Documents extends CI_Controller {
         $this->load->library('pagination_bas', '', 'pg_doc2');
         $this->setter();
 
+
         // Document Procedure 	
 		
         $this->field_doc = array(
@@ -27,7 +28,7 @@ class Documents extends CI_Controller {
             array('field' => 'DOCUMENTS_NO', 'label' => 'Nomor', 'attribut' => array('class' => 'form-control', 'style' => 'width:150px')),
             array('field' => 'DOCUMENTS_TITLE', 'label' => 'Judul', 'attribut' => array('class' => 'form-control', 'style' => 'width:330px')),
             array('field' => 'VERSION_DTL', 'label' => 'Versi', 'attribut' => array('class' => 'form-control', 'style' => 'width:100px')),
-            array('field' => 'PROCESS_STATUS_DTL', 'label' => 'Status', 'attribut' => array('class' => 'form-control', 'style' => 'width:100px')),
+            array('field' => 'PROCESS_STATUS_DTL', 'id' => 'status', 'label' => 'Status', 'attribut' => array('class' => 'form-control', 'style' => 'width:100px')),
             array('field' => 'CREATE_BY_NAME', 'label' => 'Penyusun', 'attribut' => array('class' => 'form-control', 'style' => 'width:200px')),
             array('field' => 'DOCUMENTS_DATEPUB', 'label' => 'Tgl. Publikasi', 'attribut' => array('class' => 'form-control', 'style' => 'width:80px')),
             array('field' => 'DOCUMENTS_CDT', 'label' => 'Tgl. Buat', 'attribut' => array('class' => 'form-control', 'style' => 'width:80px')),
@@ -49,10 +50,27 @@ EOD;
 <span class=\"font-disabled\">({\$value['E_MAIL_ADDR']})</span>";
 EOD;
 
-        $this->field_doc[8]['script'] = <<<EOD
-"<span><button id='hapuscoy' onClick='parent.location=http://www.plus2net.com/'>HAPUS</button></span>";
+// if($this->field_doc[4]['script'] == 1)
+// {
+   // $result = "Bisa Dihapus";
+// }
+// if($this->field_doc[4]['script'] !== 1)
+// {
+   // $result = "ERROR!";
+// }
+ // else {
+    // $result = "Belom diset";
+// }
+
+  $this->field_doc[8]['script'] = <<<EOD
+"{\$value['HAPUS']}";
 EOD;
-        $this->pg_doc1->set_component_id('pg_doc1');
+ 
+
+
+
+  
+  $this->pg_doc1->set_component_id('pg_doc1');
         $this->pg_doc1->set_field($this->field_doc);
 
         $this->pg_doc2->set_component_id('pg_doc2');
@@ -120,7 +138,8 @@ EOD;
             $this->session->set_flashdata('error', $this->data['config']['msg_no_data']);
             redirect(404);
         }
-
+		
+		//$isread = $this->mm_documents->isread($doc_id,'1',$this->data['userInfo']['uID'],$timestamp);		
         $this->data['records'] = $documents;
         $this->data['process'] = $this->mm_documents->get_process_by_cat($doc_id);
         $this->data['penandatangan'] = $this->mm_documents->get_penandatangan($doc_id);
@@ -134,6 +153,44 @@ EOD;
         $this->data['is_step_final'] = ( ($documents['CURRENT_LAYER'] != ACTION_FINAL) ? TRUE : FALSE );
         $this->data['layout'] = $this->folder . 'd';
         $this->load->view('layout', $this->data);
+    }
+	
+	
+	
+	
+	 public function hapus() {
+        $this->load->model('mm_documents');
+        $doc_id = intval($this->uri->segment(3));
+        if (!$doc_id) {
+            $this->session->set_flashdata('error', $this->data['config']['msg_no_data']);
+            redirect(404);
+        }
+
+		$sql = "select T1.DOCUMENTS_TITLE, T1.DOCUMENTS_CDT from T_DOCUMENTS t1 WHERE T1.PK_DOCUMENTS_ID=?";
+		
+		$tanggal_buat = $this->db->query($sql, array($doc_id))->row()->DOCUMENTS_CDT;
+		$judul_doc = $this->db->query($sql, array($doc_id))->row()->DOCUMENTS_TITLE;
+
+        $hapus1 = $this->mm_documents->delete_draft_step($doc_id);
+		$hapus2 = $this->mm_documents->delete_draft_process($doc_id);
+		$hapus3 = $this->mm_documents->delete_draft_doc($doc_id);
+
+        if (!$hapus1) {
+            $this->session->set_flashdata('error', 'Data 1 Gagal Dihapus.');
+			            redirect(site_url('documents'));
+
+        }
+		    if (!$hapus2) {
+            $this->session->set_flashdata('error', 'Data 2 Gagal Dihapus.');
+			 redirect(site_url('documents'));
+        }
+				    if (!$hapus3) {
+            $this->session->set_flashdata('error', 'Data 3 Gagal Dihapus.');
+			 redirect(site_url('documents'));
+        }
+            $this->session->set_flashdata('success', 'Data Dengan Judul '.$judul_doc.' (Dibuat Tanggal '.$tanggal_buat.') Berhasil Dihapus');
+			 redirect(site_url('documents'));
+ 
     }
 
     public function edit() {
@@ -282,7 +339,9 @@ if (in_array("DOC_DRAFT", $field)) {
         ));
 
         $result = TRUE; // Di sini upload file Lampiran tidak mandatory
-        foreach ($_FILES['files']['name'] as $k => $v) {
+if($_FILES['files']['name']!=null)
+{
+       foreach ($_FILES['files']['name'] as $k => $v) { 
             if ($v == '') {
                 unset($_FILES['files']['name'][$k]);
             }
@@ -295,6 +354,11 @@ if (in_array("DOC_DRAFT", $field)) {
             $this->data['files_error'] = $this->upload->display_errors('', '');
         }
         return $result;
+}
+else
+{
+redirect(404);
+}
     }
 
     public function validate_upload() {

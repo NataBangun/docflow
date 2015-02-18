@@ -2,7 +2,7 @@
 	<h4>Daftar Nota Dinas</h4>
 </div>
 <p>
-	<a href=":;" id="linkBtn" class="btn btn-info" data-rel="<?php echo site_url('nota/add')?>" title="Buat Nota Dinas Baru">
+	<a href=":;" id="linkBtn" class="btn btn-info" data-rel="<?php echo site_url('nota/add')?>" title="Buat Nota Dinas Baru" onclick="localStorage.clear();">
 		<i class="fam-add"></i> Buat Nota Dinas
 	</a>	
 	<div class="clearfix"></div>

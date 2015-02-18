@@ -37,7 +37,7 @@
 		<?php if($records['PROCESS_STATUS']==NOTA_DRAFT || $records['PROCESS_STATUS']==NOTA_EDIT):?>
 			<li class="pull-right">
 				<div class="alert">
-					<strong style="color: #A67E39;">Jika ingin melakukan submit / sosialisasi silakan klik tombol edit diatas </strong>
+					<strong style="color: #A67E39;">Jika ingin melakukan submit, silakan klik tombol edit di atas </strong>
 				</div>
 			</li>
 		<?php endif;?>
@@ -182,7 +182,13 @@
 	foreach($versioning as $key):	
 	//$version_formatted  = wordwrap($key['VERSION_ID'], 1, '.', true);
 	if($version != $key['VERSION_ID']) {
-	echo '<tr><th colspan="6" style="background:#eee;">'.$key['VERSION_ID'].'</th></tr>';
+		$ver_version = $key['VERSION_ID'];
+		$val_ver_version = 'Versi '.$ver_version;
+		if($ver_version != 0){
+			$val_ver_version = 'Revisi Versi '.$ver_version; 
+		}
+		echo '<tr><th colspan="6" style="background:#eee;">'.$val_ver_version.'</th></tr>';	
+	//echo '<tr><th colspan="6" style="background:#eee;">'.$key['VERSION_ID'].'</th></tr>';
 	}
 
 	?>
@@ -211,15 +217,24 @@
 		$version = 0;
 		foreach($comments as $key):
 			if($version != $key['VERSION_ID']) {
-				$ver = $key['VERSION_ID'];
-				echo '<h5 class="rev">Versi : '. $ver.'</h5>';
+				//$ver = $key['VERSION_ID'];
+				//echo '<h5 class="rev">Versi : '. $ver.'</h5>';
+					$ver = $key['VERSION_ID'];
+					$val_ver = 'Versi '.$ver;
+					if($ver != 0){
+						$val_ver = 'Revisi Versi '.$ver; 
+					}
+					echo '<h5 class="rev">'. $val_ver.'</h5>';
 			}
 			?>
 			<div class="accordion-group">
 				<div class="accordion-heading alt1">
 					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_meta" href="#cmt<?php echo $key['PK_DOCUMENTS_COMMENTS_ID']?>">
-					<span class="pull-right font-disabled"><em><?php echo ' mengomentari pada: ' . $key['COMMENTS_CDT']?></em></span>
+					<span class="pull-right font-disabled"><em>
+                        <?php echo ' mengomentari pada: ' . $key['COMMENTS_CDT']?>
+                    </em></span>
 					<?php echo $key['EMPLOYEE_NAME']?>
+                    <?php echo ' | <i class="'.(($key['APPROVAL_STATUS']==ACTION_APPROVE) ? 'fam-accept' : 'fam-error' ).'"></i> '.$config['act_status'][ $key['APPROVAL_STATUS'] ]?>    
 					</a>
 				</div>
 				<div id="cmt<?php echo $key['PK_DOCUMENTS_COMMENTS_ID']?>" class="accordion-body collapse">
@@ -227,8 +242,11 @@
 						<div>
 						<?php echo ($key['COMMENTS_DESC'])?$key['COMMENTS_DESC']:'<i> Tidak ada komentar </i>';?>
 						</div>
+                        
 					</div>
-				</div>
+                </div>
+                
+                
 			</div><!--//accordion-group-->
 		<?php 
 		$version = $key['VERSION_ID'];		

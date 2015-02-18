@@ -87,26 +87,6 @@
 	$rec = explode(",",$str);
 	?>
 
-	<?php if($records['KEPADA_TEXT']):?>
-		<div class="clearfix"></div>
-		<div class="control-group add-bar">
-			<label class="control-label no-border"></label>	
-			<div class="span11">	
-				<?php $clears = rtrim($records['KEPADA_TEXT'], ', ');?>
-				<?php $ex_dis = explode(',', $clears);?>
-				<ul class="no-bulets" style="margin-left: 0;">		
-				<?php foreach($ex_dis as $key=>$val):?>
-					<li>
-						<span class="label label-info"><?php echo $val?></span>
-						<a class="btn btn-mini btn-danger" href="<?php echo site_url('nota/d_dist/'.$records['PK_NOTA_ID'].'/'.$key)?>">
-							<i class="fam-cancel"></i>
-						</a>
-					</li>
-				<?php endforeach;?>			
-				</ul>
-			</div>		
-		</div>
-	<?php endif;?>
 	<div class="control-group">		
 		<label class="control-label">Kepada<span class="important">*</span></label>
 		<div class="controls">
@@ -124,6 +104,28 @@
 			<br /><br />
 		</div>		    
 	</div>
+	
+	<?php if($records['KEPADA_TEXT']):?>
+		<div class="clearfix"></div>
+		<div class="control-group add-bar">
+			<label class="control-label no-border"></label>	
+			<!--<label class="control-label">Kepada<span class="important">*</span></label>-->
+			<div class="span11">	
+				<?php $clears = rtrim($records['KEPADA_TEXT'], ', ');?>
+				<?php $ex_dis = explode(',', $clears);?>
+				<ul class="no-bulets" style="margin-left: 0;">		
+				<?php foreach($ex_dis as $key=>$val):?>
+					<li>
+						<span class="label label-info"><?php echo $val?></span>
+						<a class="btn btn-mini btn-danger" href="<?php echo site_url('nota/d_dist/'.$records['PK_NOTA_ID'].'/'.$key)?>">
+							<i class="fam-cancel"></i>
+						</a>
+					</li>
+				<?php endforeach;?>			
+				</ul>
+			</div>		
+		</div>
+	<?php endif;?>
 	<div class="clearfix"></div>
 	<input type="hidden" name="list_kepada" value="<?php echo $records['KEPADA_TEXT']?>">		
 	<div class="control-group">
@@ -452,7 +454,6 @@ endif;
 					type: 'post',
 					dataType: 'json'
 				}; 
-
 				$('#distForm').ajaxSubmit(options); 
 			}
 		});

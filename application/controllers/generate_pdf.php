@@ -402,7 +402,7 @@ EOD;
 		$mpdf->list_indent_first_level = 1;	// 1 or 0 - whether to indent the first level of a list
 		$mpdf->WriteHTML($html_tembusan);
 
-		$file_nota_dinas = dirname($_SERVER['SCRIPT_FILENAME'])."/assets/nota_".$this->session->userdata('session_id').".pdf";
+		$file_nota_dinas = dirname($_SERVER['SCRIPT_FILENAME'])."/assets/nota_dinas/nota_".$this->session->userdata('session_id').".pdf";
 		$mpdf->Output($file_nota_dinas,'F');
  		
 		return $file_nota_dinas;
@@ -534,7 +534,7 @@ EOD;
 EOD;
 		$mpdf->WriteHTML($html);
 
-		$file_header_footer = dirname($_SERVER['SCRIPT_FILENAME'])."/assets/header_".$this->session->userdata('session_id').".pdf";
+		$file_header_footer = dirname($_SERVER['SCRIPT_FILENAME'])."/assets/nota_dinas/header_".$this->session->userdata('session_id').".pdf";
 		$mpdf->Output($file_header_footer,'F');
 
 		return $file_header_footer;
@@ -571,7 +571,7 @@ EOD;
 		
 		// $file_lampiran = dirname($_SERVER['SCRIPT_FILENAME'])."/assets/pdf/Lampiran Nota Dinas.pdf"; // masih static
 		$file_lampiran = dirname($_SERVER['SCRIPT_FILENAME']).$this->_LAMPIRAN_RAWNAME;
-		$file_merge = dirname($_SERVER['SCRIPT_FILENAME'])."/assets/nota_merge_".$this->session->userdata('session_id').".pdf";
+		$file_merge = dirname($_SERVER['SCRIPT_FILENAME'])."/assets/nota_dinas/nota_merge_".$this->session->userdata('session_id').".pdf";
 
 		$PDFMerger = new PDFMerger();
 		$PDFMerger->addPDF_header_footer($file_nota_dinas, 'all', $file_header_footer);

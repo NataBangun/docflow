@@ -93,13 +93,13 @@
 					<a href="#" class="dropdown-toggle <?php echo ($this->uri->segment(1)=='usr' || $this->uri->segment(1)=='type' || $this->uri->segment(1)=='categories')?'here':NULL?>" data-toggle="dropdown" title="Masterdata"><i class="fam-cog"></i> Konfigurasi <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<?php if (in_array("Setting Tandatangan", explode("|", $this->session->userdata('umc_feature')))) { ?>
-						<li><a href="<?php echo site_url('usr')?>">Paraf & Tanda Tangan</a></li>	
+						<li><a href="<?php echo site_url('usr')?>" onclick="localStorage.clear();">Paraf & Tanda Tangan</a></li>	
 						<?php }?>
 						<?php if (in_array("Setting Jenis Dokumen", explode("|", $this->session->userdata('umc_feature')))) { ?>
-						<li><a href="<?php echo site_url('type')?>">Jenis Dokumen</a></li>	
+						<li><a href="<?php echo site_url('type')?>" onclick="localStorage.clear();">Jenis Dokumen</a></li>	
 						<?php }?>
 						<?php if (in_array("Setting Workflow", explode("|", $this->session->userdata('umc_feature')))) { ?>
-						<li><a href="<?php echo site_url('categories')?>">Pengaturan Kategori & Workflow</a></li>	
+						<li><a href="<?php echo site_url('categories')?>" onclick="localStorage.clear();">Pengaturan Kategori & Workflow</a></li>	
 						<?php }?>					
 					</ul>
 				</li>
@@ -114,8 +114,8 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle <?php echo ($this->uri->segment(1)=='documents' || $this->uri->segment(1)=='documents' && $this->uri->segment(2)=='add')?'here':NULL?>" data-toggle="dropdown" title="Dokumen Prosedur"><i class="fam-folder-page-white"></i> Dokumen Prosedur <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-					<li><a href="<?php echo site_url('documents')?>">Daftar Dokumen Prosedur</a></li>
-					<li><a href="<?php echo site_url('documents/add')?>">Posting Dokumen Prosedur</a></li>
+					<li><a href="<?php echo site_url('documents')?>" onclick="localStorage.clear();">Daftar Dokumen Prosedur</a></li>
+					<li><a href="<?php echo site_url('documents/add')?>" onclick="localStorage.clear();">Posting Dokumen Prosedur</a></li>
 					</ul>
 				</li>
 				<?php } ?>
@@ -126,8 +126,8 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle <?php echo ($this->uri->segment(1)=='nota' || $this->uri->segment(1)=='nota' && $this->uri->segment(2)=='add')?'here':NULL?>" data-toggle="dropdown" title="Nota Dinas"><i class="fam-note"></i> Nota Dinas<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-					<li><a href="<?php echo site_url('nota')?>">Daftar Nota Dinas</a></li>
-					<li><a href="<?php echo site_url('nota/add')?>">Posting Nota Dinas</a></li>
+					<li><a href="<?php echo site_url('nota')?>" onclick="localStorage.clear();">Daftar Nota Dinas</a></li>
+					<li><a href="<?php echo site_url('nota/add')?>" onclick="localStorage.clear();">Posting Nota Dinas</a></li>
 					</ul>
 				</li>
 				
@@ -143,7 +143,7 @@
 					|| in_array("Admin Buspro", explode("|", $this->session->userdata('umc_feature'))) 
 					|| in_array("Admin Sekretaris", explode("|", $this->session->userdata('umc_feature')))) 
 					{ ?>
-				<li><a href="<?php echo site_url('inbox')?>" class="<?php echo ($this->uri->segment(1)=='inbox')?'here':NULL?>"><i class="fam-folder-database"></i> Inbox Dokumen<?php echo ($service['myInbox']['total']>0)?' <sup>'.$service['myInbox']['total'].'</sup>':'';?></a></li>
+				<li><a href="<?php echo site_url('inbox')?>" class="<?php echo ($this->uri->segment(1)=='inbox')?'here':NULL?>" onclick="localStorage.clear();"><i class="fam-folder-database"></i> Inbox Dokumen<?php echo ($service['myInbox']['total']>0)?' <sup>'.$service['myInbox']['total'].'</sup>':'';?></a></li>
 				<?php } ?>
 				<?php if (in_array("Pemeriksa Doc Prosedur", explode("|", $this->session->userdata('umc_feature')))
 					|| in_array("Penyetuju Doc Prosedur", explode("|", $this->session->userdata('umc_feature'))) 
@@ -155,7 +155,7 @@
 					|| in_array("Admin Sekretaris", explode("|", $this->session->userdata('umc_feature'))) 
 					) 
 					{ ?>				
-				<li><a href="<?php echo site_url('monitoring/document')?>" class="<?php echo ($this->uri->segment(1)=='monitoring' && $this->uri->segment(2)=='document')?'here':NULL?>"><i class="fam-folder-explore"></i> Monitoring Dokumen</a></li>				
+				<li><a href="<?php echo site_url('monitoring/document')?>" onclick="localStorage.clear();" class="<?php echo ($this->uri->segment(1)=='monitoring' && $this->uri->segment(2)=='document')?'here':NULL?>"><i class="fam-folder-explore"></i> Monitoring Dokumen</a></li>				
 				<?php } ?>
 								
 				

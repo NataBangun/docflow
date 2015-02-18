@@ -19,6 +19,7 @@ class CI_Pagination_Bas {
     function __construct() {
         $this->ci =& get_instance();
         $this->ci->load->database();
+		//$this->ci->load->helper('firephp');
     }
     
     public function set_table_id($id){
@@ -48,6 +49,7 @@ class CI_Pagination_Bas {
         $this->ci->db->like($this->data);
         $this->ci->db->limit($this->limit,$this->offset);
         $select = $this->ci->db->get($this->table);
+        
         return $select->result_array();
     }
     
@@ -185,15 +187,17 @@ class CI_Pagination_Bas {
 						// proses Add DOM Element
 						for (var i=0; i<rs.isi_table.length; i++) {
 							var tr = document.createElement("TR");
+							tr.className  = "baris-"+i;
 							for (var j=0; j<rs.isi_table[i].length; j++) {
 								var td = document.createElement("TD");
+								td.id = j;
 								td.innerHTML = rs.isi_table[i][j];
 								tr.appendChild(td);
 							}
-							tbody.appendChild(tr);
+							tbody.appendChild(tr); 
 						}
 						//document.getElementById("'.$this->component_id.'_body_table").innerHTML  = rs.isi_table;
-						
+				
 						var limit = rs.rs.limit;
 						var count = rs.rs.count;
 						var page = rs.rs.page;
@@ -217,9 +221,17 @@ class CI_Pagination_Bas {
 						list += "<li><a href=\"javascript:'.$this->component_id.'_cari("+ page_count +");\" onclick=\"\">&raquo;</a></li>";
 						$("#'.$this->component_id.'_pagination").html(list);
                     }
+
                     $(document).ready(function(){
 						'.$this->component_id.'_cari(1);
-                    });
+						
+						
+						});
+							$(document).on("click", "button.hapuscoy", function () {
+							var enyot = $(this).closest("tr").find("#4").text();
+							alert(enyot);
+						
+});
                 </script>
                 ';
         return $s;
@@ -245,14 +257,15 @@ class CI_Pagination_Bas {
         foreach($arr_table['result_array'] as $value){ 
             $id = ($this->table_id != null) ? '/'.$value[$this->table_id] : '#' ;
 			$tr = array();
-			
+			error_reporting(E_ALL ^ E_NOTICE);
             foreach($this->field as $val){
+				
 				if (!isset($val['script'])) {
 					$s = $val['field'];
 					// $isi_table .= '<td>'.$value[$s].'</td>';
 					$tr[] = $value[$s];
 				} else {
-					eval("\$temp = {$val['script']}");
+					eval("\$temp = {$val['script']}");		
 					// $isi_table .= '<td>'.$temp.'</td>';
 					$tr[] = $temp;
 				}
@@ -277,4 +290,5 @@ class CI_Pagination_Bas {
 
         echo json_encode($arr_result);
     }
+	
 }

@@ -305,6 +305,10 @@
 					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_meta" href="#cmt<?php echo $key['PK_DOCUMENTS_COMMENTS_ID']?>">
 					<span class="pull-right font-disabled"><em><?php echo ' mengomentari ver.'. $ver[0].'.'.$ver[1].(($ver[2] == 0)? NULL : 'Revisi Ke - '. $ver[2]).', pada: ' . $key['COMMENTS_CDT']?></em></span>
 					<?php echo $key['EMPLOYEE_NAME']?>
+                        
+                                              <?php echo ' | <i class="'.(($key['APPROVAL_STATUS']==ACTION_APPROVE) ? 'fam-accept' : 'fam-error' ).'"></i> '.$config['act_status'][ $key['APPROVAL_STATUS'] ]?>    
+                        
+                        
 					</a>
 				</div>
 				<div id="cmt<?php echo $key['PK_DOCUMENTS_COMMENTS_ID']?>" class="accordion-body collapse">
@@ -327,7 +331,7 @@
 </div><!--//tab-content-->
 
 
-<div id="commentModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="commentModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="border-radius:15px;" aria-hidden="true">
 	<div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon-remove"></i></button>
 	<h3 id="modalLabel"><i class="fam-comment"></i> Berikan Saran Anda</h3>
@@ -401,6 +405,7 @@ $(function() {
 	
 	$("#submitComment").click(function(){
 		var data_t = $("input[name='respon']:checked").attr('data-respon');
+		 $(this).attr('disabled', true);
 		var cnf = confirm(data_t);
 		if (cnf){
 			var options = { 
@@ -417,6 +422,16 @@ $(function() {
 		}
 	});
 
+		$("#closeModal").click(function(){
+				 $("#submitComment").attr('disabled', false);
+
+	});
+	
+			$('input[name=respon]').click(function(){
+				 $("#submitComment").attr('disabled', false);
+
+	});
+	
 	function validate(formData, jqForm, options) 
 	{  
 		var msg = '';
@@ -440,6 +455,8 @@ $(function() {
 			return true;
 		}
 	}
+	
+
 	
 	function showResponse(responseText, statusText, xhr, $form)  
 	{ 

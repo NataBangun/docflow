@@ -18,6 +18,7 @@ class Mm_type extends CI_Model {
 		DBDOC.P_TYPE.TYPE_CBY
 		FROM
 		DBDOC.P_TYPE
+        ORDER BY DBDOC.P_TYPE.TYPE_CDT DESC
 		";
 		$query = $this->db->query($sql);		
 		if($query)

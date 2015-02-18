@@ -31,13 +31,13 @@ class Inbox extends CI_Controller
             array('field'=>'DOCUMENTS_DATEPUB', 'label'=>'Tgl. Publikasi', 'attribut'=>array('class'=>'form-control', 'style'=>'width:70px')),
             array('field'=>'DOCUMENTS_CDT', 'label'=>'Tgl. Buat', 'attribut'=>array('class'=>'form-control', 'style'=>'width:110px'))
         );
-		
-		$this->field_doc[0]['script'] = <<<EOD
+	
+	$this->field_doc[0]['script'] = <<<EOD
 (\$value['PROCESS_STATUS'] == DOC_EDIT) 
 	? "<a href=\"".site_url('documents/detail/'.\$value['PK_DOCUMENTS_ID'])."\" title=\"detail\">{\$value['PK_DOCUMENTS_ID']}</a>"
 	: "<a href=\"".site_url('inbox/detail/'    .\$value['PK_DOCUMENTS_ID'])."\" title=\"detail\">{\$value['PK_DOCUMENTS_ID']}</a>";
 EOD;
-		$this->field_doc[1]['script'] = <<<EOD
+	$this->field_doc[1]['script'] = <<<EOD
 (\$value['PROCESS_STATUS'] == DOC_EDIT) 
 	? "<span><a href=\"".site_url('documents/detail/'.\$value['PK_DOCUMENTS_ID'])."\" title=\"detail\">{\$value['DOCUMENTS_TITLE']}</a></span><br>
 	   <span class=\"font-disabled\">{\$value['CATEGORIES_TITLE']}</span>"
@@ -223,7 +223,8 @@ EOD;
 					'cL' => $current_layer,
 					'comment' => sanitize_filename($this->input->post('comment')),
 					'uID' => $this->data['userInfo']['uID'],
-					'timestamp' => $timestamp
+					'timestamp' => $timestamp,
+                    'sL' => $step_layer
 				);				
 				
 				// Langkah Kedua: Simpan Komentar
@@ -267,7 +268,7 @@ EOD;
 						if ($result != "1") {
 							$return['message'] .= '<pre>'.$result.'</pre>';
 						}
-						$return['message'] .= 'reject + raise version <br>';
+						$return['message'] .= 'Reject, Raised Version.<br>';
 						$return['temp'] = $values;						
 					} else {
 						$next_layer = ($total == $approve) ? $current_layer + 1 : $current_layer;
@@ -296,7 +297,7 @@ EOD;
 							if ($result != "1") {
 								$return['message'] .= '<pre>'.$result.'</pre>';
 							}							
-							$return['message'] .= 'approve + final <br>';
+							$return['message'] .= 'Dokumen Telah Mencapai Final.<br>';
 						} else {
 							$table = array(
 								'CURRENT_LAYER' => $next_layer,
@@ -327,9 +328,9 @@ EOD;
 							}
 							
 							if ($next_layer == $current_layer) {
-								$return['message'] .= 'approve, wait other user respond <br>';
+								$return['message'] .= 'Approve, Wait Other User to Respond <br>';
 							} else {
-								$return['message'] .= 'approve + next layer <br>';
+								$return['message'] .= 'Dokumen Telah Mencapai Final.<br>';
 							}
 						}
 					}
@@ -400,7 +401,7 @@ EOD;
 							if ($result != "1") {
 								$return['message'] .= '<pre>'.$result.'</pre>';
 							}						
-							$return['message'] .= 'approve + final <br>';
+							$return['message'] .= 'Approved.<br>';
 						} else {
 							$table = array(
 								'CURRENT_LAYER' => $next_layer,
@@ -433,7 +434,7 @@ EOD;
 									}
 								}
 							
-								$return['message'] .= 'approve + next layer <br>';
+								$return['message'] .= 'Approved.<br>';
 							}
 						}
 					}

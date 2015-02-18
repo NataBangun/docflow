@@ -45,7 +45,7 @@
     <li class="active"><a href="#metadata" data-toggle="tab">Info Dokumen</a></li>
     <li class=""><a href="#files" data-toggle="tab">Dokumen Prosedur</a></li>
     <?php if ($records['PROCESS_STATUS'] == DOC_DRAFT || $records['PROCESS_STATUS'] == DOC_EDIT) { ?>
-        <li class="pull-right"><div class="alert"><strong style="color: #A67E39;">Jika ingin melakukan submit / sosialisasi silakan klik tombol submit diatas </strong></div></li>
+        <li class="pull-right"><div class="alert"><strong style="color: #A67E39;">Jika ingin melakukan submit, silakan klik tombol submit diatas </strong></div></li>
     <?php } ?>
 </ul>
 
@@ -149,7 +149,7 @@
                                 <?php } ?>		
                             </ul>
                         <?php } ?>
-                        <input type="file" accept="application/pdf" class="span3" name="files[]">
+                        <input type="file" accept="application/pdf" onchange="checkFile(this)" class="span3" name="files[]">
                         <a class="btn btn-info" id="atch"><i class="fam-add"></i></a> &nbsp &nbsp <span class="label label-info"><?php echo "Jenis File: " . UPLOAD_DOKPRO_FILE_TYPE . ";  Ukuran Maks: " . UPLOAD_DOKPRO_SIZE_MB . "MB"; ?></span>
                         <input type="hidden" name="file_name" value="<?php echo $records['DOCUMENTS_ATC_NAME'] ?>">
                     </div>
@@ -285,7 +285,8 @@
                         <td><?php echo $num ?>.</td>	
                         <td><?php echo $records['DOCUMENTS_ATC_SYSTEM'] ?></td>
                         <td><?php echo $doc_version[0] . '.' . $doc_version[1] ?><?php echo ($doc_version[2] == 0) ? NULL : ' Revisi Ke - ' . $doc_version[2]; ?></td>					
-                        <td><a href="<?php echo base_url(UPLOAD_DOKPRO . $records['PK_DOCUMENTS_ID'] . '/' . $records['DOCUMENTS_ATC_SYSTEM']) ?>" target="_blank">View</a></td>	
+                        <td>
+<a id="distBtn" class="btn btn-primary" title="view"  href="<?php echo base_url(UPLOAD_DOKPRO . $records['PK_DOCUMENTS_ID'] . '/' . $records['DOCUMENTS_ATC_SYSTEM']) ?>" target="_blank">View</a></td>	
                     </tr>
                     <?php
                     $name_img .= $records['DOCUMENTS_ATC_SYSTEM'];
@@ -338,8 +339,8 @@
 
         if ( (FileExt != "pdf") || FileSize>5000001)
         {
-            var error = "Tipe file lampiran harus PDF dan tidak boleh lebih dari 8 MB.\n.";
-			document.getElementById('userfile').value=''
+            var error = "Tipe file lampiran harus PDF dan tidak boleh lebih dari 5 MB.\n.";
+			fieldObj.value='';
             alert(error);
             return false;
         }

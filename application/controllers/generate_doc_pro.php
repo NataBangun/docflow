@@ -405,6 +405,7 @@ class Generate_doc_pro extends CI_Controller {
 		}
 		
 		$dest = imagecreatetruecolor($width=260, $height=185);
+		//$dest = imagecreatetruecolor($width=150, $height=95);
 		imagecolortransparent($dest, imagecolorallocatealpha($dest, 255, 255, 255, 127));
 		imagealphablending($dest, false);
 		imagesavealpha($dest, true);		
@@ -417,6 +418,8 @@ class Generate_doc_pro extends CI_Controller {
 			// add ttd stempel
 			$width_ttd=100; 
 			$height_ttd=30;
+			//$width_ttd=50; 
+			//$height_ttd=10;
 			$ttd_stempel_png = imagecreatefrompng($ttd_stempel);
 			imagecopyresampled($dest, $ttd_stempel_png, 135, 150, 0, 0, $width_ttd, $height_ttd, $ttd_size[0], $ttd_size[1]);
 		}

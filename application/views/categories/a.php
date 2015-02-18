@@ -29,7 +29,7 @@
 	<label class="control-label">Stempel</label>
 	<div class="controls">
 <div class="input-prepend">
-		<input type="file" class="span5" name="userfile" id="userfile">
+		<input type="file" class="span5" name="userfile" onchange="checkFile(this)" id="userfile">
 		<?php echo '<span style="color:red;"><br>'.form_error('userfile').'</span>'?>
 <p style="color:red;font-style:italic;margin-top:15px;">
 			<b>Keterangan :</b><br />
@@ -42,7 +42,7 @@
 <div class="control-group">
 	<label class="control-label">Judul <span class="important">*</span></label>
 	<div class="controls">
-		<input type="text" name="title" id="title" class="span10" placeholder="ketikkan judul" value="<?php echo $this->input->post('title')?>">
+		<input type="text" name="title" id="title" class="span10" placeholder="ketikkan judul" maxlength="75" value="<?php echo $this->input->post('title')?>">
 		<?php echo '<span style="color:red;"><br>'.form_error('title').'</span>'?>
 	</div>
 </div>
@@ -60,7 +60,7 @@
 		<div class="input-append">
 			<input type="hidden" value="<?php echo $i?>" name="val">
 			<input class="span1" type="hidden" value="<?php echo $i?>" name="order_status<?php echo $i?>" placeholder="urutan <?php echo $i?>">
-			<input class="span3"  type="text" placeholder="Masukan Judul Kategori" name="add<?php echo $i?>" id="add<?php echo $i?>"
+			<input class="span3"  type="text" placeholder="Masukkan Nama Grup Penandatangan" name="add<?php echo $i?>" id="add<?php echo $i?>"
 			value="<?php echo $this->input->post('add'.$i)?>" >
 			<input class="span2" id="appendedInputButton" type="text" name="pdf_title<?php echo $i?>" id="pdf_title<?php echo $i?>"
 			value="<?php echo $this->input->post('pdf_title'.$i)?>"
@@ -107,6 +107,25 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/chosen.min.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/nicEdit.js')?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/form.js')?>"></script>
+
+<script type="text/javascript">
+   function checkFile(fieldObj)
+    {
+        var FileName  = fieldObj.value;
+        var FileExt = FileName.substr(FileName.lastIndexOf('.')+1);
+        var FileSize = fieldObj.files[0].size;
+        var FileSizeMB = (FileSize/512001).toFixed(2);
+
+        if ( (FileExt != "png") && (FileExt != "jpg") || FileSize>512001)
+        {
+            var error = "Tipe file lampiran harus png atau jpg, dan tidak boleh lebih dari 512kb.\n.";
+			document.getElementById('userfile').value='';
+            alert(error);
+            return false;
+        }
+        return true;
+    }
+</script>
 <script type="text/javascript">
 $(document).ready(function(){	
 var nyut = document.getElementById('doc-type');

@@ -4,7 +4,7 @@ class Inbox_nota extends CI_Controller
 {
 	var $folder = 'inbox_nota/';
 	var $data=array();
-	
+	var $pesan;
 	function __construct()
 	{
 		parent::__construct();
@@ -120,9 +120,10 @@ class Inbox_nota extends CI_Controller
 				{
 					$dataApproval = array('APPROVAL_STATUS'=>$action, 'APPROVAL_UDT'=>$timestamp);
 					$this->db->where('FK_DOCUMENTS_ID', $nota_id);
-					$this->db->where('VERSION_ID', $version_id);					
-					$this->db->where('EMPLOYEE_NO', $this->data['userInfo']['uID']);
 					$this->db->where('FK_TYPE_ID', 2);
+					$this->db->where('STEP_LAYER', $current_layer);
+					$this->db->where('VERSION_ID', $version_id);					
+					$this->db->where('EMPLOYEE_NO', $this->data['userInfo']['uID']);					
 					$this->db->update('H_DOCUMENTS_APPROVAL', $dataApproval);
 				}
 				
@@ -132,8 +133,10 @@ class Inbox_nota extends CI_Controller
 					'cL' => $current_layer,
 					'comment' => $this->input->post('comment'),
 					'uID' => $this->data['userInfo']['uID'],
-					'timestamp' => $timestamp
+					'timestamp' => $timestamp,
+                    'sL' => $step_layer
 				);
+				$this->mm_inbox->insert_comment($data);			
 				
 				$approval = $this->mm_inbox_nota->count_approve($data);				
 				$approve = intval($approval['approve']);
@@ -212,12 +215,13 @@ class Inbox_nota extends CI_Controller
 							
 							$table['CURRENT_LAYER'] = ACTION_FINAL;
 							$table['PROCESS_STATUS'] = DOC_FINAL;
-							$return['message'] .= 'DOkumen telah mencapai final.';
+							$pesan = 'Dokumen Telah Mencapai Final.';
 						} else {
 							/************************************
 							 bila belum final, insert step baru
 							**********************************/
-							
+							$pesan = 'Approved.';
+
 							$this->mm_inbox_nota->clone_to_approval_nota( $nota_id, $table['CURRENT_LAYER'] );
 						}
 						$this->db->where('FK_DOCUMENTS_ID', $nota_id);
@@ -331,7 +335,7 @@ class Inbox_nota extends CI_Controller
 						if ($result != '1') {
 							$return['message'] .= '<pre>'.$result.'</pre>'; 
 						}
-						$return['message'] .= 'approve + next layer <br>';
+						$return['message'] = $pesan.'<br>';
 					}
 					
 					/*******************
@@ -396,7 +400,7 @@ class Inbox_nota extends CI_Controller
 						if ($result != '1') {
 							$return['message'] .= '<pre>'.$result.'</pre>'; 
 						}
-						$return['message'] .= 'reject + raise version <br>';
+						$return['message'] .= 'Reject, Raise Version. <br>';
 					}		
 				
 				}				

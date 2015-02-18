@@ -25,7 +25,7 @@
 	<li class="active"><a href="#versioning" data-toggle="tab">Versi</a></li>
 	<li><a href="#comments" data-toggle="tab">Komentar</a></li>
 	<?php if($records['PROCESS_STATUS']==DOC_DRAFT || $records['PROCESS_STATUS']==DOC_EDIT):?>
-	<li class="pull-right"><div class="alert"><strong style="color: #A67E39;">Jika ingin melakukan submit / sosialisasi silakan klik tombol edit diatas </strong></div></li>
+	<li class="pull-right"><div class="alert"><strong style="color: #A67E39;">Jika ingin melakukan submit, silakan klik tombol edit diatas </strong></div></li>
 	<?php endif;?>
 </ul>
  
@@ -242,6 +242,9 @@
 					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_meta" href="#cmt<?php echo $key['PK_DOCUMENTS_COMMENTS_ID']?>">
 					<span class="pull-right font-disabled"><em><?php echo ' mengomentari ver.'.$ver[0].'.'.$ver[1].(($ver[2] == 0)? NULL : ' Revisi Ke - '. $ver[2]).', pada: ' . $key['COMMENTS_CDT']?></em></span>
 					<?php echo $key['EMPLOYEE_NAME']?>
+                        
+                               <?php echo ' | <i class="'.(($key['APPROVAL_STATUS']==ACTION_APPROVE) ? 'fam-accept' : 'fam-error' ).'"></i> '.$config['act_status'][ $key['APPROVAL_STATUS'] ]?>    
+                        
 					</a>
 				</div>
 				<div id="cmt<?php echo $key['PK_DOCUMENTS_COMMENTS_ID']?>" class="accordion-body collapse">

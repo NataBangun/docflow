@@ -1,7 +1,7 @@
 <div class="page-header"><h4>Daftar Dokumen Prosedur</h4></div>
 
 <p>
-	<a href=":;" id="linkBtn" class="btn btn-info" data-rel="<?php echo site_url('documents/add')?>" title="Buat Dokumen Baru">
+	<a href=":;" id="linkBtn" onclick="localStorage.clear();" class="btn btn-info" data-rel="<?php echo site_url('documents/add')?>" title="Buat Dokumen Baru">
 		<i class="fam-add"></i> Buat Dokumen Prosedur</a>
 	<div class="clearfix"></div>
 </p>
@@ -112,6 +112,7 @@
 	</div>
 </div>
 <script type="text/javascript">
+
 $('#myTable, #myTable2').dynatable({
   table: {
     defaultColumnIdStyle: 'trimDash'

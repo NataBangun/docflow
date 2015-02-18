@@ -413,20 +413,30 @@ class Mm_documents extends CI_Model {
           ORDER BY documents_comments.version_id DESC,
           documents_comments.comments_id DESC";
          */
-        $sql = "SELECT
+        $sql = "SELECT DISTINCT
 					H_DOCUMENTS_COMMENTS.PK_DOCUMENTS_COMMENTS_ID,						
 					H_DOCUMENTS_COMMENTS.COMMENTS_CBY,
 					H_DOCUMENTS_COMMENTS.COMMENTS_CDT,
 					H_DOCUMENTS_COMMENTS.COMMENTS_DESC,
 					H_DOCUMENTS_COMMENTS.FK_DOCUMENTS_ID,
 					H_DOCUMENTS_COMMENTS.VERSION_ID,
+                    H_DOCUMENTS_APPROVAL.APPROVAL_STATUS,
 					V_EMPLOYEE_DOKUMEN_PROSEDUR.EMPLOYEE_NAME
 				FROM
 					H_DOCUMENTS_COMMENTS
-					INNER JOIN V_EMPLOYEE_DOKUMEN_PROSEDUR 
+					INNER JOIN V_EMPLOYEE_DOKUMEN_PROSEDUR
 						ON H_DOCUMENTS_COMMENTS.COMMENTS_CBY = V_EMPLOYEE_DOKUMEN_PROSEDUR.EMPLOYEE_NO
+                    LEFT JOIN H_DOCUMENTS_APPROVAL
+                        ON H_DOCUMENTS_COMMENTS.FK_DOCUMENTS_ID =  H_DOCUMENTS_APPROVAL.FK_DOCUMENTS_ID
+                        AND H_DOCUMENTS_COMMENTS.FK_TYPE_ID = H_DOCUMENTS_APPROVAL.FK_TYPE_ID
+                        AND H_DOCUMENTS_COMMENTS.STEP_LAYER= H_DOCUMENTS_APPROVAL.STEP_LAYER
+                        AND H_DOCUMENTS_COMMENTS.VERSION_ID = H_DOCUMENTS_APPROVAL.VERSION_ID
 				WHERE H_DOCUMENTS_COMMENTS.FK_DOCUMENTS_ID = ?
 					AND H_DOCUMENTS_COMMENTS.FK_TYPE_ID = 1
+                    AND H_DOCUMENTS_APPROVAL.APPROVAL_UDT IS NOT NULL
+                    AND H_DOCUMENTS_COMMENTS.COMMENTS_CDT IS NOT NULL
+                    AND H_DOCUMENTS_APPROVAL.APPROVAL_STATUS IS NOT NULL
+                    AND H_DOCUMENTS_COMMENTS.STEP_LAYER IS NOT NULL
 				ORDER BY H_DOCUMENTS_COMMENTS.PK_DOCUMENTS_COMMENTS_ID DESC";
 
         $query = $this->db->query($sql, array($doc_id));
@@ -810,6 +820,14 @@ class Mm_documents extends CI_Model {
 		DBDOC.P_CATEGORY_PROCESS.FK_CATEGORIES_ID = $cat_id";
         $data = $this->db->query($sql);
         return $data->result_array();
+    }
+	
+	    public function hapus($doc_id) {
+        $sql = "DELETE * FROM 
+		DBDOC.T_DOCUMENTS
+		WHERE
+		PK_DOCUMENTS_ID = $doc_id";
+        $data = $this->db->query($sql);
     }
 
     public function check_img() {
