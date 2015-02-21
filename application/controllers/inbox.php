@@ -93,13 +93,7 @@ EOD;
 	}
 	
 	public function index()
-	{
-		// $this->data['records'] = $this->mm_inbox->get_inbox_layer( $this->data['userInfo']['uID'] );
-		// $this->data['revisi'] = $this->mm_documents->get_all( $this->session->userdata('uID') );
-		
-		// $this->data['records_nota'] = $this->mm_inbox_nota->get_inbox( $this->data['userInfo']['uID'] );
-		// $this->data['revisi_nota'] = $this->mm_nota->get_all( $this->data['userInfo']['uID'] );
-		
+	{		
         $this->pg_doc->set_attr_table('class="table table-bordered table-condensed table-hover table-striped"');
         $this->pg_doc->set_ajax_url(site_url().'inbox/search_doc');
         $this->data['doc_inbox'] = $this->pg_doc->generate_all();
@@ -177,7 +171,6 @@ EOD;
 			$this->form_validation->set_rules('vI', 'Judul', 'required');//version id
 			$this->form_validation->set_rules('cL', 'Judul', 'required');//curr layer
 			$this->form_validation->set_rules('status', 'Status', '');//approval status			
-			//$this->form_validation->set_rules('comment', 'Isi Saran', 'required');
 			
 			if( $this->input->post('status') <= ACTION_READ && $this->input->post('sL') == $this->input->post('cL') )
 			{
@@ -209,12 +202,13 @@ EOD;
 				if( $make_comments )
 				{
 					$dataApproval = array('APPROVAL_STATUS'=>$action, 'APPROVAL_UDT'=>$timestamp);
+										
 					$this->db->where('FK_DOCUMENTS_ID', $doc_id);					
 					$this->db->where('FK_TYPE_ID', 1);					
 					$this->db->where('STEP_LAYER', $current_layer);
 					$this->db->where('VERSION_ID', $version_id);
 					$this->db->where('EMPLOYEE_NO', $this->data['userInfo']['uID']);
-					$this->db->update('H_DOCUMENTS_APPROVAL', $dataApproval);									
+					$this->db->update('H_DOCUMENTS_APPROVAL', $dataApproval);					
 				}
 				
 				$data = array(
@@ -272,6 +266,7 @@ EOD;
 						$return['temp'] = $values;						
 					} else {
 						$next_layer = ($total == $approve) ? $current_layer + 1 : $current_layer;
+						
 						if ($next_layer > $total_step_layer) {
 							$table = array(
 								'PROCESS_STATUS' => DOC_FINAL,
@@ -330,7 +325,7 @@ EOD;
 							if ($next_layer == $current_layer) {
 								$return['message'] .= 'Approve, Wait Other User to Respond <br>';
 							} else {
-								$return['message'] .= 'Dokumen Telah Mencapai Final.<br>';
+								$return['message'] .= 'Approved.<br>';
 							}
 						}
 					}
@@ -345,8 +340,8 @@ EOD;
 				if ($this->input->post('pT')==1) {
 				
 					$info_action = '';
-					if ($action == 2) $info_action = 'approve';
-					if ($action == 3) $info_action = 'reject';
+					if ($action == 2) $info_action = 'Approve';
+					if ($action == 3) $info_action = 'Reject';
 					
 					if ($reject > 0 && (($approve + $reject) == $total)) {
 						$table = array(
@@ -373,7 +368,7 @@ EOD;
 						if ($result != "1") {
 							$return['message'] .= '<pre>'.$result.'</pre>';
 						}						
-						$return['message'] .= $info_action . ', next: revisi + raise version <br>';
+						$return['message'] .= $info_action . ', Raised Version <br>';
 					} else {
 						$next_layer = ($total == $approve) ? $current_layer + 1 : $current_layer;
 						if ($next_layer > $total_step_layer) {
@@ -401,7 +396,7 @@ EOD;
 							if ($result != "1") {
 								$return['message'] .= '<pre>'.$result.'</pre>';
 							}						
-							$return['message'] .= 'Approved.<br>';
+							$return['message'] .= 'Dokumen Telah Mencapai Final.<br>';
 						} else {
 							$table = array(
 								'CURRENT_LAYER' => $next_layer,
@@ -412,7 +407,7 @@ EOD;
 							$this->db->update('H_DOCUMENTS_PROCESS', $table);
 							
 							if ($next_layer == $current_layer) {
-								$return['message'] = $info_action . ', wait other user respond <br>';
+								$return['message'] = $info_action . ', Wait Other User to Respond <br>';
 							} else {
 								$this->mm_inbox->clone_to_approval($doc_id);
 								$dokumen_message = $this->mm_documents_email->get_approval($doc_id);
@@ -440,94 +435,12 @@ EOD;
 					}
 				}
 						
-				// if($this->input->post('pT')==0 && $reject)
-				// {
-					// $approve = 0;
-					// $total = 1;	
-				// }
-				// elseif($approve)
-				// {
-					// $total = intval($approval['total']);
-				// }
-				
-				// if($this->input->post('pT')==1)
-				// {
-					// $total = intval($approval['total']);
-				// }
-				
-				// // $row_step=$this->mm_documents->get_versioning_rows($doc_id);
-				// if( $approve > 0 && $reject > 0 )
-				// {
-					// if( ($approve + $reject) == $total )
-					// {
-						// $return['message'] = 'reject + raise version <br>';
-						// $table = array(
-							// 'PROCESS_STATUS' => 2,
-							// 'VERSION_ID' => $new_version_id,
-							// 'UDT' => $timestamp
-						// );
+if (empty($this->input->post('comment'))) {
+								$return['message'] .= 'Anda tidak mengisi kotak saran. Terima kasih.';
 
-						// $this->db->where('FK_DOCUMENTS_ID', $doc_id);												
-						// $this->db->update('H_DOCUMENTS_PROCESS', $table);
-						// $this->mm_inbox->clone_to_approval( $doc_id, $current_layer);
-						
-						// // TODO
-						// // make email notification to author
-					// }
-				// }
-				// else
-				// {
-					// // approve + next layer	
-					// if( $approve == $total )
-					// {						
-						// $table = array(
-							// 'CURRENT_LAYER' => ($current_layer+1), // important
-							// 'UDT' => $timestamp
-						// );					
-						
-						// $is_doc_final = ( ($total_step_layer == $current_layer) ? TRUE : FALSE );
-							
-						// if( $is_doc_final )
-						// {
-							// $table['CURRENT_LAYER'] = ACTION_FINAL;
-							// $table['PROCESS_STATUS'] = DOC_FINAL;
-						// }
-						// else
-						// {
-							// $this->mm_inbox->clone_to_approval( $doc_id, $table['CURRENT_LAYER'] );
-						// }
-						
-						// $this->db->where('FK_DOCUMENTS_ID', $doc_id);
-						// $this->db->update('H_DOCUMENTS_PROCESS', $table);
-						
-						// // TODO
-						// // make email notification to author
-						
-						// $return['message'] = 'approve + next layer <br>';
-					// }
-					
-					
-					// // reject + raise version
-					// if( $reject == $total )
-					// {
-						// $return['message'] = 'reject + raise version <br>';
-						// $table = array(
-							// 'PROCESS_STATUS' => 2,
-							// 'VERSION_ID' => $new_version_id,
-							// 'UDT' => $timestamp
-						// );
-
-						// $this->db->where('FK_DOCUMENTS_ID', $doc_id);
-						// $this->db->update('H_DOCUMENTS_PROCESS', $table);
-						// $this->mm_inbox->clone_to_approval( $doc_id, $current_layer );
-						
-						// // TODO
-						// // make email notification to author
-					// }
-				
-				// }				
-				
-				$return['message'] .= 'Saran Anda telah disampaikan.';				
+}else{
+				$return['message'] .= 'Saran Anda telah disampaikan. Terima kasih.';
+}							
 				$return['error'] = 0;
 				// $return['response'] = $data;
 				echo json_encode($return);
